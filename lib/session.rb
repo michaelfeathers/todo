@@ -9,6 +9,18 @@ CLEAR_SCREEN =  "\e[H\e[2J"
 
 class Session
 
+  def initialize
+    @cursor = 0
+    @grab_mode = false
+    @actions = load 
+    render
+  end
+
+  def load 
+    File.read(TODO_FILE).lines
+  end
+
+
   def todo_add tokens
     @actions = [tokens.join(" ") + $/] + @actions
     @cursor = 0
@@ -119,13 +131,6 @@ class Session
    puts ""
 
    gets
-  end
-
-  def initialize
-    @cursor = 0
-    @grab_mode = false
-    @actions = File.read(TODO_FILE).lines
-    render
   end
 
   def cursor_char index
