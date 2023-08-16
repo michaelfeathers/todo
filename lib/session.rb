@@ -2,6 +2,7 @@ $:.unshift File.dirname(__FILE__)
 
 require 'common'
 require 'date'
+require 'appio'
 
 VIEW_LIMIT   = 45
 CLEAR_SCREEN =  "\e[H\e[2J" 
@@ -90,8 +91,12 @@ class Session
     @grab_mode = (not @grab_mode)
   end
   
-  def todo_month_summaries
-    task_descs = File.read(ARCHIVE_FILE)
+  def todo_month_summaries 
+    month_summaries(AppIo.new)
+  end
+
+  def month_summaries appio 
+    task_descs = appio.read_archive
                       .lines
                       .map {|l| [DateTime.parse(l.split[0]), l.split[1].chars.first] }
 
