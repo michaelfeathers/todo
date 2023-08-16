@@ -242,7 +242,7 @@ class ToDo
 
   def initialize
     ToDoUpdater.new.run
-    @session = Session.new
+    @session = Session.from_file(TODO_FILE)
     @session.render
   end
 

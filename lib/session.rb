@@ -9,17 +9,16 @@ CLEAR_SCREEN =  "\e[H\e[2J"
 
 class Session
 
-  def initialize
+  def self.from_file file
+    self.new(File.read(TODO_FILE).lines)
+  end
+
+  def initialize actions
     @cursor = 0
     @grab_mode = false
-    @actions = load 
+    @actions = actions 
     render
   end
-
-  def load 
-    File.read(TODO_FILE).lines
-  end
-
 
   def todo_add tokens
     @actions = [tokens.join(" ") + $/] + @actions
