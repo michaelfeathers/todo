@@ -53,7 +53,7 @@ class Session
 
   def todo_find text
     puts CLEAR_SCREEN 
-    found = @actions.each_with_index.map {|i,e| "%2d %s" % [e,i] }.grep(Regexp.new(text))
+    found = find(text) 
     puts found.join + $/ + found.count.to_s + $/ + $/
   end
   
@@ -149,6 +149,10 @@ class Session
 
     # @actions.each_with_index {|e,i| print ("%2d %s %s" % [i, cursor_char(i), e]) }
     # puts ""
+  end
+
+  def find text
+    @actions.each_with_index.map {|i,e| "%2d %s" % [e,i] }.grep(Regexp.new(text))
   end
 end
 
