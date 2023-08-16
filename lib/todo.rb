@@ -1,17 +1,8 @@
 $:.unshift File.dirname(__FILE__)
 
-require 'date'
+require 'common'
 require 'session'
-
-ROOT_DIR     = "/Users/michaelfeathers/Projects/todo/lib/"
-TODO_FILE    = ROOT_DIR + "todo.txt"
-UPDATER_FILE = ROOT_DIR + "updates.txt"
-ARCHIVE_FILE = ROOT_DIR + "archive.txt"
-
-
-def day_date dt
-  DateTime.new(dt.year, dt.month, dt.day, 0, 0, 0, dt.zone)
-end
+require 'date'
 
 
 class Command
@@ -250,8 +241,9 @@ class ToDo
   end
 
   def initialize
-    @session = Session.new
     ToDoUpdater.new.run
+    @session = Session.new
+    @session.render
   end
 
   def run
@@ -283,10 +275,6 @@ class ToDoUpdater
 
   def non_due us
      us.reject {|e| due?(e)}
-  end
-
-  def day_date dt
-    DateTime.new(dt.year, dt.month, dt.day, 0, 0, 0, dt.zone)
   end
 
   def lines_of file_name
