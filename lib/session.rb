@@ -152,7 +152,7 @@ class Session
   end
 
   def find text
-    @actions.each_with_index.map {|i,e| "%2d %s" % [e,i] }.grep(Regexp.new(text))
+    @actions.each_with_index.map {|i,e| "%2d %s" % [e,i] }.grep(/#{Regexp.escape text}/i)
   end
 end
 
