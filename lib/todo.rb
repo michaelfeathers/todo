@@ -218,8 +218,6 @@ class ToDoMonthSummaries < Command
 end
 
 
-
-
 class ToDo
   @@commands = [ToDoAdd.new,
                 ToDoQuit.new,
@@ -258,7 +256,6 @@ end
 
 
 class ToDoUpdater
-
   def run
     [[lines_of(TODO_FILE), lines_of(UPDATER_FILE)]]
       .map {|ts,us| [due(us) + ts, non_due(us)] }
@@ -292,13 +289,11 @@ class ToDoUpdater
   def due? line 
     tokens = line.split
     return false unless tokens.size > 0
-
     day_date(DateTime.parse(tokens.first)) <= day_date(DateTime.now)
   rescue
     false
   end
 end
-
 
 
 ToDo.new.run

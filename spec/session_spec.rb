@@ -38,13 +38,10 @@ describe Session do
     expect(session.find("b")).to eq([" 1 L: task B\n"])
   end
 
-
   it 'produces a summary for an empty archive' do
     io = FakeAppIo.new
     session = Session.new(["L: task A\n", "L: task B\n"])
     session.month_summaries(io)
     expect(io.console_content).to eq(empty_archive_expected)
   end
-
-
 end

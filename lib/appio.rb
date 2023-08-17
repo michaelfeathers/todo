@@ -4,7 +4,6 @@ require 'common'
 
 
 class AppIo
-
   def read_archive
     File.read(ARCHIVE_FILE)
   end
@@ -16,5 +15,4 @@ class AppIo
   def get_from_console
     gets
   end
-
 end

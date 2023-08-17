@@ -9,11 +9,10 @@ CLEAR_SCREEN =  "\e[H\e[2J"
 
 
 class Session
-
   def self.from_file file
-    instance = self.new(File.read(TODO_FILE).lines)
-    instance.render
-    instance
+    o = self.new(File.read(TODO_FILE).lines)
+    o.render
+    o
   end
 
   def initialize actions
@@ -96,6 +95,17 @@ class Session
     month_summaries(AppIo.new)
   end
 
+  def render
+    puts CLEAR_SCREEN 
+    index = 0
+    @actions.each do |e|
+      print ("%2d %s %s" % [index, cursor_char(index), e]) 
+      break if index >= VIEW_LIMIT
+      index = index + 1
+    end
+    print ("\n%s\n\n" % [index >= VIEW_LIMIT ? "..." : ""])
+  end
+
   def month_summaries appio 
     task_descs = appio.read_archive
                       .lines
@@ -135,7 +145,7 @@ class Session
    appio.append_to_console ""
    appio.append_to_console ""
 
-  appio.get_from_console
+   appio.get_from_console
 
   end
 
@@ -147,20 +157,6 @@ class Session
   def cursor_char index
     return " " unless @cursor == index
     @grab_mode ? "*" : "-"
-  end
-
-  def render
-    puts CLEAR_SCREEN 
-    index = 0
-    @actions.each do |e|
-      print ("%2d %s %s" % [index, cursor_char(index), e]) 
-      break if index >= VIEW_LIMIT
-      index = index + 1
-    end
-    print ("\n%s\n\n" % [index >= VIEW_LIMIT ? "..." : ""])
-
-    # @actions.each_with_index {|e,i| print ("%2d %s %s" % [i, cursor_char(i), e]) }
-    # puts ""
   end
 
   def find text

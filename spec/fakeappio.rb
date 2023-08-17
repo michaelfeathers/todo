@@ -3,7 +3,6 @@ $:.unshift File.dirname(__FILE__)
 
 
 class FakeAppIo
-
   attr_accessor :archive_content, :console_content
 
   def initialize
@@ -21,6 +20,5 @@ class FakeAppIo
   def get_from_console
     ""
   end
-
 end
 
