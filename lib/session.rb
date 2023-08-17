@@ -11,14 +11,15 @@ CLEAR_SCREEN =  "\e[H\e[2J"
 class Session
 
   def self.from_file file
-    self.new(File.read(TODO_FILE).lines)
+    instance = self.new(File.read(TODO_FILE).lines)
+    instance.render
+    instance
   end
 
   def initialize actions
     @cursor = 0
     @grab_mode = false
     @actions = actions 
-    render
   end
 
   def todo_add tokens
