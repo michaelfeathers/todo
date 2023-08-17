@@ -105,10 +105,10 @@ class Session
    appio.append_to_console ""
    (1..12).each do |month|
      appio.append_to_console "%s   %10d %10d %10d %10d" % [month_name_of(month), 
-                                  year_descs.select {|d| d.first.month == month }.select {|dd| dd[1] == "R" }.count,
-                                  year_descs.select {|d| d.first.month == month }.select {|dd| dd[1] == "G" }.count,       
-                                  year_descs.select {|d| d.first.month == month }.select {|dd| dd[1] == "L" }.count,
-                                  year_descs.select {|d| d.first.month == month }.count]
+                                                           count_month_entries(month, "R", year_descs),
+                                                           count_month_entries(month, "G", year_descs),
+                                                           count_month_entries(month, "L", year_descs),
+                                                           count_month_entries(month, "*",  year_descs)]
 
    end
    appio.append_to_console ""
@@ -136,6 +136,11 @@ class Session
 
   appio.get_from_console
 
+  end
+
+  def count_month_entries month_no, type, descs
+    return  descs.select {|d| d.first.month == month_no }.count if type == "*"
+    descs.select {|d| d.first.month == month_no }.select {|dd| dd[1] == type }.count
   end
 
   def cursor_char index
