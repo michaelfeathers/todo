@@ -101,40 +101,41 @@ class Session
                       .map {|l| [DateTime.parse(l.split[0]), l.split[1].chars.first] }
 
    year_descs =  task_descs.select {|td| td.first.year == 2023 }
-   puts "\n\n      %10s %10s %10s %10s" % ["R7K", "Globant", "Life", "Total"]
-   puts ""
+   appio.append_to_console "\n\n      %10s %10s %10s %10s" % ["R7K", "Globant", "Life", "Total"]
+   appio.append_to_console ""
    (1..12).each do |month|
-     puts "%s   %10d %10d %10d %10d" % [month_name_of(month), 
+     appio.append_to_console "%s   %10d %10d %10d %10d" % [month_name_of(month), 
                                   year_descs.select {|d| d.first.month == month }.select {|dd| dd[1] == "R" }.count,
                                   year_descs.select {|d| d.first.month == month }.select {|dd| dd[1] == "G" }.count,       
                                   year_descs.select {|d| d.first.month == month }.select {|dd| dd[1] == "L" }.count,
                                   year_descs.select {|d| d.first.month == month }.count]
 
    end
-   puts ""
-   puts "      %10d %10d %10d %10d" % [year_descs.select {|dd| dd[1] == "R" }.count,
+   appio.append_to_console ""
+   appio.append_to_console "      %10d %10d %10d %10d" % [year_descs.select {|dd| dd[1] == "R" }.count,
                                        year_descs.select {|dd| dd[1] == "G" }.count,
                                        year_descs.select {|dd| dd[1] == "L" }.count,
                                        year_descs.count]
 
-   puts ""
+   appio.append_to_console ""
 
    todays = year_descs.select {|d| day_date(d.first) === day_date(DateTime.now) } 
 
 
    if todays.count > 0
-     puts "Today %10d %10d %10d %10d" % [todays.select {|d| d[1] == "R" }.count,
+     appio.append_to_console "Today %10d %10d %10d %10d" % [todays.select {|d| d[1] == "R" }.count,
                                          todays.select {|d| d[1] == "G" }.count,
                                          todays.select {|d| d[1] == "L" }.count,
                                          todays.count]
    else
-     puts "Today %10d %10d %10d %10d" % [0, 0, 0, 0]
+     appio.append_to_console "Today %10d %10d %10d %10d" % [0, 0, 0, 0]
    end
 
-   puts ""
-   puts ""
+   appio.append_to_console ""
+   appio.append_to_console ""
 
-   gets
+  appio.get_from_console
+
   end
 
   def cursor_char index
