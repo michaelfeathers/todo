@@ -1,7 +1,7 @@
 $:.unshift File.dirname(__FILE__)
 
 require 'common'
-require 'date'
+require 'day'
 require 'appio'
 
 VIEW_LIMIT   = 45
@@ -111,9 +111,9 @@ class Session
   def month_summaries appio 
     task_descs = appio.read_archive
                       .lines
-                      .map {|l| [DateTime.parse(l.split[0]), l.split[1].chars.first] }
+                      .map {|l| [Day.from_text(l.split[0]), l.split[1].chars.first] }
 
-   year_descs =  task_descs.select {|td| td.first.year == 2023 }
+   year_descs =  task_descs.select {|td| td.first.year.to_i == 2023 }
    appio.append_to_console "\n\n      %10s %10s %10s %10s" % ["R7K", "Globant", "Life", "Total"]
    appio.append_to_console ""
 
@@ -134,7 +134,7 @@ class Session
 
    appio.append_to_console ""
 
-   todays = year_descs.select {|d| day_date(d.first) === day_date(DateTime.now) } 
+   todays = year_descs.select {|d| d.first.date == Day.today } #day_date(d.first) === day_date(DateTime.now) } 
 
    if todays.count > 0
      appio.append_to_console "Today %10d %10d %10d %10d" % [todays.select {|d| d[1] == "R" }.count,
@@ -152,8 +152,8 @@ class Session
   end
 
   def count_month_entries month_no, type, descs
-    return  descs.select {|d| d.first.month == month_no }.count if type == "*"
-    descs.select {|d| d.first.month == month_no }.select {|dd| dd[1] == type }.count
+    return  descs.select {|d| d.first.month_no == month_no }.count if type == "*"
+    descs.select {|d| d.first.month_no == month_no }.select {|dd| dd[1] == type }.count
   end
 
   def cursor_char index

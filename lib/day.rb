@@ -9,6 +9,10 @@ class Day
     self.new(DateTime.parse(date_text))
   end
 
+  def self.today
+    self.new(DateTime.now)
+  end
+
   def initialize date
     @date = DateTime.new(date.year, date.month, date.day, 0, 0, 0, date.zone)
   end
@@ -16,13 +20,21 @@ class Day
   def month
     @date.strftime("%b")
   end
+
+  def month_no
+    @date.month
+  end
   
   def day
     @date.strftime("%d")
   end
 
   def year
-    @date.strftime("%y")
+    @date.strftime("%Y")
+  end
+
+  def date
+    @date
   end
 
 end

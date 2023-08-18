@@ -9,6 +9,8 @@ describe Day do
     expect(day.day).to    eq("21")
     expect(day.month).to  eq("Dec")
     expect(day.year).to   eq("2022")
+
+    expect(day.month_no).to eq(12)
   end
 
 end
