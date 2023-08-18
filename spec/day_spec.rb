@@ -6,7 +6,9 @@ require 'day'
 describe Day do
   it 'constructs a day from a string' do
     day = Day.from_text("2022-12-21")
-    expect(day.month).to eq("Dec")
+    expect(day.day).to    eq("21")
+    expect(day.month).to  eq("Dec")
+    expect(day.year).to   eq("2022")
   end
 
 end
