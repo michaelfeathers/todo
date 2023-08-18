@@ -15,10 +15,10 @@ class Session
     o
   end
 
-  def initialize actions
+  def initialize io
     @cursor = 0
     @grab_mode = false
-    @actions = actions 
+    @actions = io.read_actions.lines
   end
 
   def todo_add tokens
@@ -98,11 +98,13 @@ class Session
   def render
     puts CLEAR_SCREEN 
     index = 0
+
     @actions.each do |e|
       print ("%2d %s %s" % [index, cursor_char(index), e]) 
       break if index >= VIEW_LIMIT
       index = index + 1
     end
+
     print ("\n%s\n\n" % [index >= VIEW_LIMIT ? "..." : ""])
   end
 
@@ -114,6 +116,7 @@ class Session
    year_descs =  task_descs.select {|td| td.first.year == 2023 }
    appio.append_to_console "\n\n      %10s %10s %10s %10s" % ["R7K", "Globant", "Life", "Total"]
    appio.append_to_console ""
+
    (1..12).each do |month|
      appio.append_to_console "%s   %10d %10d %10d %10d" % [month_name_of(month), 
                                                            count_month_entries(month, "R", year_descs),
@@ -122,6 +125,7 @@ class Session
                                                            count_month_entries(month, "*",  year_descs)]
 
    end
+
    appio.append_to_console ""
    appio.append_to_console "      %10d %10d %10d %10d" % [year_descs.select {|dd| dd[1] == "R" }.count,
                                        year_descs.select {|dd| dd[1] == "G" }.count,
@@ -131,7 +135,6 @@ class Session
    appio.append_to_console ""
 
    todays = year_descs.select {|d| day_date(d.first) === day_date(DateTime.now) } 
-
 
    if todays.count > 0
      appio.append_to_console "Today %10d %10d %10d %10d" % [todays.select {|d| d[1] == "R" }.count,
@@ -146,7 +149,6 @@ class Session
    appio.append_to_console ""
 
    appio.get_from_console
-
   end
 
   def count_month_entries month_no, type, descs

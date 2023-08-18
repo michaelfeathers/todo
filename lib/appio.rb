@@ -7,6 +7,10 @@ class AppIo
   def read_archive
     File.read(ARCHIVE_FILE)
   end
+  
+  def read_actions
+    File.read(TODO_FILE)
+  end
 
   def append_to_console text
     puts text 

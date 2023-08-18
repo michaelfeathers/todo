@@ -2,7 +2,7 @@ $:.unshift File.dirname(__FILE__)
 
 require 'common'
 require 'session'
-require 'date'
+require 'appio'
 
 
 class Command
@@ -240,7 +240,7 @@ class ToDo
 
   def initialize
     ToDoUpdater.new.run
-    @session = Session.from_file(TODO_FILE)
+    @session = Session.new(AppIo.new)
     @session.render
   end
 
