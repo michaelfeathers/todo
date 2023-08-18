@@ -9,12 +9,6 @@ CLEAR_SCREEN =  "\e[H\e[2J"
 
 
 class Session
-  def self.from_file file
-    o = self.new(File.read(TODO_FILE).lines)
-    o.render
-    o
-  end
-
   def initialize io
     @cursor = 0
     @grab_mode = false
