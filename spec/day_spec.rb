@@ -13,4 +13,9 @@ describe Day do
     expect(day.month_no).to eq(12)
   end
 
+  it 'creates a text reprsentation of itself' do
+    day = Day.from_text("2022-12-21")
+    expect(day.to_s).to eq("2022-12-21")
+  end
+
 end

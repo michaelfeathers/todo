@@ -19,4 +19,8 @@ class AppIo
   def get_from_console
     gets
   end
+
+  def today
+    Day.new(DateTime.now)
+  end
 end

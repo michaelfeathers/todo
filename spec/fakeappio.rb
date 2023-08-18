@@ -4,9 +4,11 @@ $:.unshift File.dirname(__FILE__)
 
 class FakeAppIo
   attr_accessor :archive_content, :console_content, :actions_content
+  attr_accessor :today_day
 
   def initialize
     @archive_content = @console_content = @actions_content = ""
+    @today_day = nil
   end
 
   def read_archive
@@ -23,6 +25,10 @@ class FakeAppIo
 
   def get_from_console
     ""
+  end
+
+  def today
+    @today_day
   end
 end
 

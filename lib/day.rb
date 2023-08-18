@@ -41,4 +41,7 @@ class Day
     @date
   end
 
+  def to_s
+    @date.to_s[0, 10] 
+  end
 end
