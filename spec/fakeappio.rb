@@ -4,7 +4,7 @@ $:.unshift File.dirname(__FILE__)
 
 class FakeAppIo
   attr_accessor :archive_content, :console_content, :actions_content
-  attr_accessor :today_day
+  attr_accessor :today_content
 
   def initialize
     @archive_content = @console_content = @actions_content = ""
@@ -28,7 +28,7 @@ class FakeAppIo
   end
 
   def today
-    @today_day
+    @today_content
   end
 end
 

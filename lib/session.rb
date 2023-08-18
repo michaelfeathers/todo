@@ -10,6 +10,7 @@ CLEAR_SCREEN =  "\e[H\e[2J"
 
 class Session
   def initialize io
+    @io = io
     @cursor = 0
     @grab_mode = false
     @actions = io.read_actions.lines
@@ -87,6 +88,14 @@ class Session
   
   def todo_month_summaries 
     month_summaries(AppIo.new)
+  end
+
+  def todo_today
+    @io.read_archive
+       .lines 
+       .select {|line| Day.from_text(line.split.first) === @io.today }
+       .each { |line| @io.append_to_console(line) }
+    @io.get_from_console
   end
 
   def render

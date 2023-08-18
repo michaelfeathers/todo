@@ -160,6 +160,21 @@ class ToDoSaveNoRemove < Command
   end
 end
 
+class ToDoToday < Command
+  def matches? line
+    line.split == ["t"]
+  end
+
+  def process line, session
+    session.todo_today
+  end
+
+  def help_message
+    "t    - show tasks done today"
+  end
+end
+
+
 class ToDoEdit < Command
   def matches? line
     line.split.take(1) == ["e"]
@@ -229,6 +244,7 @@ class ToDo
                 ToDoRemove.new,
                 ToDoSave.new,
                 ToDoSaveNoRemove.new,
+                ToDoToday.new,
                 ToDoEdit.new,
                 ToDoGrabToggle.new,
                 ToDoHelp.new,

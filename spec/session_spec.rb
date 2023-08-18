@@ -25,7 +25,7 @@ Dec            0          0          0          0
 Today          0          0          0          0
 
 
-"
+
 
 describe Session do
   it 'finds simple text' do
@@ -50,8 +50,12 @@ describe Session do
     expect(io.console_content).to eq(empty_archive_expected)
   end
 
-  xit 'shows archive entries of today' do
-    # io = FakeAppIo.new
-    # session = Session.new(["L: task A\n", "L: task B\n"])
+  it 'shows archive entries of today' do
+    io = FakeAppIo.new
+    io.archive_content = "2020-01-11 R: Thing X\n2020-01-12 R: Thing Y\n"
+    io.today_content = Day.from_text("2020-01-12")
+    session = Session.new(io)
+    session.todo_today
+    expect(io.console_content).to eq("2020-01-12 R: Thing Y\n\n")
   end
 end
