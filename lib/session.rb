@@ -134,7 +134,7 @@ class Session
 
    appio.append_to_console ""
 
-   todays = year_descs.select {|d| d.first.date == Day.today } #day_date(d.first) === day_date(DateTime.now) } 
+   todays = year_descs.select {|d| d.first === Day.today } 
 
    if todays.count > 0
      appio.append_to_console "Today %10d %10d %10d %10d" % [todays.select {|d| d[1] == "R" }.count,

@@ -17,6 +17,10 @@ class Day
     @date = DateTime.new(date.year, date.month, date.day, 0, 0, 0, date.zone)
   end
 
+  def === other
+    @date === other.date
+  end
+
   def month
     @date.strftime("%b")
   end
