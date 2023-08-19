@@ -72,7 +72,7 @@ class Session
 
   def todo_save
     File.open(ARCHIVE_FILE, 'a') { |f| f.write(DateTime.now.to_s[0, 10] + " " + @actions[@cursor]) }
-    todo_remove
+    remove_action_at_cursor
   end
 
   def todo_save_no_remove
