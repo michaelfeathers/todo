@@ -13,7 +13,7 @@ class AppIo
   end
 
   def append_to_console text
-    puts text 
+    print text 
   end
 
   def get_from_console

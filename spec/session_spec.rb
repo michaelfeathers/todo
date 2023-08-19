@@ -25,7 +25,7 @@ Dec            0          0          0          0
 Today          0          0          0          0
 
 
-
+"
 
 describe Session do
   it 'finds simple text' do
@@ -57,5 +57,13 @@ describe Session do
     session = Session.new(io)
     session.todo_today
     expect(io.console_content).to eq("2020-01-12 R: Thing Y\n\n")
+  end
+
+  xit 'renders two tasks' do
+    io = FakeAppIo.new
+    io.actions_content = "L: Do something\nR: Do another thing\n"
+    session = Session.new(io)
+    session.render
+    expect(io.console_content).to eq("A")
   end
 end

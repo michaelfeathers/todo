@@ -20,7 +20,7 @@ class FakeAppIo
   end
 
   def append_to_console text
-    @console_content = @console_content + text + $/
+    @console_content = @console_content + text 
   end
 
   def get_from_console

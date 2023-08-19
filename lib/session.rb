@@ -95,6 +95,7 @@ class Session
        .lines 
        .select {|line| Day.from_text(line.split.first) === @io.today }
        .each { |line| @io.append_to_console(line) }
+    @io.append_to_console($/)
     @io.get_from_console
   end
 
@@ -103,12 +104,12 @@ class Session
     index = 0
 
     @actions.each do |e|
-      print ("%2d %s %s" % [index, cursor_char(index), e]) 
+      @io.append_to_console ("%2d %s %s" % [index, cursor_char(index), e]) 
       break if index >= VIEW_LIMIT
       index = index + 1
     end
 
-    print ("\n%s\n\n" % [index >= VIEW_LIMIT ? "..." : ""])
+    @io.append_to_console ("\n%s\n\n" % [index >= VIEW_LIMIT ? "..." : ""])
   end
 
   def month_summaries appio 
@@ -117,11 +118,10 @@ class Session
                       .map {|l| [Day.from_text(l.split[0]), l.split[1].chars.first] }
 
    year_descs =  task_descs.select {|td| td.first.year.to_i == 2023 }
-   appio.append_to_console "\n\n      %10s %10s %10s %10s" % ["R7K", "Globant", "Life", "Total"]
-   appio.append_to_console ""
+   appio.append_to_console "\n\n      %10s %10s %10s %10s\n\n" % ["R7K", "Globant", "Life", "Total"]
 
    (1..12).each do |month|
-     appio.append_to_console "%s   %10d %10d %10d %10d" % [month_name_of(month), 
+     appio.append_to_console "%s   %10d %10d %10d %10d\n" % [month_name_of(month), 
                                                            count_month_entries(month, "R", year_descs),
                                                            count_month_entries(month, "G", year_descs),
                                                            count_month_entries(month, "L", year_descs),
@@ -129,27 +129,27 @@ class Session
 
    end
 
-   appio.append_to_console ""
-   appio.append_to_console "      %10d %10d %10d %10d" % [year_descs.select {|dd| dd[1] == "R" }.count,
+   appio.append_to_console $/
+   appio.append_to_console "      %10d %10d %10d %10d\n" % [year_descs.select {|dd| dd[1] == "R" }.count,
                                        year_descs.select {|dd| dd[1] == "G" }.count,
                                        year_descs.select {|dd| dd[1] == "L" }.count,
                                        year_descs.count]
 
-   appio.append_to_console ""
+   appio.append_to_console $/
 
    todays = year_descs.select {|d| d.first === Day.today } 
 
    if todays.count > 0
-     appio.append_to_console "Today %10d %10d %10d %10d" % [todays.select {|d| d[1] == "R" }.count,
+     appio.append_to_console "Today %10d %10d %10d %10d\n" % [todays.select {|d| d[1] == "R" }.count,
                                          todays.select {|d| d[1] == "G" }.count,
                                          todays.select {|d| d[1] == "L" }.count,
                                          todays.count]
    else
-     appio.append_to_console "Today %10d %10d %10d %10d" % [0, 0, 0, 0]
+     appio.append_to_console "Today %10d %10d %10d %10d\n" % [0, 0, 0, 0]
    end
 
-   appio.append_to_console ""
-   appio.append_to_console ""
+   appio.append_to_console $/
+   appio.append_to_console $/
 
    appio.get_from_console
   end
