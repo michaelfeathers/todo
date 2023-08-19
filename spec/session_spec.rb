@@ -46,7 +46,7 @@ describe Session do
     io = FakeAppIo.new
     io.actions_content = "L: task A\nL: task B\n"
     session = Session.new(io)
-    session.month_summaries(io)
+    session.todo_month_summaries
     expect(io.console_content).to eq(empty_archive_expected)
   end
 

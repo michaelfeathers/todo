@@ -27,6 +27,9 @@ class FakeAppIo
     ""
   end
 
+  def clear_console
+  end
+
   def today
     @today_content
   end

@@ -20,6 +20,10 @@ class AppIo
     gets
   end
 
+  def clear_console
+    puts  "\e[H\e[2J" 
+  end
+
   def today
     Day.new(DateTime.now)
   end
