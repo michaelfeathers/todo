@@ -20,7 +20,7 @@ class Session
   end
 
   def todo_quit
-    File.open(TODO_FILE, 'w') { |f| f.write(@actions.join) }
+    @io.write_actions(@actions)
     exit
   end
 
@@ -58,12 +58,16 @@ class Session
     updates = updates.sort_by {|line| DateTime.parse(line.split.first) }
 
     File.open(UPDATER_FILE, 'w') { |f| f.write(updates.join) }
-    todo_remove
+    remove 
   end
 
   def todo_remove
-    @actions.delete_at(@cursor)
-    @cursor = [@cursor, @actions.count - 1].min
+    @io.append_to_console "Remove current line (Y/N)?\n"
+    response = @io.get_from_console
+    return unless response.split.first == "Y"
+
+    remove_action_at_cursor
+    @io.write_actions(@actions)
   end
 
   def todo_save
@@ -161,6 +165,12 @@ class Session
   def find text
     @actions.each_with_index.map {|i,e| "%2d %s" % [e,i] }.grep(/#{Regexp.escape text}/i)
   end
+
+  def remove_action_at_cursor
+    @actions.delete_at(@cursor)
+    @cursor = [@cursor, @actions.count - 1].min
+  end
+
 end
 
 

@@ -45,14 +45,14 @@ describe Session do
   it 'produces a summary for an empty archive' do
     io.actions_content = "L: task A\nL: task B\n"
     session.todo_month_summaries
-    expect(io.console_content).to eq(empty_archive_expected)
+    expect(io.console_output_content).to eq(empty_archive_expected)
   end
 
   it 'shows archive entries of today' do
     io.archive_content = "2020-01-11 R: Thing X\n2020-01-12 R: Thing Y\n"
     io.today_content = Day.from_text("2020-01-12")
     session.todo_today
-    expect(io.console_content).to eq("2020-01-12 R: Thing Y\n\n")
+    expect(io.console_output_content).to eq("2020-01-12 R: Thing Y\n\n")
   end
 
   xit 'renders two tasks' do

@@ -11,6 +11,10 @@ class AppIo
   def read_actions
     File.read(TODO_FILE)
   end
+  
+  def write_actions actions
+    File.open(TODO_FILE, 'w') { |f| f.write(actions.join) }
+  end
 
   def append_to_console text
     print text 

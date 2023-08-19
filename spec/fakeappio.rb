@@ -3,11 +3,12 @@ $:.unshift File.dirname(__FILE__)
 
 
 class FakeAppIo
-  attr_accessor :archive_content, :console_content, :actions_content
+  attr_accessor :archive_content, :console_output_content 
+  attr_accessor :console_input_content, :actions_content
   attr_accessor :today_content
 
   def initialize
-    @archive_content = @console_content = @actions_content = ""
+    @archive_content = @console_output_content = @actions_content = ""
     @today_day = nil
   end
 
@@ -19,12 +20,18 @@ class FakeAppIo
     @actions_content
   end
 
+  def write_actions actions
+    @actions_content = actions.join
+  end
+
   def append_to_console text
-    @console_content = @console_content + text 
+    @console_output_content = @console_output_content + text 
   end
 
   def get_from_console
-    ""
+    text = @console_input_content 
+    @console_input_content = ""
+    text
   end
 
   def clear_console
