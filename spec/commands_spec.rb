@@ -32,7 +32,7 @@ describe ToDoPageDown do
     output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
     io.actions_content = actions.join 
     session.render
-    expect(io.console_output_content).to eq(output.take(45).join + "\n")
+    expect(io.console_output_content).to eq(output.take(Session::VIEW_LIMIT).join + "\n")
   end
 
   it 'shows the second page of tasks' do
@@ -41,35 +41,43 @@ describe ToDoPageDown do
     io.actions_content = actions.join 
     ToDoPageDown.new.run("dd", session)
     session.render
-    expect(io.console_output_content).to eq(output.drop(40).take(45).join + "\n")
+    expect(io.console_output_content).to eq(output.drop(Session::PAGE_SIZE).take(Session::VIEW_LIMIT).join + "\n")
+  end
+
+  it 'is noop when on the last page' do
+    actions =  50.times.map {|n| "L: task #{n}\n" }
+    output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
+    io.actions_content = actions.join 
+    ToDoPageDown.new.run("dd", session)
+    ToDoPageDown.new.run("dd", session)
+    session.render
+    expect(io.console_output_content).to eq(output.drop(Session::PAGE_SIZE).take(Session::VIEW_LIMIT).join + "\n")
   end
 end
 
-
-class ToDoPageUp; end
 
 describe ToDoPageUp do
 
   let(:io) { FakeAppIo.new }
   let(:session) { Session.new(io) }
 
-  xit 'shows the first page of tasks' do
+  it 'shows the first page of tasks' do
     actions =  50.times.map {|n| "L: task #{n}\n" }
     output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
     io.actions_content = actions.join 
     ToDoPageUp.new.run("uu", session)
     session.render
-    expect(io.console_output_content).to eq(output.take(45).join + "\n")
+    expect(io.console_output_content).to eq(output.take(Session::VIEW_LIMIT).join + "\n")
   end
 
-  xit 'shows the first page of tasks after previously paging down' do
+  it 'shows the first page of tasks after previously paging down' do
     actions =  50.times.map {|n| "L: task #{n}\n" }
     output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
     io.actions_content = actions.join 
     ToDoPageDown.new.run("dd", session)
     ToDoPageUp.new.run("uu", session)
     session.render
-    expect(io.console_output_content).to eq(output.take(45).join + "\n")
+    expect(io.console_output_content).to eq(output.take(Session::VIEW_LIMIT).join + "\n")
   end
 
   

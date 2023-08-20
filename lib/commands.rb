@@ -243,7 +243,19 @@ class ToDoPageDown < Command
   end  
 end
 
+class ToDoPageUp < Command
+  def matches? line
+    line.split.take(1) == ["uu"]
+  end
 
+  def process line, session
+    session.todo_page_up
+  end
+
+  def help_message
+   "uu  - page up"
+  end  
+end
 
 
 

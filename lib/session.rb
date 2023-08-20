@@ -4,9 +4,11 @@ require 'common'
 require 'day'
 require 'appio'
 
-VIEW_LIMIT   = 45
-
 class Session
+
+  VIEW_LIMIT   = 45
+  PAGE_SIZE    = 40
+
   def initialize io
     @io = io
     @actions = io.read_actions.lines
@@ -141,7 +143,11 @@ class Session
   end
 
   def todo_page_down
-    @page_no = @page_no + 1
+    (@page_no = @page_no + 1) if ((@page_no + 1) * PAGE_SIZE < @actions.count)
+  end
+
+  def todo_page_up
+    (@page_no = @page_no - 1) if @page_no > 0
   end
 
   def render
@@ -149,12 +155,11 @@ class Session
 
     lines = @actions.zip((0..))
                     .map {|e,i| "%2d %s %s" % [i, cursor_char(i), e]}
-                    .drop(@page_no * 40)
+                    .drop(@page_no * PAGE_SIZE)
                     .take(VIEW_LIMIT)
 
     @io.append_to_console lines.join
     @io.append_to_console $/ 
-    # @io.append_to_console ("\n%s\n\n" % [(lines.count + @page_no * 40 <= @actions.count) ? "..." : ""])
   end
 
   def count_month_entries month_no, type, descs
