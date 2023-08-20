@@ -58,7 +58,7 @@ class Session
     updates = updates.sort_by {|line| DateTime.parse(line.split.first) }
 
     File.open(UPDATER_FILE, 'w') { |f| f.write(updates.join) }
-    remove 
+    remove_action_at_cursor
   end
 
   def todo_remove
