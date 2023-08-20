@@ -21,7 +21,8 @@ class ToDo
                 ToDoEdit.new,
                 ToDoGrabToggle.new,
                 ToDoHelp.new,
-                ToDoMonthSummaries.new]
+                ToDoMonthSummaries.new,
+                ToDoPageDown.new]
 
   def self.registered_commands
     @@commands

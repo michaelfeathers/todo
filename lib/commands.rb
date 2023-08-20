@@ -229,6 +229,22 @@ class ToDoMonthSummaries < Command
   end  
 end
 
+class ToDoPageDown < Command
+  def matches? line
+    line.split.take(1) == ["dd"]
+  end
+
+  def process line, session
+    session.todo_page_down
+  end
+
+  def help_message
+   "dd  - page down"
+  end  
+end
+
+
+
 
 
 

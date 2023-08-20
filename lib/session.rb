@@ -139,6 +139,9 @@ class Session
     @io.get_from_console
   end
 
+  def todo_page_down
+  end
+
   def render
     @io.clear_console
     index = 0

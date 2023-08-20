@@ -16,3 +16,23 @@ describe ToDoRemove do
     expect(io.actions_content).to eq("L: task BB\n")
   end
 end
+
+
+describe ToDoPageDown do
+  let(:io) { FakeAppIo.new }
+  let(:session) { Session.new(io) }
+
+  it 'shows the first page of tasks' do
+    tasks = 50.times.map {|n| "L: task #{n}\n" }
+    io.actions_content = tasks.join 
+    ToDoPageDown.new.run("dd", session)
+    session.render
+    expect(io.console_output_content).to eq(tasks.take(46).join + "\n...\n\n")
+  end
+end
+
+
+
+
+
+
