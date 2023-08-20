@@ -12,6 +12,7 @@ class Session
     @actions = io.read_actions.lines
     @cursor = 0
     @grab_mode = false
+    @page_no = 0
   end
 
   def todo_add tokens
@@ -140,19 +141,20 @@ class Session
   end
 
   def todo_page_down
+    @page_no = @page_no + 1
   end
 
   def render
     @io.clear_console
-    index = 0
 
-    @actions.each do |e|
-      @io.append_to_console ("%2d %s %s" % [index, cursor_char(index), e]) 
-      break if index >= VIEW_LIMIT
-      index = index + 1
-    end
+    lines = @actions.zip((0..))
+                    .map {|e,i| "%2d %s %s" % [i, cursor_char(i), e]}
+                    .drop(@page_no * 40)
+                    .take(VIEW_LIMIT)
 
-    @io.append_to_console ("\n%s\n\n" % [index >= VIEW_LIMIT ? "..." : ""])
+    @io.append_to_console lines.join
+    @io.append_to_console $/ 
+    # @io.append_to_console ("\n%s\n\n" % [(lines.count + @page_no * 40 <= @actions.count) ? "..." : ""])
   end
 
   def count_month_entries month_no, type, descs
