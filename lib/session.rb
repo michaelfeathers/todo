@@ -3,6 +3,7 @@ $:.unshift File.dirname(__FILE__)
 require 'common'
 require 'day'
 require 'appio'
+require 'array_ext'
 
 class Session
 
