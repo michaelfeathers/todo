@@ -16,6 +16,10 @@ class FakeAppIo
     @archive_content
   end
 
+  def append_to_archive text
+    @archive_content = @archive_content + text
+  end
+
   def read_actions
     @actions_content
   end

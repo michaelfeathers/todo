@@ -3,11 +3,18 @@ $:.unshift File.dirname(__FILE__)
 require 'common'
 
 
+ARCHIVE_FILE = ROOT_DIR + "archive.txt"
+
+
 class AppIo
   def read_archive
     File.read(ARCHIVE_FILE)
   end
   
+  def append_to_archive line
+    File.open(ARCHIVE_FILE, 'a') { |f| f.write(line); }
+  end
+
   def read_actions
     File.read(TODO_FILE)
   end

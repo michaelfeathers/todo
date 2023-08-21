@@ -75,12 +75,14 @@ class Session
   end
 
   def todo_save
-    File.open(ARCHIVE_FILE, 'a') { |f| f.write(DateTime.now.to_s[0, 10] + " " + @actions[@cursor]) }
+    @io.append_to_archive(@io.today.to_s + " " + @actions[@cursor])  
+    # File.open(ARCHIVE_FILE, 'a') { |f| f.write(DateTime.now.to_s[0, 10] + " " + @actions[@cursor]) }
     remove_action_at_cursor
   end
 
   def todo_save_no_remove
-    File.open(ARCHIVE_FILE, 'a') { |f| f.write(DateTime.now.to_s[0, 10] + " " + @actions[@cursor]) }
+    # File.open(ARCHIVE_FILE, 'a') { |f| f.write(DateTime.now.to_s[0, 10] + " " + @actions[@cursor]) }
+    @io.append_to_archive(@io.today.to_s + " " + @actions[@cursor]) 
   end
 
   def todo_edit tokens
