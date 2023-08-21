@@ -1,8 +1,8 @@
 $:.unshift File.dirname(__FILE__)
 
-require 'common'
-
-
+ROOT_DIR     = "/Users/michaelfeathers/Projects/todo/lib/"
+TODO_FILE    = ROOT_DIR + "todo.txt"
+UPDATER_FILE = ROOT_DIR + "updates.txt"
 ARCHIVE_FILE = ROOT_DIR + "archive.txt"
 
 
@@ -21,6 +21,14 @@ class AppIo
   
   def write_actions actions
     File.open(TODO_FILE, 'w') { |f| f.write(actions.join) }
+  end
+
+  def read_updates
+    File.read(UPDATER_FILE)
+  end
+  
+  def write_updates updates
+    File.open(UPDATER_FILE, 'w') { |f| f.write(updates.join) }
   end
 
   def append_to_console text

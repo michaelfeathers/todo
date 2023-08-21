@@ -1,16 +1,20 @@
 $:.unshift File.dirname(__FILE__)
 
-require 'common'
 require 'appio'
 
 
 class ToDoUpdater
+
+  def initialize io
+    @io = io
+  end
+
   def run
-    [[lines_of(TODO_FILE), lines_of(UPDATER_FILE)]]
+    [[@io.read_actions.lines, @io.read_updates.lines]]
       .map {|ts,us| [due(us) + ts, non_due(us)] }
       .each  do |ts,us| 
-        write_lines(TODO_FILE, ts)
-        write_lines(UPDATER_FILE, us.sort_by {|lines| DateTime.parse(lines.split.first)})
+        @io.write_actions(ts)
+        @io.write_updates(us.sort_by {|lines| Day.from_text(lines.split.first).date})
       end
   end
 
@@ -23,14 +27,6 @@ class ToDoUpdater
      us.reject {|e| due?(e)}
   end
 
-  def lines_of file_name
-    File.read(file_name).lines
-  end
-
-  def write_lines file_name, lines
-    File.open(file_name, 'w') { |f| f.write(lines.join) }
-  end
-
   def strip_date line
     line.split.drop(1).join(" ") + $/
   end
@@ -38,7 +34,7 @@ class ToDoUpdater
   def due? line 
     tokens = line.split
     return false unless tokens.size > 0
-    day_date(DateTime.parse(tokens.first)) <= day_date(DateTime.now)
+    Day.from_text(tokens.first).date <= @io.today.date
   rescue
     false
   end

@@ -1,6 +1,8 @@
 $:.unshift File.dirname(__FILE__)
 
 require 'day'
+require 'fakeappio'
+
 
 
 describe Day do

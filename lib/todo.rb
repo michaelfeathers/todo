@@ -1,6 +1,5 @@
 $:.unshift File.dirname(__FILE__)
 
-require 'common'
 require 'session'
 require 'commands'
 require 'appio'
@@ -31,7 +30,7 @@ class ToDo
   end
 
   def initialize io
-    ToDoUpdater.new.run
+    ToDoUpdater.new(io).run
     @io = io
     @session = Session.new(io)
     @session.render

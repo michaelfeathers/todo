@@ -1,6 +1,5 @@
 $:.unshift File.dirname(__FILE__)
 
-require 'common'
 require 'session'
 require 'appio'
 

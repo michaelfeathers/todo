@@ -1,9 +1,14 @@
 $:.unshift File.dirname(__FILE__)
 
-require 'common'
 require 'day'
 require 'appio'
 require 'array_ext'
+
+
+def month_name_of month_no
+  DateTime.parse("2023-#{month_no}-01").strftime("%b")
+end
+
 
 class Session
 
