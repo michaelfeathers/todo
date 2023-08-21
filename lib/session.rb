@@ -60,13 +60,13 @@ class Session
   end
   
   def todo_push days_text
-    updates = File.read(UPDATER_FILE).lines.to_a
+    updates = @io.read_updates.lines.to_a
     date_text = DateTime.now.next_day(days_text.to_i).to_s[0, 10] 
 
     updates << [date_text, @actions[@cursor]].join(' ')
     updates = updates.sort_by {|line| DateTime.parse(line.split.first) }
 
-    File.open(UPDATER_FILE, 'w') { |f| f.write(updates.join) }
+    @io.write_updates(updates)
     remove_action_at_cursor
   end
 
@@ -81,12 +81,10 @@ class Session
 
   def todo_save
     @io.append_to_archive(@io.today.to_s + " " + @actions[@cursor])  
-    # File.open(ARCHIVE_FILE, 'a') { |f| f.write(DateTime.now.to_s[0, 10] + " " + @actions[@cursor]) }
     remove_action_at_cursor
   end
 
   def todo_save_no_remove
-    # File.open(ARCHIVE_FILE, 'a') { |f| f.write(DateTime.now.to_s[0, 10] + " " + @actions[@cursor]) }
     @io.append_to_archive(@io.today.to_s + " " + @actions[@cursor]) 
   end
 
