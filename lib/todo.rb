@@ -23,7 +23,8 @@ class ToDo
                 ToDoHelp.new,
                 ToDoMonthSummaries.new,
                 ToDoPageDown.new,
-                ToDoPageUp.new]
+                ToDoPageUp.new,
+                ToDoZapToPosition.new]
 
   def self.registered_commands
     @@commands

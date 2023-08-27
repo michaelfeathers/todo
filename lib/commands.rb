@@ -256,6 +256,23 @@ class ToDoPageUp < Command
   end  
 end
 
+class ToDoZapToPosition < Command
+  def matches? line
+    line.split.count == 2 && line.split[0] == "z" 
+  end
+
+  def process line, session
+    session.todo_zap_to_position(line.split[1].to_i)
+  end
+
+  def help_message
+    "z _  - Zap (move) task at cursor to position"
+  end
+
+end
+
+
+
 
 
 

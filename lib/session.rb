@@ -156,6 +156,13 @@ class Session
     (@page_no = @page_no - 1) if @page_no > 0
   end
 
+  def todo_zap_to_position line_no
+    line_no = [line_no, @actions.count-1].min
+    line_no = [0, line_no].max
+
+    @actions = @actions.swap_elements(@cursor,line_no)
+  end               
+
   def render
     @io.clear_console
 

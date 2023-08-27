@@ -83,16 +83,46 @@ describe ToDoPageUp do
 end
 
 
-=begin 
-
 describe ToDoZapToPosition do
   let(:io) { FakeAppIo.new }
   let(:session) { Session.new(io) }
 
-  it 'zaps the item at zero to one' 
-  it 'saturates when asked to zap outside the range'
-  it 'noops when asked to zap to the same position'
+  it 'zaps the item at zero to one' do
+    io.actions_content = [ "L: first\n", "L: second\n"].join
+    output = [" 0 - L: second\n", " 1   L: first\n\n"].join
+    ToDoZapToPosition.new.run("z 1", session)
+    session.render
+    expect(io.console_output_content).to eq(output)
+
+  end
+
+  it 'saturates when asked to zap outside the range high' do
+    io.actions_content = [ "L: first\n", "L: second\n"].join
+    output = [" 0 - L: second\n", " 1   L: first\n\n"].join
+    ToDoZapToPosition.new.run("z 2", session)
+    session.render
+    expect(io.console_output_content).to eq(output)
+
+  end
+
+  
+  it 'saturates when asked to zap outside the range low' do
+    io.actions_content = [ "L: first\n", "L: second\n"].join
+    output = [" 0   L: second\n", " 1 - L: first\n\n"].join
+    ToDoCursorSet.new.run("c 1", session)
+    ToDoZapToPosition.new.run("z -1", session)
+    session.render
+    expect(io.console_output_content).to eq(output)
+
+  end
+
+  it 'noops when asked to zap to the same position' do
+    io.actions_content = [ "L: first\n", "L: second\n"].join
+    output = [" 0 - L: first\n", " 1   L: second\n\n"].join
+    ToDoZapToPosition.new.run("z 0", session)
+    session.render
+    expect(io.console_output_content).to eq(output)
+  end
 
 end
 
-=end
