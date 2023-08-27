@@ -79,12 +79,20 @@ describe ToDoPageUp do
     session.render
     expect(io.console_output_content).to eq(output.take(Session::VIEW_LIMIT).join + "\n")
   end
-
   
 end
 
 
+=begin 
 
+describe ToDoZapToPosition do
+  let(:io) { FakeAppIo.new }
+  let(:session) { Session.new(io) }
 
+  it 'zaps the item at zero to one' 
+  it 'saturates when asked to zap outside the range'
+  it 'noops when asked to zap to the same position'
 
+end
 
+=end
