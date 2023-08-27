@@ -124,5 +124,13 @@ describe ToDoZapToPosition do
     expect(io.console_output_content).to eq(output)
   end
 
+  it 'has insertion rather than swap aemantics' do
+    io.actions_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
+    output = [" 0 - L: second\n", " 1   L: third\n 2   L: first\n\n"].join
+    ToDoZapToPosition.new.run("z 2", session)
+    session.render
+    expect(io.console_output_content).to eq(output)
+  end
+
 end
 

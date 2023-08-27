@@ -160,7 +160,7 @@ class Session
     line_no = [line_no, @actions.count-1].min
     line_no = [0, line_no].max
 
-    @actions = @actions.swap_elements(@cursor,line_no)
+    @actions = @actions.insert(line_no, @actions.delete_at(@cursor))
   end               
 
   def render
