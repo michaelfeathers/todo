@@ -149,11 +149,13 @@ class Session
   end
 
   def todo_page_down
-    (@page_no = @page_no + 1) if ((@page_no + 1) * PAGE_SIZE < @actions.count)
+    return unless ((@page_no + 1) * PAGE_SIZE) < @actions.count
+    @page_no = @page_no + 1
   end
 
   def todo_page_up
-    (@page_no = @page_no - 1) if @page_no > 0
+    return unless @page_no > 0
+    @page_no = @page_no - 1
   end
 
   def todo_zap_to_position line_no
