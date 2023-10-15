@@ -170,8 +170,7 @@ class Session
                     .drop(@page_no * PAGE_SIZE)
                     .take(VIEW_LIMIT)
 
-    @io.append_to_console lines.join
-    @io.append_to_console $/ 
+    @io.append_to_console lines.join + $/
   end
 
   def count_month_entries month_no, type, descs
