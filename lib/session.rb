@@ -145,6 +145,16 @@ class Session
     @io.get_from_console
   end
 
+  def todo_trend
+      @io.read_archive
+         .lines 
+         .map {|line| line.split[0] }
+         .freq
+         .each {|e| @io.append_to_console(("%3s  %s" %  [e[1], e[0]]) + $/) } 
+      @io.append_to_console($/)
+      @io.get_from_console
+  end
+
   def todo_page_down
     return unless ((@page_no + 1) * PAGE_SIZE) < @actions.count
     @page_no = @page_no + 1

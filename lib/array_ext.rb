@@ -5,6 +5,14 @@ class Array
     e = self[i]; self[i] = self[j]; self[j] = e
     self
   end
+
+  def freq_by &block
+    group_by(&block).map {|k,v| [k, v.count] }.sort_by(&:first)
+  end
+
+  def freq
+    freq_by {|e| e }
+  end
 end
 
 

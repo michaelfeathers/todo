@@ -171,6 +171,21 @@ class ToDoToday < Command
 end
 
 
+class ToDoTrend < Command
+  def matches? line
+    line.split == ["tr"]
+  end
+
+  def process line, session
+    session.todo_trend
+  end
+
+  def help_message
+    "tr   - show trend: freqs for all days"
+  end
+end
+
+
 class ToDoEdit < Command
   def matches? line
     line.split.take(1) == ["e"]

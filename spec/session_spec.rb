@@ -54,4 +54,10 @@ describe Session do
     session.todo_today
     expect(io.console_output_content).to eq("2020-01-12 R: Thing Y\n\n")
   end
+
+  it 'shows trend' do 
+    io.archive_content = "2020-01-11 R: Thing X\n2020-01-12 R: Thing Y\n2020-01-12 L: Another thing\n"
+    session.todo_trend
+    expect(io.console_output_content).to eq("  1  2020-01-11\n  2  2020-01-12\n\n")
+  end
 end
