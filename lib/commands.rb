@@ -253,7 +253,7 @@ class ToDoPageDown < Command
   end
 
   def help_message
-   "dd  - page down"
+   "dd   - page down"
   end  
 end
 
@@ -267,7 +267,7 @@ class ToDoPageUp < Command
   end
 
   def help_message
-   "uu  - page up"
+   "uu   - page up"
   end  
 end
 
@@ -281,7 +281,7 @@ class ToDoZapToPosition < Command
   end
 
   def help_message
-    "z _  - Zap (move) task at cursor to position"
+    "z _  - zap (move) task at cursor to position"
   end
 
 end
