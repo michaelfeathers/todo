@@ -19,6 +19,7 @@ class ToDo
                 ToDoSaveNoRemove.new,
                 ToDoToday.new,
                 ToDoTrend.new,
+                ToDoTrendChart.new,
                 ToDoEdit.new,
                 ToDoGrabToggle.new,
                 ToDoHelp.new,

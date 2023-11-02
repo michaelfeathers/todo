@@ -186,6 +186,21 @@ class ToDoTrend < Command
 end
 
 
+class ToDoTrendChart < Command
+  def matches? line
+    line.split == ["tc"]
+  end
+
+  def process line, session
+    session.todo_trend_chart
+  end
+
+  def help_message
+    "tc   - show trend chart"
+  end
+end
+
+
 class ToDoEdit < Command
   def matches? line
     line.split.take(1) == ["e"]

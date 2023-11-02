@@ -4,6 +4,8 @@ require 'day'
 require 'appio'
 require 'array_ext'
 
+require 'gruff'
+
 
 def month_name_of month_no
   DateTime.parse("2023-#{month_no}-01").strftime("%b")
@@ -153,6 +155,18 @@ class Session
          .each {|e| @io.append_to_console(("%3s  %s" %  [e[1], e[0]]) + $/) } 
       @io.append_to_console($/)
       @io.get_from_console
+  end
+
+  def todo_trend_chart
+      trend = @io.read_archive
+         .lines 
+         .map {|line| line.split[0] }
+         .freq
+         .map {|e| e[1]}
+    g = Gruff::Line.new
+    g.data(:Trend, trend) 
+    g.write('trend.png')
+    `open trend.png`
   end
 
   def todo_page_down
