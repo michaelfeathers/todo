@@ -35,6 +35,7 @@ class ToDo
     ToDoUpdater.new(io).run
     @io = io
     @session = Session.new(io)
+    @session.surface(1)
     @session.render
   end
 

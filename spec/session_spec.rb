@@ -60,4 +60,45 @@ describe Session do
     session.todo_trend
     expect(io.console_output_content).to eq("  1  2020-01-11\n  2  2020-01-12\n\n")
   end
+
+  it 'surfaces one action' do
+    io.actions_content = "L: task A\nL: task B\n"
+    session.surface(1)
+    session.render
+    expect(io.console_output_content).to eq(" 0 - L: task B\n 1   L: task A\n\n")
+  end
+
+
+  it 'noops on surface 2 actions on a list of 2' do
+    io.actions_content = "L: task A\nL: task B\n"
+    session.surface(2)
+    session.render
+    expect(io.console_output_content).to eq(" 0 - L: task A\n 1   L: task B\n\n")
+  end
+
+  
+  it 'noops on surface 0 actions on a list of 2' do
+    io.actions_content = "L: task A\nL: task B\n"
+    session.surface(0)
+    session.render
+    expect(io.console_output_content).to eq(" 0 - L: task A\n 1   L: task B\n\n")
+  end
+
+  
+  it 'noops on surface 1 action on a list of 0' do
+    io.actions_content = ""
+    session.surface(1)
+    session.render
+    expect(io.console_output_content).to eq("\n")
+  end
+
+  
+  it 'noops on surface 1 action on a list of 1' do
+    io.actions_content = "L: task A\n"
+    session.surface(1)
+    session.render
+    expect(io.console_output_content).to eq(" 0 - L: task A\n\n")
+  end
+
+
 end

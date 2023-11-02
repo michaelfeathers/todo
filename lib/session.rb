@@ -202,6 +202,15 @@ class Session
     @cursor = [@cursor, @actions.count - 1].min
   end
 
+  def surface count
+    return if @actions.count < 2 
+    count.times do 
+      todo_cursor_set(@actions.count - 1)
+      todo_zap_to_position(0)
+    end
+    todo_cursor_set(0)
+  end
+
 end
 
 
