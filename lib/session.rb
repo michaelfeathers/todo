@@ -163,7 +163,7 @@ class Session
          .map {|line| line.split[0] }
          .freq
          .map {|e| e[1]}
-    g = Gruff::Line.new(1600, false)
+    g = Gruff::Line.new(1600)
     g.theme = {
       colors: %w[red],
       marker_color: 'gray',
