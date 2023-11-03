@@ -163,8 +163,14 @@ class Session
          .map {|line| line.split[0] }
          .freq
          .map {|e| e[1]}
-    g = Gruff::Line.new
-    g.data(:Trend, trend) 
+    g = Gruff::Line.new(1600, false)
+    g.theme = {
+      colors: %w[red],
+      marker_color: 'gray',
+      font_color: 'black',
+      background_colors: 'white'
+    }
+    g.data('', trend) 
     g.write('trend.png')
     `open trend.png`
   end
