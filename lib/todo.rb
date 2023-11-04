@@ -80,9 +80,18 @@ class ToDo
   end
 
   def on_line line
-    @@commands.each {|c| c.run(line, @session) }
+    result = CommandResult.new
+    @@commands.each {|c| c.run(line, @session, result) }
+    process_result(result, line)
     @session.render
   end
+
+  def process_result result, line
+    return unless result.match_count == 0 && line.split.count > 0
+    @io.append_to_console("Unrecognized command" + $/)
+    @io.get_from_console
+  end
+
 end
 
 

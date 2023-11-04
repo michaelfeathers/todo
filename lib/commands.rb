@@ -4,9 +4,22 @@ require 'session'
 require 'appio'
 
 
+class CommandResult
+  attr_reader :match_count
+
+  def initialize
+    @match_count = 0
+  end
+
+  def record_match
+    @match_count = @match_count + 1
+  end
+end
+
 class Command
-  def run line, session
+  def run line, session, result = CommandResult.new
     return unless matches? line
+    result.record_match
     process line, session
   end
 
