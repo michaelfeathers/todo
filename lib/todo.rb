@@ -6,6 +6,41 @@ require 'appio'
 require 'todoupdater'
 
 
+require 'gruff'
+
+class ToDoTrendChart < Command
+  def matches? line
+    line.split == ["tc"]
+  end
+
+  def process line, session
+    session.todo_trend_chart
+  end
+
+  def help_message
+    "tc   - show trend chart"
+  end
+end
+
+
+class Session
+  def todo_trend_chart
+    g = Gruff::Line.new(1600)
+    g.theme = {
+      colors: %w[red],
+      marker_color: 'gray',
+      font_color: 'black',
+      background_colors: 'white'
+    }
+    g.data('', day_frequencies.map {|e| e[1] })  
+    g.write('trend.png')
+    `open trend.png`
+  end
+end
+
+
+
+
 class ToDo
   @@commands = [ToDoAdd.new,
                 ToDoQuit.new,
@@ -36,7 +71,7 @@ class ToDo
     ToDoUpdater.new(io).run
     @io = io
     @session = Session.new(io)
-    @session.surface(1)
+    @session.surface(0)
     @session.render
   end
 

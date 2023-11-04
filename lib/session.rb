@@ -4,7 +4,9 @@ require 'day'
 require 'appio'
 require 'array_ext'
 
-require 'gruff'
+=begin
+require 'gruff' 
+=end
 
 
 def month_name_of month_no
@@ -148,21 +150,13 @@ class Session
   end
 
   def todo_trend
-      @io.read_archive
-         .lines 
-         .map {|line| line.split[0] }
-         .freq
-         .each {|e| @io.append_to_console(("%3s  %s" %  [e[1], e[0]]) + $/) } 
+      day_frequencies.each {|e| @io.append_to_console(("%3s  %s" %  [e[1], e[0]]) + $/) } 
       @io.append_to_console($/)
       @io.get_from_console
   end
 
+=begin
   def todo_trend_chart
-      trend = @io.read_archive
-         .lines 
-         .map {|line| line.split[0] }
-         .freq
-         .map {|e| e[1]}
     g = Gruff::Line.new(1600)
     g.theme = {
       colors: %w[red],
@@ -170,10 +164,11 @@ class Session
       font_color: 'black',
       background_colors: 'white'
     }
-    g.data('', trend) 
+    g.data('', day_frequencies.map {|e| e[1] })  
     g.write('trend.png')
     `open trend.png`
   end
+=end
 
   def todo_page_down
     return unless ((@page_no + 1) * PAGE_SIZE) < @actions.count
@@ -229,6 +224,13 @@ class Session
       todo_zap_to_position(0)
     end
     todo_cursor_set(0)
+  end
+
+  def day_frequencies
+    @io.read_archive
+       .lines 
+       .map {|line| line.split[0] }
+       .freq
   end
 
 end

@@ -185,7 +185,7 @@ class ToDoTrend < Command
   end
 end
 
-
+=begin
 class ToDoTrendChart < Command
   def matches? line
     line.split == ["tc"]
@@ -199,7 +199,7 @@ class ToDoTrendChart < Command
     "tc   - show trend chart"
   end
 end
-
+=end
 
 class ToDoEdit < Command
   def matches? line
