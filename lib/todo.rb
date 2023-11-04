@@ -88,7 +88,7 @@ class ToDo
 
   def process_result result, line
     return unless result.match_count == 0 && line.split.count > 0
-    @io.append_to_console("Unrecognized command" + $/)
+    @io.append_to_console("Unrecognized command: " + line + $/)
     @io.get_from_console
   end
 
