@@ -94,7 +94,7 @@ class ToDoUp < Command
   end  
   
   def help_message
-    "u    - sursor up"
+    "u    - cursor up"
   end
 end
 
@@ -224,7 +224,7 @@ class ToDoEdit < Command
   end
 
   def help_message
-   "e _  - edit task at cursor"
+   "e    - edit task at cursor"
   end
 end
 
