@@ -49,7 +49,7 @@ class Session
   end
 
   def todo_up
-    return unlesss @actions.count > 1 && @cursor > 0
+    return unless @actions.count > 1 && @cursor > 0
 
     @actions.swap_elements(@cursor - 1, @cursor) if @grab_mode
     @cursor -= 1
