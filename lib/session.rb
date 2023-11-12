@@ -82,11 +82,13 @@ class Session
   end
 
   def todo_save
+    return if @actions.count < 1
     @io.append_to_archive(@io.today.to_s + " " + @actions[@cursor])  
     remove_action_at_cursor
   end
 
   def todo_save_no_remove
+    return if @actions.count < 1
     @io.append_to_archive(@io.today.to_s + " " + @actions[@cursor]) 
   end
 

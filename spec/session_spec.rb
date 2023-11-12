@@ -114,5 +114,18 @@ describe Session do
     expect(io.console_output_content).to eq(" 0 - L: this is a test\n 1   L: task A\n\n")
   end
 
+  it 'does not write to archive when saving an empty todo list' do
+    io.actions_content = ""
+    session.todo_save
+    session.render
+    expect(io.archive_content).to eq("")
+  end
+
+  it 'does not write to archive when save_no_remove on an empty todo list' do
+    io.actions_content = ""
+    session.todo_save_no_remove
+    session.render
+    expect(io.archive_content).to eq("")
+  end
 
 end
