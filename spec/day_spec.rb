@@ -20,4 +20,9 @@ describe Day do
     expect(day.to_s).to eq("2022-12-21")
   end
 
+  it 'creates the next day'  do
+    day = Day.from_text("2022-12-21").with_more_days(1)
+    expect(day.to_s).to eq("2022-12-22")
+  end
+
 end

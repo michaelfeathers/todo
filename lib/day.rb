@@ -13,6 +13,10 @@ class Day
     self.new(DateTime.now)
   end
 
+  def with_more_days days
+    Day.new(@date.next_day(days))
+  end
+
   def initialize date
     @date = DateTime.new(date.year, date.month, date.day, 0, 0, 0, date.zone)
   end
