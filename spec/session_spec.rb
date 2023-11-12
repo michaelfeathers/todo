@@ -100,5 +100,19 @@ describe Session do
     expect(io.console_output_content).to eq(" 0 - L: task A\n\n")
   end
 
+  it 'adds a session on an empty todo list' do
+    io.actions_content = ""
+    session.todo_add(["this", "is", "a", "test"])
+    session.render
+    expect(io.console_output_content).to eq(" 0 - this is a test\n\n")
+  end
+
+  it 'adds a session on an non-empty todo list' do
+    io.actions_content = "L: task A\n"
+    session.todo_add(["L:", "this", "is", "a", "test"])
+    session.render
+    expect(io.console_output_content).to eq(" 0 - L: this is a test\n 1   L: task A\n\n")
+  end
+
 
 end
