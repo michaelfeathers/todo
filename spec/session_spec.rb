@@ -128,4 +128,13 @@ describe Session do
     expect(io.archive_content).to eq("")
   end
 
+
+  it 'x' do
+    io.update_content = ""
+    io.today_content = Day.from_text("2022-12-21")
+    session.todo_push "1"
+    session.render
+    expect(io.today_content.to_s).to eq("2022-12-21")
+  end
+
 end
