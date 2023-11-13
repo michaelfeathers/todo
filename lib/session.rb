@@ -63,7 +63,7 @@ class Session
   
   def todo_push days_text
     updates = @io.read_updates.lines.to_a
-    date_text = Day.new(DateTime.now.next_day(days_text.to_i)).to_s
+    date_text = @io.today.with_more_days(days_text.to_i).to_s
 
     updates << [date_text, @actions[@cursor]].join(' ')
     updates = updates.sort_by {|line| DateTime.parse(line.split.first) }
