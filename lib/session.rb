@@ -62,6 +62,8 @@ class Session
   end
   
   def todo_push days_text
+    return if @actions.count < 1
+
     updates = @io.read_updates.lines.to_a
     date_text = @io.today.with_more_days(days_text.to_i).to_s
 

@@ -9,6 +9,7 @@ class FakeAppIo
 
   def initialize
     @archive_content = @console_output_content = @actions_content = ""
+    @update_content = []
     @today_day = nil
   end
 

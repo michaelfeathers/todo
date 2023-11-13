@@ -130,11 +130,23 @@ describe Session do
 
 
   it 'pushes task at cursor to next day' do
+    io.actions_content = "L: task A\n"
     io.update_content = ""
     io.today_content = Day.from_text("2022-12-21")
     session.todo_push "1"
     session.render
-    expect(io.today_content.to_s).to eq("2022-12-21")
+    expect(io.update_content.first).to eq("2022-12-22 L: task A\n")
+    expect(io.console_output_content).to eq("\n")
+  end
+
+  
+  it 'noops push on no tasks' do
+    io.update_content = []
+    io.today_content = Day.from_text("2022-12-21")
+    session.todo_push "1"
+    session.render
+    expect(io.update_content).to eq([])
+    expect(io.console_output_content).to eq("\n")
   end
 
 end
