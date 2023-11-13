@@ -129,7 +129,7 @@ describe Session do
   end
 
 
-  it 'x' do
+  it 'pushes task at cursor to next day' do
     io.update_content = ""
     io.today_content = Day.from_text("2022-12-21")
     session.todo_push "1"
