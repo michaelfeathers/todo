@@ -61,7 +61,8 @@ class ToDo
                 ToDoMonthSummaries.new,
                 ToDoPageDown.new,
                 ToDoPageUp.new,
-                ToDoZapToPosition.new]
+                ToDoZapToPosition.new,
+                ToDoSurface.new]
 
   def self.registered_commands
     @@commands
@@ -71,7 +72,6 @@ class ToDo
     ToDoUpdater.new(io).run
     @io = io
     @session = Session.new(io)
-    @session.surface(0)
     @session.render
   end
 

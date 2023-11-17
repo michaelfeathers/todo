@@ -189,6 +189,10 @@ class Session
     @actions = @actions.insert(line_no, @actions.delete_at(@cursor))
   end               
 
+  def todo_surface no_elements
+    surface(no_elements)
+  end
+
   def render
     @io.clear_console
 

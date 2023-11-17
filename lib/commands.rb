@@ -315,6 +315,22 @@ class ToDoZapToPosition < Command
 end
 
 
+class ToDoSurface < Command
+  def matches? line
+    line.split.count == 1 && line.split[0] == "su" 
+  end
+
+  def process line, session
+    session.todo_surface(1)
+  end
+
+  def help_message
+    0
+  end
+end
+
+
+
 
 
 

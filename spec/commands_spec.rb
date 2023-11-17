@@ -134,3 +134,16 @@ describe ToDoZapToPosition do
 
 end
 
+describe ToDoSurface do
+  let(:io) { FakeAppIo.new }
+  let(:session) { Session.new(io) }
+
+  it 'surfaces a single task' do
+    io.actions_content = (0..9).to_a.map { |n| "#{n}\n" }.join($/)
+    ToDoSurface.new.run("su", session)
+    session.render
+    expect(io.console_output_content.split.map(&:to_i)).to_not eq((0..9).to_a)
+  end
+
+end
+
