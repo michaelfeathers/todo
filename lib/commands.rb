@@ -325,7 +325,7 @@ class ToDoSurface < Command
   end
 
   def help_message
-    0
+    "su   - surface the last task by putting it first" 
   end
 end
 
