@@ -43,7 +43,6 @@ describe Session do
   end
 
   it 'produces a summary for an empty archive' do
-    io.actions_content = "L: task A\nL: task B\n"
     session.todo_month_summaries
     expect(io.console_output_content).to eq(empty_archive_expected)
   end
