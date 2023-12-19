@@ -193,6 +193,14 @@ class Session
     surface(no_elements)
   end
 
+  def todo_retag new_tag
+    return unless @actions.size > 0
+    return unless @actions[@cursor].split.size > 0
+    return unless @actions[@cursor].split[0] =~ /^[A-Z]*:$/
+    rest_of_tokens = @actions[@cursor].split.drop(1)
+    @actions[@cursor] = (["#{new_tag.upcase}:"] + rest_of_tokens).join(" ") + $/
+  end
+
   def render
     @io.clear_console
 

@@ -147,3 +147,45 @@ describe ToDoSurface do
 
 end
 
+describe ToDoReTag do
+  let(:io) { FakeAppIo.new }
+  let(:session) { Session.new(io) }
+
+  it 'retags an L to an R' do
+    io.actions_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
+    output = [ " 0   L: first\n", " 1 - R: second\n",  " 2   L: third\n\n"].join    
+    ToDoCursorSet.new.run("c 1", session)
+    ToDoReTag.new.run("rt r", session)
+    session.render
+    expect(io.console_output_content).to eq(output)
+  end
+
+  it'does nothing when regtagging in an empty task list' do
+    io.actions_content = "" 
+    output = "\n" 
+    ToDoReTag.new.run("rt r", session)
+    session.render
+    expect(io.console_output_content).to eq(output)
+   end
+
+
+  it'does nothing when regtagging a task with no tag' do
+    io.actions_content = ["first\n"].join
+    output = " 0 - first\n\n" 
+    ToDoReTag.new.run("rt r", session)
+    session.render
+    expect(io.console_output_content).to eq(output)
+   end
+
+  
+   it'does nothing when no new tag is supplied' do
+     io.actions_content = ["R: first\n"].join
+     output = " 0 - R: first\n\n" 
+     ToDoReTag.new.run("rt", session)
+     session.render
+     expect(io.console_output_content).to eq(output)
+   end
+
+ end
+
+

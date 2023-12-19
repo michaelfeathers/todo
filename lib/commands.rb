@@ -330,6 +330,22 @@ class ToDoSurface < Command
 end
 
 
+class ToDoReTag < Command 
+  def matches? line
+    line.split.count == 2 && line.split[0] == "rt"
+  end
+
+  def process line, session
+    session.todo_retag(line.split[1])
+  end
+
+  def help_message
+    "rt   - re tag the task at the cursor" 
+  end
+
+end
+
+
 
 
 

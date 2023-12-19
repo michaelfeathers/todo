@@ -62,7 +62,8 @@ class ToDo
                 ToDoPageDown.new,
                 ToDoPageUp.new,
                 ToDoZapToPosition.new,
-                ToDoSurface.new]
+                ToDoSurface.new,
+                ToDoReTag.new]
 
   def self.registered_commands
     @@commands
