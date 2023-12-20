@@ -183,9 +183,7 @@ class Session
   end
 
   def todo_zap_to_position line_no
-    line_no = [line_no, @actions.count-1].min
-    line_no = [0, line_no].max
-
+    line_no = [[0, line_no].max, @actions.count-1].min
     @actions = @actions.insert(line_no, @actions.delete_at(@cursor))
   end               
 
