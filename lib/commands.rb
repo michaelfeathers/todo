@@ -32,9 +32,6 @@ class Command
     CommandDesc.new("h", "help")
   end
 
-  def help_message
-    "h    - help"
-  end
 end
 
 class ToDoAdd < Command
