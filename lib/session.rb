@@ -105,7 +105,14 @@ class Session
   end
 
   def todo_edit tokens
-    @actions[@cursor] = tokens.join(" ") + $/
+    return if @actions.count < 1
+    
+    old_tokens = @actions[@cursor].split
+    if old_tokens.first =~ /^[A-Z]*:$/
+      @actions[@cursor] = ([old_tokens.first] + tokens).join(" ") + $/
+    else
+      @actions[@cursor] = tokens.join(" ") + $/
+    end
   end
 
   def todo_grab_toggle

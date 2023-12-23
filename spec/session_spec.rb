@@ -137,7 +137,6 @@ describe Session do
     expect(io.update_content.first).to eq("2022-12-22 L: task A\n")
     expect(io.console_output_content).to eq("\n")
   end
-
   
   it 'noops push on no tasks' do
     io.update_content = []
@@ -146,6 +145,20 @@ describe Session do
     session.render
     expect(io.update_content).to eq([])
     expect(io.console_output_content).to eq("\n")
+  end
+
+  it 'edits a task with no tag' do
+    io.actions_content = "task\n"
+    session.todo_edit ["edited", "task"]
+    session.render
+    expect(io.console_output_content).to eq(" 0 - edited task\n\n")
+  end
+
+  it 'preserves a tag on editing' do
+    io.actions_content = "L: task\n"
+    session.todo_edit ["edited", "task"]
+    session.render
+    expect(io.console_output_content).to eq(" 0 - L: edited task\n\n")
   end
 
 end
