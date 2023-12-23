@@ -221,7 +221,7 @@ class ToDoEdit < Command
   end
 
   def description
-    CommandDesc.new("e  text", "end task at cursor, replacing it with text") 
+    CommandDesc.new("e  text", "edit task at cursor, replacing it with text") 
   end
 end
 
