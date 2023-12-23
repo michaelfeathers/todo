@@ -5,7 +5,7 @@ require 'appio'
 
 
 
-CommandDesc = Struct.new(:name, :description)
+CommandDesc = Struct.new(:name, :line)
 
 
 class CommandResult
@@ -26,10 +26,6 @@ class Command
     return unless matches? line
     result.record_match
     process line, session
-  end
-
-  def description
-    CommandDesc.new("h", "help")
   end
 
 end
@@ -310,7 +306,7 @@ class ToDoHelp < Command
   end
 
   def process line, session
-    puts $/ + ToDo.registered_commands.map {|c| c.help_message }.join($/)
+    puts $/ + session.todo_help(ToDo.registered_commands.map { |c| [c.description.name, c.description.line] })
     gets
   end
 

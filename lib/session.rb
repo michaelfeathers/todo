@@ -27,6 +27,13 @@ class Session
     @page_no = 0
   end
 
+  def todo_help command_list
+     max = command_list.map { |cmd| cmd[0].length }.max
+     command_list.sort_by {|n,_| n }
+                 .map { |n, l| "#{n.ljust(max + 5)}- #{l}" }.join("\n") 
+  end
+
+
   def todo_add tokens
     @actions = [tokens.join(" ") + $/] + @actions
     @cursor = 0

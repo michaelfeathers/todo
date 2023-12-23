@@ -17,6 +17,10 @@ class ToDoTrendChart < Command
     session.todo_trend_chart
   end
 
+  def description
+    CommandDesc.new("tc", "show tend chart")
+  end
+
   def help_message
     "tc   - show trend chart"
   end
