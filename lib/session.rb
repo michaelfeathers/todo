@@ -203,10 +203,17 @@ class Session
 
   def todo_retag new_tag
     current_action = @actions[@cursor]
-    return unless current_action && current_action.split.first =~ /^[A-Z]*:$/
-
+    return unless current_action
+   
     tokens = current_action.split
-    tokens[0] = "#{new_tag.upcase}:"
+    tag_text = "#{new_tag.upcase}:"
+
+    if tokens.first =~ /^[A-Z]*:$/
+      tokens[0] = tag_text
+    else
+      tokens.unshift(tag_text)
+    end
+
     @actions[@cursor] = tokens.join(" ") + $/
   end
   

@@ -334,6 +334,6 @@ class ToDoReTag < Command
   end
 
   def description
-    CommandDesc.new("tr tag", "re-tag the task at the cursor with tag")
+    CommandDesc.new("tr tag", "re-tag the task at the cursor with tag. Tag if not tagged")
   end
 end

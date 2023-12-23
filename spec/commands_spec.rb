@@ -168,16 +168,14 @@ describe ToDoReTag do
     expect(io.console_output_content).to eq(output)
    end
 
-
-  it'does nothing when regtagging a task with no tag' do
-    io.actions_content = ["first\n"].join
-    output = " 0 - first\n\n" 
-    ToDoReTag.new.run("rt r", session)
-    session.render
-    expect(io.console_output_content).to eq(output)
+   it'adds a tag to a task with no tag' do
+     io.actions_content = ["first\n"].join
+     output = " 0 - L: first\n\n" 
+     ToDoReTag.new.run("rt l", session)
+     session.render
+     expect(io.console_output_content).to eq(output)
    end
 
-  
    it'does nothing when no new tag is supplied' do
      io.actions_content = ["R: first\n"].join
      output = " 0 - R: first\n\n" 
