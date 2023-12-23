@@ -42,10 +42,6 @@ class ToDoAdd < Command
   def description
     CommandDesc.new("a", "add task")
   end
-
-  def help_message
-    "a _  - add task"
-  end
 end
 
 class ToDoQuit < Command
@@ -59,10 +55,6 @@ class ToDoQuit < Command
 
   def description
     CommandDesc.new("q", "save and quit")
-  end
-
-  def help_message
-    "q    - save and quit"
   end
 end
 
@@ -78,10 +70,6 @@ class ToDoCursorSet < Command
   def description
     CommandDesc.new("c", "set cursor position")
   end
-
-  def help_message
-    "c _  - set cursor position"
-  end
 end
 
 class ToDoDown < Command
@@ -96,10 +84,6 @@ class ToDoDown < Command
   def description
     CommandDesc.new("d", "move cursor down")
   end
-
-  def help_message
-    "d    - cursor down"
-  end
 end
 
 class ToDoUp < Command
@@ -113,10 +97,6 @@ class ToDoUp < Command
 
   def description
     CommandDesc.new("u", "move cursor up")
-  end
-  
-  def help_message
-    "u    - cursor up"
   end
 end
 
@@ -133,10 +113,6 @@ class ToDoFind < Command
   def description
     CommandDesc.new("f", "find all tasks containing specified text")
   end
-
-  def help_message
-    "f _  - find all tasks containing specified text"
-  end
 end
 
 class ToDoPush < Command
@@ -150,10 +126,6 @@ class ToDoPush < Command
 
   def description
     CommandDesc.new("p", "push forward x number of days")
-  end
-
-  def help_message
-    "p _  - push foward x number of days"
   end
 end
 
@@ -169,10 +141,6 @@ class ToDoRemove < Command
   def description
     CommandDesc.new("r", "remove task at cursor")
   end
-
-  def help_message
-    "r    - remove task at cursor"
-  end
 end
 
 class ToDoSave < Command
@@ -186,10 +154,6 @@ class ToDoSave < Command
 
   def description
     CommandDesc.new("s", "save task at cursor")
-  end
-
-  def help_message
-    "s    - save task at cursor"
   end
 end
 
@@ -205,10 +169,6 @@ class ToDoSaveNoRemove < Command
   def description
     CommandDesc.new("ss", "save task at cursor without removing")
   end
-
-  def help_message
-    "ss   - save task at cursor without removing"
-  end
 end
 
 class ToDoToday < Command
@@ -223,12 +183,7 @@ class ToDoToday < Command
   def description
     CommandDesc.new("t", "show tasks done today")
   end
-
-  def help_message
-    "t    - show tasks done today"
-  end
 end
-
 
 class ToDoTrend < Command
   def matches? line
@@ -242,10 +197,6 @@ class ToDoTrend < Command
   def description
     CommandDesc.new("tr", "show trend") 
   end
-
-  def help_message
-    "tr   - show trend: freqs for all days"
-  end
 end
 
 =begin
@@ -256,10 +207,6 @@ class ToDoTrendChart < Command
 
   def process line, session
     session.todo_trend_chart
-  end
-
-  def help_message
-    "tc   - show trend chart"
   end
 end
 =end
@@ -276,10 +223,6 @@ class ToDoEdit < Command
   def description
     CommandDesc.new("e", "end task at cursor") 
   end
-
-  def help_message
-   "e    - edit task at cursor"
-  end
 end
 
 class ToDoGrabToggle < Command
@@ -294,10 +237,6 @@ class ToDoGrabToggle < Command
   def description
     CommandDesc.new("g", "toggle grab mode")
   end
-
-  def help_message
-   "g    - toggle grab mode"
-  end  
 end
 
 class ToDoHelp < Command
@@ -313,10 +252,6 @@ class ToDoHelp < Command
   def description
     CommandDesc.new("h", "show help message")
   end
-
-  def help_message
-   "h    - show help message"
-  end  
 end
 
 class ToDoMonthSummaries < Command
@@ -331,10 +266,6 @@ class ToDoMonthSummaries < Command
   def description
     CommandDesc.new("m", "show month summaries") 
   end
-
-  def help_message
-   "m    - show month summaries"
-  end  
 end
 
 class ToDoPageDown < Command
@@ -349,10 +280,6 @@ class ToDoPageDown < Command
   def description
     CommandDesc.new("dd", "page down")
   end
-
-  def help_message
-   "dd   - page down"
-  end  
 end
 
 class ToDoPageUp < Command
@@ -367,10 +294,6 @@ class ToDoPageUp < Command
   def description
     CommandDesc.new("uu", "page up")
   end
-
-  def help_message
-   "uu   - page up"
-  end  
 end
 
 class ToDoZapToPosition < Command
@@ -385,13 +308,7 @@ class ToDoZapToPosition < Command
   def description
     CommandDesc.new("z", "move (zap) task at cursor to position")
   end
-
-  def help_message
-    "z _  - zap (move) task at cursor to position"
-  end
-
 end
-
 
 class ToDoSurface < Command
   def matches? line
@@ -405,12 +322,7 @@ class ToDoSurface < Command
   def description
     CommandDesc.new("su", "surfae the last task by putting it first")
   end
-
-  def help_message
-    "su   - surface the last task by putting it first" 
-  end
 end
-
 
 class ToDoReTag < Command 
   def matches? line
@@ -424,17 +336,4 @@ class ToDoReTag < Command
   def description
     CommandDesc.new("tr", "re-tag the task at the cursor")
   end
-
-  def help_message
-    "rt   - re tag the task at the cursor" 
-  end
-
 end
-
-
-
-
-
-
-
-
