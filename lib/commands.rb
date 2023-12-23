@@ -4,6 +4,10 @@ require 'session'
 require 'appio'
 
 
+
+CommandDesc = Struct.new(:name, :description)
+
+
 class CommandResult
   attr_reader :match_count
 
@@ -17,10 +21,15 @@ class CommandResult
 end
 
 class Command
+
   def run line, session, result = CommandResult.new
     return unless matches? line
     result.record_match
     process line, session
+  end
+
+  def description
+    CommandDesc.new("h", "help")
   end
 
   def help_message
@@ -37,6 +46,10 @@ class ToDoAdd < Command
     session.todo_add(line.split.drop(1))
   end
 
+  def description
+    CommandDesc.new("a", "add task")
+  end
+
   def help_message
     "a _  - add task"
   end
@@ -49,6 +62,10 @@ class ToDoQuit < Command
 
   def process line, session
     session.todo_quit
+  end
+
+  def description
+    CommandDesc.new("q", "save and quit")
   end
 
   def help_message
@@ -65,6 +82,10 @@ class ToDoCursorSet < Command
     session.todo_cursor_set(line.split[1].to_i)
   end
 
+  def description
+    CommandDesc.new("c", "set cursor position")
+  end
+
   def help_message
     "c _  - set cursor position"
   end
@@ -77,6 +98,10 @@ class ToDoDown < Command
 
   def process line, session
     session.todo_down
+  end
+
+  def description
+    CommandDesc.new("d", "move cursor down")
   end
 
   def help_message
@@ -92,6 +117,10 @@ class ToDoUp < Command
   def process line, session
     session.todo_up
   end  
+
+  def description
+    CommandDesc.new("u", "move cursor up")
+  end
   
   def help_message
     "u    - cursor up"
@@ -108,6 +137,10 @@ class ToDoFind < Command
     gets
   end
 
+  def description
+    CommandDesc.new("f", "find all tasks containing specified text")
+  end
+
   def help_message
     "f _  - find all tasks containing specified text"
   end
@@ -120,6 +153,10 @@ class ToDoPush < Command
 
   def process line, session
     session.todo_push line.split[1] 
+  end
+
+  def description
+    CommandDesc.new("p", "push forward x number of days")
   end
 
   def help_message
@@ -136,6 +173,10 @@ class ToDoRemove < Command
     session.todo_remove
   end
 
+  def description
+    CommandDesc.new("r", "remove task at cursor")
+  end
+
   def help_message
     "r    - remove task at cursor"
   end
@@ -148,6 +189,10 @@ class ToDoSave < Command
 
   def process line, session
     session.todo_save
+  end
+
+  def description
+    CommandDesc.new("s", "save task at cursor")
   end
 
   def help_message
@@ -164,6 +209,10 @@ class ToDoSaveNoRemove < Command
     session.todo_save_no_remove
   end
 
+  def description
+    CommandDesc.new("ss", "save task at cursor without removing")
+  end
+
   def help_message
     "ss   - save task at cursor without removing"
   end
@@ -176,6 +225,10 @@ class ToDoToday < Command
 
   def process line, session
     session.todo_today
+  end
+
+  def description
+    CommandDesc.new("t", "show tasks done today")
   end
 
   def help_message
@@ -191,6 +244,10 @@ class ToDoTrend < Command
 
   def process line, session
     session.todo_trend
+  end
+
+  def description
+    CommandDesc.new("tr", "show trend") 
   end
 
   def help_message
@@ -223,6 +280,10 @@ class ToDoEdit < Command
     session.todo_edit(line.split.drop(1))
   end
 
+  def description
+    CommandDesc.new("e", "end task at cursor") 
+  end
+
   def help_message
    "e    - edit task at cursor"
   end
@@ -235,6 +296,10 @@ class ToDoGrabToggle < Command
 
   def process line, session
     session.todo_grab_toggle
+  end
+
+  def description
+    CommandDesc.new("g", "toggle grab mode")
   end
 
   def help_message
@@ -252,6 +317,10 @@ class ToDoHelp < Command
     gets
   end
 
+  def description
+    CommandDesc.new("h", "show help message")
+  end
+
   def help_message
    "h    - show help message"
   end  
@@ -264,6 +333,10 @@ class ToDoMonthSummaries < Command
 
   def process line, session
     session.todo_month_summaries
+  end
+
+  def description
+    CommandDesc.new("m", "show month summaries") 
   end
 
   def help_message
@@ -280,6 +353,10 @@ class ToDoPageDown < Command
     session.todo_page_down
   end
 
+  def description
+    CommandDesc.new("dd", "page down")
+  end
+
   def help_message
    "dd   - page down"
   end  
@@ -294,6 +371,10 @@ class ToDoPageUp < Command
     session.todo_page_up
   end
 
+  def description
+    CommandDesc.new("uu", "page up")
+  end
+
   def help_message
    "uu   - page up"
   end  
@@ -306,6 +387,10 @@ class ToDoZapToPosition < Command
 
   def process line, session
     session.todo_zap_to_position(line.split[1].to_i)
+  end
+
+  def description
+    CommandDesc.new("z", "move (zap) task at cursor to position")
   end
 
   def help_message
@@ -324,6 +409,10 @@ class ToDoSurface < Command
     session.todo_surface(1)
   end
 
+  def description
+    CommandDesc.new("su", "surfae the last task by putting it first")
+  end
+
   def help_message
     "su   - surface the last task by putting it first" 
   end
@@ -337,6 +426,10 @@ class ToDoReTag < Command
 
   def process line, session
     session.todo_retag(line.split[1])
+  end
+
+  def description
+    CommandDesc.new("tr", "re-tag the task at the cursor")
   end
 
   def help_message
