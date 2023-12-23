@@ -104,15 +104,15 @@ class Session
     @io.append_to_archive(@io.today.to_s + " " + @actions[@cursor]) 
   end
 
-  def todo_edit tokens
-    return if @actions.count < 1
-    
+  def todo_edit new_tokens  
+    return if @actions.empty?
+
     old_tokens = @actions[@cursor].split
-    if old_tokens.first =~ /^[A-Z]*:$/
-      @actions[@cursor] = ([old_tokens.first] + tokens).join(" ") + $/
-    else
-      @actions[@cursor] = tokens.join(" ") + $/
-    end
+    @actions[@cursor] = if old_tokens.first =~ /^[A-Z]*:$/
+                          ([old_tokens.first] + new_tokens).join(" ")
+                        else
+                          new_tokens.join(" ")
+                        end + $/
   end
 
   def todo_grab_toggle
