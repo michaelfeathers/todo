@@ -43,27 +43,27 @@ end
 
 class ToDo
   @@commands = [ToDoAdd.new,
-                ToDoQuit.new,
                 ToDoCursorSet.new,
                 ToDoDown.new,
-                ToDoUp.new,
-                ToDoFind.new,
-                ToDoPush.new,
-                ToDoRemove.new,
-                ToDoSave.new,
-                ToDoSaveNoRemove.new,
-                ToDoToday.new,
-                ToDoTrend.new,
-                ToDoTrendChart.new,
                 ToDoEdit.new,
+                ToDoFind.new,
                 ToDoGrabToggle.new,
                 ToDoHelp.new,
                 ToDoMonthSummaries.new,
                 ToDoPageDown.new,
                 ToDoPageUp.new,
-                ToDoZapToPosition.new,
+                ToDoPush.new,
+                ToDoQuit.new,
+                ToDoReTag.new,
+                ToDoRemove.new,
+                ToDoSave.new,
+                ToDoSaveNoRemove.new,
                 ToDoSurface.new,
-                ToDoReTag.new]
+                ToDoToday.new,
+                ToDoTrend.new,
+                ToDoTrendChart.new,
+                ToDoUp.new,
+                ToDoZapToPosition.new]
 
   def self.registered_commands
     @@commands
