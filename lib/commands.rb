@@ -306,7 +306,7 @@ class ToDoHelp < Command
   end
 
   def process line, session
-    puts $/ + session.todo_help(ToDo.registered_commands.map { |c| [c.description.name, c.description.line] })
+    session.todo_help(ToDo.registered_commands.map { |c| [c.description.name, c.description.line] })
     gets
   end
 

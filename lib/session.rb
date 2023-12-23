@@ -29,9 +29,9 @@ class Session
 
   def todo_help command_list
      max = command_list.map { |cmd| cmd[0].length }.max
-     command_list.sort_by {|n,_| n }
-                 .map { |n, l| "#{n.ljust(max + 5)}- #{l}" }
-                 .join("\n") 
+     @io.append_to_console command_list.sort_by {|n,_| n }
+                                       .map { |n, l| "#{n.ljust(max + 5)}- #{l}" }
+                                       .join("\n") 
   end
 
 
