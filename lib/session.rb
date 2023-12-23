@@ -208,12 +208,7 @@ class Session
     tokens = current_action.split
     tag_text = "#{new_tag.upcase}:"
 
-    if tokens.first =~ /^[A-Z]*:$/
-      tokens[0] = tag_text
-    else
-      tokens.unshift(tag_text)
-    end
-
+    tokens.first =~ /^[A-Z]*:$/ ? tokens[0] = tag_text : tokens.unshift(tag_text)
     @actions[@cursor] = tokens.join(" ") + $/
   end
   
