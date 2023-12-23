@@ -40,7 +40,7 @@ class ToDoAdd < Command
   end
 
   def description
-    CommandDesc.new("a", "add task")
+    CommandDesc.new("a  text", "add text as a task")
   end
 end
 
@@ -68,7 +68,7 @@ class ToDoCursorSet < Command
   end
 
   def description
-    CommandDesc.new("c", "set cursor position")
+    CommandDesc.new("c  n", "set cursor position to line n")
   end
 end
 
@@ -111,7 +111,7 @@ class ToDoFind < Command
   end
 
   def description
-    CommandDesc.new("f", "find all tasks containing specified text")
+    CommandDesc.new("f  text", "find all tasks containing specified text")
   end
 end
 
@@ -125,7 +125,7 @@ class ToDoPush < Command
   end
 
   def description
-    CommandDesc.new("p", "push forward x number of days")
+    CommandDesc.new("p  n", "push forward n number of days")
   end
 end
 
@@ -221,7 +221,7 @@ class ToDoEdit < Command
   end
 
   def description
-    CommandDesc.new("e", "end task at cursor") 
+    CommandDesc.new("e  text", "end task at cursor, replacing it with text") 
   end
 end
 
@@ -306,7 +306,7 @@ class ToDoZapToPosition < Command
   end
 
   def description
-    CommandDesc.new("z", "move (zap) task at cursor to position")
+    CommandDesc.new("z  n", "move (zap) task at cursor to line n")
   end
 end
 
@@ -334,6 +334,6 @@ class ToDoReTag < Command
   end
 
   def description
-    CommandDesc.new("tr", "re-tag the task at the cursor")
+    CommandDesc.new("tr tag", "re-tag the task at the cursor with tag")
   end
 end
