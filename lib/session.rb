@@ -159,10 +159,10 @@ class Session
 
   end
 
-  def todo_today
+  def todo_today days_prev
     @io.read_archive
        .lines 
-       .select {|line| Day.from_text(line.split.first) === @io.today }
+       .select {|line| Day.from_text(line.split.first) === @io.today.with_fewer_days(days_prev.to_i) }
        .each { |line| @io.append_to_console(line) }
     @io.append_to_console($/)
     @io.get_from_console

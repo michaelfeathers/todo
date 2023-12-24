@@ -50,7 +50,7 @@ describe Session do
   it 'shows archive entries of today' do
     io.archive_content = "2020-01-11 R: Thing X\n2020-01-12 R: Thing Y\n"
     io.today_content = Day.from_text("2020-01-12")
-    session.todo_today
+    session.todo_today 0
     expect(io.console_output_content).to eq("2020-01-12 R: Thing Y\n\n")
   end
 

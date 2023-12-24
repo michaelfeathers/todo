@@ -187,3 +187,30 @@ describe ToDoReTag do
  end
 
 
+describe ToDoToday do
+  let(:io) { FakeAppIo.new }
+  let(:session) { Session.new(io) }
+
+   it'shows the tasks for the current day' do
+     io.archive_content = "2020-01-11 R: Thing X\n2020-01-12 R: Thing Y\n"
+     io.today_content = Day.from_text("2020-01-12")
+     output = " 0 - R: first\n\n" 
+     ToDoToday.new.run("t", session)
+     session.render
+     expect(io.console_output_content).to eq("2020-01-12 R: Thing Y\n\n\n")
+   end
+
+
+   it'shows the tasks for the previous day' do
+     io.archive_content = "2020-01-11 R: Thing X\n2020-01-12 R: Thing Y\n"
+     io.today_content = Day.from_text("2020-01-12")
+     output = " 0 - R: first\n\n" 
+     ToDoToday.new.run("t 1", session)
+     session.render
+     expect(io.console_output_content).to eq("2020-01-11 R: Thing X\n\n\n")
+   end
+
+
+end
+
+

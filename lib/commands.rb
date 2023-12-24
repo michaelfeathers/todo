@@ -173,11 +173,11 @@ end
 
 class ToDoToday < Command
   def matches? line
-    line.split == ["t"]
+    (1..2).include?(line.split.count) && line.split.first == "t"
   end
 
   def process line, session
-    session.todo_today
+    session.todo_today (line.split.count == 2 ? line.split[1] : 0)
   end
 
   def description
