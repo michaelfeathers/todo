@@ -127,7 +127,6 @@ describe Session do
     expect(io.archive_content).to eq("")
   end
 
-
   it 'pushes task at cursor to next day' do
     io.actions_content = "L: task A\n"
     io.update_content = ""
@@ -160,5 +159,7 @@ describe Session do
     session.render
     expect(io.console_output_content).to eq(" 0 - L: edited task\n\n")
   end
+
+
 
 end
