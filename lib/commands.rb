@@ -177,7 +177,7 @@ class ToDoToday < Command
   end
 
   def process line, session
-    session.todo_today (line.split.count == 2 ? line.split[1] : 0)
+    session.todo_today (line.split.count == 1 ? 0 : line.split[1])
   end
 
   def description
