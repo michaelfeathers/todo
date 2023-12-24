@@ -181,7 +181,7 @@ class ToDoToday < Command
   end
 
   def description
-    CommandDesc.new("t", "show tasks done today")
+    CommandDesc.new("t <n>", "show tasks n days prev. If no arg, defaults to today") 
   end
 end
 
