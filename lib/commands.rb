@@ -177,11 +177,11 @@ class ToDoToday < Command
   end
 
   def process line, session
-    session.todo_today (line.split.count == 1 ? 0 : line.split[1])
+    session.todo_today(line.split.count == 1 ? 0 : line.split[1])
   end
 
   def description
-    CommandDesc.new("t <n>", "show tasks n days prev. If no arg, defaults to today") 
+    CommandDesc.new("t  <n>", "show tasks n days prev. If no arg, defaults to today") 
   end
 end
 
