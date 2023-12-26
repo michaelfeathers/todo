@@ -28,9 +28,10 @@ class Session
   end
 
   def todo_help command_list
-     max = command_list.map { |cmd| cmd[0].length }.max
+     max = command_list.map {|cmd| cmd[0].length }.max
+
      output = command_list.sort_by {|n,_| n }
-                          .map { |n, l| "#{n.ljust(max + 5)}- #{l}" }
+                          .map {|n, l| "#{n.ljust(max + 5)}- #{l}" }
                           .join("\n") 
      
      @io.append_to_console $/ + output + $/ + $/ 
@@ -67,6 +68,7 @@ class Session
 
   def todo_find text
     @io.clear_console
+
     found = find(text) 
     @io.append_to_console found.join + $/ + found.count.to_s + $/ + $/ + $/
   end
@@ -87,6 +89,7 @@ class Session
   def todo_remove
     @io.append_to_console "Remove current line (Y/N)?\n"
     response = @io.get_from_console
+
     return unless response.split.first == "Y"
 
     remove_action_at_cursor
@@ -127,11 +130,11 @@ class Session
     year_descs =  task_descs.select {|td| td.first.year.to_i == 2023 }
       @io.append_to_console "\n\n      %10s %10s %10s\n\n" % ["R7K", "Life", "Total"]
 
-     (1..12).each do |month|
-      @io.append_to_console "%s   %10d %10d %10d\n" % [month_name_of(month), 
+      (1..12).each do |month|
+       @io.append_to_console "%s   %10d %10d %10d\n" % [month_name_of(month), 
                                                        count_month_entries(month, "R", year_descs),
                                                        count_month_entries(month, "L", year_descs),
-                                                       count_month_entries(month, "*",  year_descs)]
+                                                       count_month_entries(month, "*", year_descs)]
 
     end
 
@@ -160,10 +163,11 @@ class Session
   end
 
   def todo_today days_prev
+    day_to_display = @io.today.with_fewer_days(days_prev.to_i) 
     @io.read_archive
        .lines 
-       .select {|line| Day.from_text(line.split.first) === @io.today.with_fewer_days(days_prev.to_i) }
-       .each { |line| @io.append_to_console(line) }
+       .select {|line| Day.from_text(line.split.first) === day_to_display }
+       .each {|line| @io.append_to_console(line) }
     @io.append_to_console($/)
     @io.get_from_console
   end
@@ -233,7 +237,10 @@ class Session
 
   def count_month_entries month_no, type, descs
     return  descs.select {|d| d.first.month_no == month_no }.count if type == "*"
-    descs.select {|d| d.first.month_no == month_no }.select {|dd| dd[1] == type }.count
+
+    descs.select {|d| d.first.month_no == month_no }
+         .select {|dd| dd[1] == type }
+         .count
   end
 
   def cursor_char index
@@ -242,7 +249,8 @@ class Session
   end
 
   def find text
-    @actions.each_with_index.map {|i,e| "%2d %s" % [e,i] }.grep(/#{Regexp.escape text}/i)
+    @actions.each_with_index.map {|i,e| "%2d %s" % [e,i] }
+            .grep(/#{Regexp.escape text}/i)
   end
 
   def remove_action_at_cursor
@@ -252,10 +260,12 @@ class Session
 
   def surface count
     return if @actions.count < 2 
+
     count.times do 
       todo_cursor_set(@actions.count - 1)
       todo_zap_to_position(0)
     end
+
     todo_cursor_set(0)
   end
 
