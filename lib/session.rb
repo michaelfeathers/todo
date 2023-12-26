@@ -236,7 +236,7 @@ class Session
   end
 
   def count_month_entries month_no, type, descs
-    return  descs.select {|d| d.first.month_no == month_no }.count if type == "*"
+    return descs.select {|d| d.first.month_no == month_no }.count if type == "*"
 
     descs.select {|d| d.first.month_no == month_no }
          .select {|dd| dd[1] == type }
@@ -272,7 +272,7 @@ class Session
   def day_frequencies
     @io.read_archive
        .lines 
-       .map {|line| line.split[0] }
+       .map {|line| line.split.first }
        .freq
   end
 
