@@ -16,7 +16,6 @@ end
 
 class Session
 
-  VIEW_LIMIT   = 45
   PAGE_SIZE    = 40
 
   def initialize io
@@ -50,6 +49,7 @@ class Session
 
   def todo_cursor_set line_no
     @cursor = line_no if (0...@actions.count).include?(line_no)
+    adjust_page
   end
 
   def todo_down
@@ -57,6 +57,7 @@ class Session
     
     @actions.swap_elements(@cursor, @cursor + 1) if @grab_mode
     @cursor += 1
+    adjust_page
   end
 
   def todo_up
@@ -64,6 +65,7 @@ class Session
 
     @actions.swap_elements(@cursor - 1, @cursor) if @grab_mode
     @cursor -= 1
+    adjust_page
   end
 
   def todo_find text
@@ -230,7 +232,7 @@ class Session
     lines = @actions.zip((0..))
                     .map {|e,i| "%2d %s %s" % [i, cursor_char(i), e]}
                     .drop(@page_no * PAGE_SIZE)
-                    .take(VIEW_LIMIT)
+                    .take(PAGE_SIZE)
 
     @io.append_to_console lines.join + $/
   end
@@ -241,6 +243,10 @@ class Session
     descs.select {|d| d.first.month_no == month_no }
          .select {|dd| dd[1] == type }
          .count
+  end
+
+  def adjust_page
+    @page_no = @cursor / PAGE_SIZE
   end
 
   def cursor_char index
@@ -275,6 +281,22 @@ class Session
        .map {|line| line.split.first }
        .freq
   end
+
+=begin
+  def todo_show_tag_tallies
+    tag_pattern = /^[A-Z]:\s+/
+    text = @actions.grep(tag_pattern) {|l| l.split.first }
+                   .tally
+                   .sort
+                   .map {|t,n| "%-10s%3d" % [t, n] }
+                   .join($/)
+
+    untagged_count = @actions.grep_v(tag_pattern).count {|l| not l.strip.empty? } 
+
+    @io.append_to_console $/ + $/ + text + $/
+    @io.append_to_console $/ + ("%-10s%3d" % ["Untagged", untagged_count]) + $/ + $/
+  end
+=end
 
 end
 

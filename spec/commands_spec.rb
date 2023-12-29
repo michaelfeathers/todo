@@ -32,7 +32,7 @@ describe ToDoPageDown do
     output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
     io.actions_content = actions.join 
     session.render
-    expect(io.console_output_content).to eq(output.take(Session::VIEW_LIMIT).join + "\n")
+    expect(io.console_output_content).to eq(output.take(Session::PAGE_SIZE).join + "\n")
   end
 
   it 'shows the second page of tasks' do
@@ -41,7 +41,7 @@ describe ToDoPageDown do
     io.actions_content = actions.join 
     ToDoPageDown.new.run("dd", session)
     session.render
-    expect(io.console_output_content).to eq(output.drop(Session::PAGE_SIZE).take(Session::VIEW_LIMIT).join + "\n")
+    expect(io.console_output_content).to eq(output.drop(Session::PAGE_SIZE).take(Session::PAGE_SIZE).join + "\n")
   end
 
   it 'is noop when on the last page' do
@@ -51,7 +51,7 @@ describe ToDoPageDown do
     ToDoPageDown.new.run("dd", session)
     ToDoPageDown.new.run("dd", session)
     session.render
-    expect(io.console_output_content).to eq(output.drop(Session::PAGE_SIZE).take(Session::VIEW_LIMIT).join + "\n")
+    expect(io.console_output_content).to eq(output.drop(Session::PAGE_SIZE).take(Session::PAGE_SIZE).join + "\n")
   end
 end
 
@@ -67,7 +67,7 @@ describe ToDoPageUp do
     io.actions_content = actions.join 
     ToDoPageUp.new.run("uu", session)
     session.render
-    expect(io.console_output_content).to eq(output.take(Session::VIEW_LIMIT).join + "\n")
+    expect(io.console_output_content).to eq(output.take(Session::PAGE_SIZE).join + "\n")
   end
 
   it 'shows the first page of tasks after previously paging down' do
@@ -77,11 +77,58 @@ describe ToDoPageUp do
     ToDoPageDown.new.run("dd", session)
     ToDoPageUp.new.run("uu", session)
     session.render
-    expect(io.console_output_content).to eq(output.take(Session::VIEW_LIMIT).join + "\n")
+    expect(io.console_output_content).to eq(output.take(Session::PAGE_SIZE).join + "\n")
   end
   
 end
 
+describe ToDoCursorSet do
+  let(:io) { FakeAppIo.new }
+  let(:session) { Session.new(io) }
+
+  it 'pages when cursor set off page' do
+    pos = Session::PAGE_SIZE + 5
+    actions =  50.times.map {|n| "L: task #{n}\n" }
+    output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,n == pos ? "-" : " " ,n] }
+    io.actions_content = actions.join 
+    ToDoCursorSet.new.run("c #{pos}", session)
+    session.render
+    expect(io.console_output_content).to eq(output.drop(Session::PAGE_SIZE).take(Session::PAGE_SIZE).join + "\n")
+  end
+end
+
+describe ToDoDown do
+  let(:io) { FakeAppIo.new }
+  let(:session) { Session.new(io) }
+
+  it 'pages when cursor set off page' do
+    pos = Session::PAGE_SIZE  - 1
+    actions =  50.times.map {|n| "L: task #{n}\n" }
+    output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,n == (pos + 1) ? "-" : " " ,n] }
+    io.actions_content = actions.join 
+    ToDoCursorSet.new.run("c #{pos}", session)
+    ToDoDown.new.run("d", session)
+    session.render
+    expect(io.console_output_content).to eq(output.drop(Session::PAGE_SIZE).take(Session::PAGE_SIZE).join + "\n")
+  end
+end
+
+describe ToDoUp do
+  let(:io) { FakeAppIo.new }
+  let(:session) { Session.new(io) }
+
+  it 'pages when cursor set off page' do
+    pos = Session::PAGE_SIZE - 1
+    actions =  50.times.map {|n| "L: task #{n}\n" }
+    output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,n == pos ? "-" : " " ,n] }
+    io.actions_content = actions.join 
+    ToDoPageDown.new.run("dd", session)
+    ToDoCursorSet.new.run("c #{pos}", session)
+    ToDoUp.new.run("d", session)
+    session.render
+    expect(io.console_output_content).to eq(output.take(Session::PAGE_SIZE).join + "\n")
+  end
+end
 
 describe ToDoZapToPosition do
   let(:io) { FakeAppIo.new }
@@ -194,7 +241,6 @@ describe ToDoToday do
    it'shows the tasks for the current day' do
      io.archive_content = "2020-01-11 R: Thing X\n2020-01-12 R: Thing Y\n"
      io.today_content = Day.from_text("2020-01-12")
-     output = " 0 - R: first\n\n" 
      ToDoToday.new.run("t", session)
      session.render
      expect(io.console_output_content).to eq("2020-01-12 R: Thing Y\n\n\n")
@@ -212,5 +258,4 @@ describe ToDoToday do
 
 
 end
-
 
