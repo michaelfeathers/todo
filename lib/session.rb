@@ -282,6 +282,11 @@ class Session
        .freq
   end
 
+  def todo_tag_tallies
+    tag_pattern = /^[A-Z]:\s+/
+    @actions.grep(tag_pattern) {|l| l.split.first}.tally
+  end
+
 =begin
   def todo_show_tag_tallies
     tag_pattern = /^[A-Z]:\s+/

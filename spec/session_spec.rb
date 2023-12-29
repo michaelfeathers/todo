@@ -160,6 +160,16 @@ describe Session do
     expect(io.console_output_content).to eq(" 0 - L: edited task\n\n")
   end
 
+  xit 'can return 1 tag tally' do
+    io.actions_content = "L: task\n"
+    expect(session.todo_tag_tallies).to eq ([["L: ",1]])
+  end
+
+  xit 'can return 2 tag tallies' do
+    io.actions_content = "L: task\nR: task\nR: task\n"
+    expect(session.todo_tag_tallies).to eq ([["L: ",1],["R: ", 2]])
+  end
+
 
 
 end
