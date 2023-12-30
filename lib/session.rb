@@ -42,6 +42,7 @@ class Session
   def todo_add tokens
     @actions = [tokens.join(" ") + $/] + @actions
     @cursor = 0
+    adjust_page
   end
 
   def todo_quit

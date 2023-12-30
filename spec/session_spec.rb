@@ -113,6 +113,14 @@ describe Session do
     expect(io.console_output_content).to eq(" 0 - L: this is a test\n 1   L: task A\n\n")
   end
 
+  it 'moves the cursor on an add' do
+    io.actions_content = 50.times.map { "L: task\n" }.join
+    session.todo_page_down
+    session.todo_add(["L:", "new", "task"])
+    session.render
+    expect(io.console_output_content[0..16]).to eq(" 0 - L: new task\n")
+  end
+
   it 'does not write to archive when saving an empty todo list' do
     io.actions_content = ""
     session.todo_save
