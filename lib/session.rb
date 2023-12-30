@@ -17,6 +17,8 @@ end
 class Session
 
   PAGE_SIZE    = 40
+  TAG_PATTERN  =  /^[A-Z]:\s+/ 
+
 
   def initialize io
     @io = io
@@ -283,14 +285,12 @@ class Session
   end
 
   def tag_tallies 
-    tag_pattern = /^[A-Z]:\s+/
-    @actions.grep(tag_pattern) {|l| l.split.first}
+    @actions.grep(TAG_PATTERN) {|l| l.split.first}
             .freq
   end
 
   def untagged_tally
-    tag_pattern = /^[A-Z]:\s+/
-    @actions.grep_v(tag_pattern).count {|l| not l.strip.empty? } 
+    @actions.grep_v(TAG_PATTERN).count {|l| not l.strip.empty? } 
   end
 
   def todo_tag_tallies
