@@ -63,6 +63,7 @@ class ToDo
                 ToDoTrend.new,
                 ToDoTrendChart.new,
                 ToDoUp.new,
+                ToDoTagTallies.new,
                 ToDoZapToPosition.new]
 
   def self.registered_commands

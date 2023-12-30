@@ -337,3 +337,17 @@ class ToDoReTag < Command
     CommandDesc.new("tr tag", "re-tag the task at the cursor with tag. Tag if not tagged")
   end
 end
+
+class ToDoTagTallies < Command 
+  def matches? line
+    line.split.count == 1 && line.split[0] == "tt"
+  end
+
+  def process line, session
+    session.todo_tag_tallies
+  end
+
+  def description
+    CommandDesc.new("tt", "tally of all tag types")
+  end
+end

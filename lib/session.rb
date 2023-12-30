@@ -293,21 +293,17 @@ class Session
     @actions.grep_v(tag_pattern).count {|l| not l.strip.empty? } 
   end
 
-=begin
-  def todo_show_tag_tallies
-    tag_pattern = /^[A-Z]:\s+/
-    text = @actions.grep(tag_pattern) {|l| l.split.first }
-                   .tally
-                   .sort
-                   .map {|t,n| "%-10s%3d" % [t, n] }
-                   .join($/)
+  def todo_tag_tallies
+    text = tag_tallies.map {|t,n| "%-10s%3d" % [t, n] }
+                      .join($/)
 
-    untagged_count = @actions.grep_v(tag_pattern).count {|l| not l.strip.empty? } 
+    untagged_count = untagged_tally
 
     @io.append_to_console $/ + $/ + text + $/
     @io.append_to_console $/ + ("%-10s%3d" % ["Untagged", untagged_count]) + $/ + $/
+ 
+    @io.get_from_console 
   end
-=end
 
 end
 
