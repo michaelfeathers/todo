@@ -288,6 +288,11 @@ class Session
             .freq
   end
 
+  def untagged_tally
+    tag_pattern = /^[A-Z]:\s+/
+    @actions.grep_v(tag_pattern).count {|l| not l.strip.empty? } 
+  end
+
 =begin
   def todo_show_tag_tallies
     tag_pattern = /^[A-Z]:\s+/

@@ -170,6 +170,11 @@ describe Session do
     expect(session.tag_tallies).to eq ([["L:",1],["R:", 2]])
   end
 
+  it 'can return 2 tag tallies' do
+    io.actions_content = "L: task\nR: task\nutaski\nR: task\nutask\n"
+    expect(session.untagged_tally).to eq (2)
+  end
+
 
 
 end
