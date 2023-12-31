@@ -1,6 +1,6 @@
 $:.unshift File.dirname(__FILE__)
 
-require 'session'
+require 'tasklist'
 require 'fakeappio'
 
 empty_archive_expected = "
@@ -27,111 +27,111 @@ Today          0          0          0
 
 "
 
-describe Session do
+describe TaskList do
 
   let(:io) { FakeAppIo.new }
-  let(:session) { Session.new(io) }
+  let(:task_list) { TaskList.new(io) }
 
   it 'finds simple text' do
     io.actions_content = "L: task AA\nL: task BB\n"
-    expect(session.find("AA")).to eq([" 0 L: task AA\n"])
+    expect(task_list.find("AA")).to eq([" 0 L: task AA\n"])
   end
 
   it 'ignores case when it finds' do
     io.actions_content = "L: task A\nL: task B\n" 
-    expect(session.find("b")).to eq([" 1 L: task B\n"])
+    expect(task_list.find("b")).to eq([" 1 L: task B\n"])
   end
 
   it 'produces a summary for an empty archive' do
-    session.todo_month_summaries
+    task_list.todo_month_summaries
     expect(io.console_output_content).to eq(empty_archive_expected)
   end
 
   it 'shows archive entries of today' do
     io.archive_content = "2020-01-11 R: Thing X\n2020-01-12 R: Thing Y\n"
     io.today_content = Day.from_text("2020-01-12")
-    session.todo_today 0
+    task_list.todo_today 0
     expect(io.console_output_content).to eq("2020-01-12 R: Thing Y\n\n")
   end
 
   it 'shows trend' do 
     io.archive_content = "2020-01-11 R: Thing X\n2020-01-12 R: Thing Y\n2020-01-12 L: Another thing\n"
-    session.todo_trend
+    task_list.todo_trend
     expect(io.console_output_content).to eq("  1  2020-01-11\n  2  2020-01-12\n\n")
   end
 
   it 'surfaces one action' do
     io.actions_content = "L: task A\nL: task B\n"
-    session.surface(1)
-    session.render
+    task_list.surface(1)
+    task_list.render
     expect(io.console_output_content).to eq(" 0 - L: task B\n 1   L: task A\n\n")
   end
 
 
   it 'noops on surface 2 actions on a list of 2' do
     io.actions_content = "L: task A\nL: task B\n"
-    session.surface(2)
-    session.render
+    task_list.surface(2)
+    task_list.render
     expect(io.console_output_content).to eq(" 0 - L: task A\n 1   L: task B\n\n")
   end
 
   
   it 'noops on surface 0 actions on a list of 2' do
     io.actions_content = "L: task A\nL: task B\n"
-    session.surface(0)
-    session.render
+    task_list.surface(0)
+    task_list.render
     expect(io.console_output_content).to eq(" 0 - L: task A\n 1   L: task B\n\n")
   end
 
   
   it 'noops on surface 1 action on a list of 0' do
     io.actions_content = ""
-    session.surface(1)
-    session.render
+    task_list.surface(1)
+    task_list.render
     expect(io.console_output_content).to eq("\n")
   end
 
   
   it 'noops on surface 1 action on a list of 1' do
     io.actions_content = "L: task A\n"
-    session.surface(1)
-    session.render
+    task_list.surface(1)
+    task_list.render
     expect(io.console_output_content).to eq(" 0 - L: task A\n\n")
   end
 
   it 'adds a task on an empty todo list' do
     io.actions_content = ""
-    session.todo_add(["this", "is", "a", "test"])
-    session.render
+    task_list.todo_add(["this", "is", "a", "test"])
+    task_list.render
     expect(io.console_output_content).to eq(" 0 - this is a test\n\n")
   end
 
   it 'adds a task on an non-empty todo list' do
     io.actions_content = "L: task A\n"
-    session.todo_add(["L:", "this", "is", "a", "test"])
-    session.render
+    task_list.todo_add(["L:", "this", "is", "a", "test"])
+    task_list.render
     expect(io.console_output_content).to eq(" 0 - L: this is a test\n 1   L: task A\n\n")
   end
 
   it 'moves the cursor on an add' do
     io.actions_content = 50.times.map { "L: task\n" }.join
-    session.todo_page_down
-    session.todo_add(["L:", "new", "task"])
-    session.render
+    task_list.todo_page_down
+    task_list.todo_add(["L:", "new", "task"])
+    task_list.render
     expect(io.console_output_content[0..16]).to eq(" 0 - L: new task\n")
   end
 
   it 'does not write to archive when saving an empty todo list' do
     io.actions_content = ""
-    session.todo_save
-    session.render
+    task_list.todo_save
+    task_list.render
     expect(io.archive_content).to eq("")
   end
 
   it 'does not write to archive when save_no_remove on an empty todo list' do
     io.actions_content = ""
-    session.todo_save_no_remove
-    session.render
+    task_list.todo_save_no_remove
+    task_list.render
     expect(io.archive_content).to eq("")
   end
 
@@ -139,8 +139,8 @@ describe Session do
     io.actions_content = "L: task A\n"
     io.update_content = ""
     io.today_content = Day.from_text("2022-12-21")
-    session.todo_push "1"
-    session.render
+    task_list.todo_push "1"
+    task_list.render
     expect(io.update_content.first).to eq("2022-12-22 L: task A\n")
     expect(io.console_output_content).to eq("\n")
   end
@@ -148,39 +148,39 @@ describe Session do
   it 'noops push on no tasks' do
     io.update_content = []
     io.today_content = Day.from_text("2022-12-21")
-    session.todo_push "1"
-    session.render
+    task_list.todo_push "1"
+    task_list.render
     expect(io.update_content).to eq([])
     expect(io.console_output_content).to eq("\n")
   end
 
   it 'edits a task with no tag' do
     io.actions_content = "task\n"
-    session.todo_edit ["edited", "task"]
-    session.render
+    task_list.todo_edit ["edited", "task"]
+    task_list.render
     expect(io.console_output_content).to eq(" 0 - edited task\n\n")
   end
 
   it 'preserves a tag on editing' do
     io.actions_content = "L: task\n"
-    session.todo_edit ["edited", "task"]
-    session.render
+    task_list.todo_edit ["edited", "task"]
+    task_list.render
     expect(io.console_output_content).to eq(" 0 - L: edited task\n\n")
   end
 
   it 'can return 1 tag tally' do
     io.actions_content = "L: task\n"
-    expect(session.tag_tallies).to eq ([["L:", 1]])
+    expect(task_list.tag_tallies).to eq ([["L:", 1]])
   end
 
   it 'can return 2 tag tallies' do
     io.actions_content = "L: task\nR: task\nR: task\n"
-    expect(session.tag_tallies).to eq ([["L:",1],["R:", 2]])
+    expect(task_list.tag_tallies).to eq ([["L:",1],["R:", 2]])
   end
 
   it 'can return 2 tag tallies' do
     io.actions_content = "L: task\nR: task\nutaski\nR: task\nutask\n"
-    expect(session.untagged_tally).to eq (2)
+    expect(task_list.untagged_tally).to eq (2)
   end
 
 

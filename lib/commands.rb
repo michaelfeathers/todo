@@ -36,7 +36,7 @@ class ToDoAdd < Command
   end
 
   def process line, session
-    session.todo_add(line.split.drop(1))
+    session.list.todo_add(line.split.drop(1))
   end
 
   def description
@@ -50,7 +50,7 @@ class ToDoQuit < Command
   end
 
   def process line, session
-    session.todo_quit
+    session.list.todo_quit
   end
 
   def description
@@ -64,7 +64,7 @@ class ToDoCursorSet < Command
   end
 
   def process line, session
-    session.todo_cursor_set(line.split[1].to_i)
+    session.list.todo_cursor_set(line.split[1].to_i)
   end
 
   def description
@@ -78,7 +78,7 @@ class ToDoDown < Command
   end
 
   def process line, session
-    session.todo_down
+    session.list.todo_down
   end
 
   def description
@@ -92,7 +92,7 @@ class ToDoUp < Command
   end
 
   def process line, session
-    session.todo_up
+    session.list.todo_up
   end  
 
   def description
@@ -106,7 +106,7 @@ class ToDoFind < Command
   end
 
   def process line, session
-    session.todo_find(line.split[1])
+    session.list.todo_find(line.split[1])
     gets
   end
 
@@ -121,7 +121,7 @@ class ToDoPush < Command
   end
 
   def process line, session
-    session.todo_push line.split[1] 
+    session.list.todo_push line.split[1] 
   end
 
   def description
@@ -135,7 +135,7 @@ class ToDoRemove < Command
   end
 
   def process line, session
-    session.todo_remove
+    session.list.todo_remove
   end
 
   def description
@@ -149,7 +149,7 @@ class ToDoSave < Command
   end
 
   def process line, session
-    session.todo_save
+    session.list.todo_save
   end
 
   def description
@@ -163,7 +163,7 @@ class ToDoSaveNoRemove < Command
   end
 
   def process line, session
-    session.todo_save_no_remove
+    session.list.todo_save_no_remove
   end
 
   def description
@@ -177,7 +177,7 @@ class ToDoToday < Command
   end
 
   def process line, session
-    session.todo_today(line.split.count == 1 ? 0 : line.split[1])
+    session.list.todo_today(line.split.count == 1 ? 0 : line.split[1])
   end
 
   def description
@@ -191,7 +191,7 @@ class ToDoTrend < Command
   end
 
   def process line, session
-    session.todo_trend
+    session.list.todo_trend
   end
 
   def description
@@ -206,7 +206,7 @@ class ToDoTrendChart < Command
   end
 
   def process line, session
-    session.todo_trend_chart
+    session.list.todo_trend_chart
   end
 end
 =end
@@ -217,7 +217,7 @@ class ToDoEdit < Command
   end
 
   def process line, session
-    session.todo_edit(line.split.drop(1))
+    session.list.todo_edit(line.split.drop(1))
   end
 
   def description
@@ -231,7 +231,7 @@ class ToDoGrabToggle < Command
   end
 
   def process line, session
-    session.todo_grab_toggle
+    session.list.todo_grab_toggle
   end
 
   def description
@@ -245,7 +245,7 @@ class ToDoHelp < Command
   end
 
   def process line, session
-    session.todo_help(ToDo.registered_commands.map { |c| [c.description.name, c.description.line] })
+    session.list.todo_help(ToDo.registered_commands.map { |c| [c.description.name, c.description.line] })
     gets
   end
 
@@ -260,7 +260,7 @@ class ToDoMonthSummaries < Command
   end
 
   def process line, session
-    session.todo_month_summaries
+    session.list.todo_month_summaries
   end
 
   def description
@@ -274,7 +274,7 @@ class ToDoPageDown < Command
   end
 
   def process line, session
-    session.todo_page_down
+    session.list.todo_page_down
   end
 
   def description
@@ -288,7 +288,7 @@ class ToDoPageUp < Command
   end
 
   def process line, session
-    session.todo_page_up
+    session.list.todo_page_up
   end
 
   def description
@@ -302,7 +302,7 @@ class ToDoZapToPosition < Command
   end
 
   def process line, session
-    session.todo_zap_to_position(line.split[1].to_i)
+    session.list.todo_zap_to_position(line.split[1].to_i)
   end
 
   def description
@@ -316,7 +316,7 @@ class ToDoSurface < Command
   end
 
   def process line, session
-    session.todo_surface(1)
+    session.list.todo_surface(1)
   end
 
   def description
@@ -330,7 +330,7 @@ class ToDoReTag < Command
   end
 
   def process line, session
-    session.todo_retag(line.split[1])
+    session.list.todo_retag(line.split[1])
   end
 
   def description
@@ -344,7 +344,7 @@ class ToDoTagTallies < Command
   end
 
   def process line, session
-    session.todo_tag_tallies
+    session.list.todo_tag_tallies
   end
 
   def description

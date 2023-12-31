@@ -74,7 +74,7 @@ class ToDo
     ToDoUpdater.new(io).run
     @io = io
     @session = Session.new(io)
-    @session.render
+    @session.list.render
   end
 
   def run
@@ -85,7 +85,7 @@ class ToDo
     result = CommandResult.new
     @@commands.each {|c| c.run(line, @session, result) }
     process_result(result, line)
-    @session.render
+    @session.list.render
   end
 
   def process_result result, line

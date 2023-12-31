@@ -12,6 +12,7 @@ describe ToDoRemove do
   it 'removes an action' do
     io.actions_content = "L: task AA\nL: task BB\n"
     io.console_input_content = "Y"
+    puts "<<#{session}>>"
     ToDoRemove.new.run("r", session)
     expect(io.actions_content).to eq("L: task BB\n")
   end
@@ -31,8 +32,8 @@ describe ToDoPageDown do
     actions =  50.times.map {|n| "L: task #{n}\n" }
     output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
     io.actions_content = actions.join 
-    session.render
-    expect(io.console_output_content).to eq(output.take(Session::PAGE_SIZE).join + "\n")
+    session.list.render
+    expect(io.console_output_content).to eq(output.take(TaskList::PAGE_SIZE).join + "\n")
   end
 
   it 'shows the second page of tasks' do
@@ -40,8 +41,8 @@ describe ToDoPageDown do
     output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
     io.actions_content = actions.join 
     ToDoPageDown.new.run("dd", session)
-    session.render
-    expect(io.console_output_content).to eq(output.drop(Session::PAGE_SIZE).take(Session::PAGE_SIZE).join + "\n")
+    session.list.render
+    expect(io.console_output_content).to eq(output.drop(TaskList::PAGE_SIZE).take(TaskList::PAGE_SIZE).join + "\n")
   end
 
   it 'is noop when on the last page' do
@@ -50,8 +51,8 @@ describe ToDoPageDown do
     io.actions_content = actions.join 
     ToDoPageDown.new.run("dd", session)
     ToDoPageDown.new.run("dd", session)
-    session.render
-    expect(io.console_output_content).to eq(output.drop(Session::PAGE_SIZE).take(Session::PAGE_SIZE).join + "\n")
+    session.list.render
+    expect(io.console_output_content).to eq(output.drop(TaskList::PAGE_SIZE).take(TaskList::PAGE_SIZE).join + "\n")
   end
 end
 
@@ -66,8 +67,8 @@ describe ToDoPageUp do
     output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
     io.actions_content = actions.join 
     ToDoPageUp.new.run("uu", session)
-    session.render
-    expect(io.console_output_content).to eq(output.take(Session::PAGE_SIZE).join + "\n")
+    session.list.render
+    expect(io.console_output_content).to eq(output.take(TaskList::PAGE_SIZE).join + "\n")
   end
 
   it 'shows the first page of tasks after previously paging down' do
@@ -76,8 +77,8 @@ describe ToDoPageUp do
     io.actions_content = actions.join 
     ToDoPageDown.new.run("dd", session)
     ToDoPageUp.new.run("uu", session)
-    session.render
-    expect(io.console_output_content).to eq(output.take(Session::PAGE_SIZE).join + "\n")
+    session.list.render
+    expect(io.console_output_content).to eq(output.take(TaskList::PAGE_SIZE).join + "\n")
   end
   
 end
@@ -87,13 +88,13 @@ describe ToDoCursorSet do
   let(:session) { Session.new(io) }
 
   it 'pages when cursor set off page' do
-    pos = Session::PAGE_SIZE + 5
+    pos = TaskList::PAGE_SIZE + 5
     actions =  50.times.map {|n| "L: task #{n}\n" }
     output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,n == pos ? "-" : " " ,n] }
     io.actions_content = actions.join 
     ToDoCursorSet.new.run("c #{pos}", session)
-    session.render
-    expect(io.console_output_content).to eq(output.drop(Session::PAGE_SIZE).take(Session::PAGE_SIZE).join + "\n")
+    session.list.render
+    expect(io.console_output_content).to eq(output.drop(TaskList::PAGE_SIZE).take(TaskList::PAGE_SIZE).join + "\n")
   end
 end
 
@@ -102,14 +103,14 @@ describe ToDoDown do
   let(:session) { Session.new(io) }
 
   it 'pages when cursor set off page' do
-    pos = Session::PAGE_SIZE  - 1
+    pos = TaskList::PAGE_SIZE  - 1
     actions =  50.times.map {|n| "L: task #{n}\n" }
     output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,n == (pos + 1) ? "-" : " " ,n] }
     io.actions_content = actions.join 
     ToDoCursorSet.new.run("c #{pos}", session)
     ToDoDown.new.run("d", session)
-    session.render
-    expect(io.console_output_content).to eq(output.drop(Session::PAGE_SIZE).take(Session::PAGE_SIZE).join + "\n")
+    session.list.render
+    expect(io.console_output_content).to eq(output.drop(TaskList::PAGE_SIZE).take(TaskList::PAGE_SIZE).join + "\n")
   end
 end
 
@@ -118,15 +119,15 @@ describe ToDoUp do
   let(:session) { Session.new(io) }
 
   it 'pages when cursor set off page' do
-    pos = Session::PAGE_SIZE - 1
+    pos = TaskList::PAGE_SIZE - 1
     actions =  50.times.map {|n| "L: task #{n}\n" }
     output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,n == pos ? "-" : " " ,n] }
     io.actions_content = actions.join 
     ToDoPageDown.new.run("dd", session)
     ToDoCursorSet.new.run("c #{pos}", session)
     ToDoUp.new.run("d", session)
-    session.render
-    expect(io.console_output_content).to eq(output.take(Session::PAGE_SIZE).join + "\n")
+    session.list.render
+    expect(io.console_output_content).to eq(output.take(TaskList::PAGE_SIZE).join + "\n")
   end
 end
 
@@ -138,7 +139,7 @@ describe ToDoZapToPosition do
     io.actions_content = [ "L: first\n", "L: second\n"].join
     output = [" 0 - L: second\n", " 1   L: first\n\n"].join
     ToDoZapToPosition.new.run("z 1", session)
-    session.render
+    session.list.render
     expect(io.console_output_content).to eq(output)
 
   end
@@ -147,7 +148,7 @@ describe ToDoZapToPosition do
     io.actions_content = [ "L: first\n", "L: second\n"].join
     output = [" 0 - L: second\n", " 1   L: first\n\n"].join
     ToDoZapToPosition.new.run("z 2", session)
-    session.render
+    session.list.render
     expect(io.console_output_content).to eq(output)
 
   end
@@ -158,7 +159,7 @@ describe ToDoZapToPosition do
     output = [" 0   L: second\n", " 1 - L: first\n\n"].join
     ToDoCursorSet.new.run("c 1", session)
     ToDoZapToPosition.new.run("z -1", session)
-    session.render
+    session.list.render
     expect(io.console_output_content).to eq(output)
 
   end
@@ -167,7 +168,7 @@ describe ToDoZapToPosition do
     io.actions_content = [ "L: first\n", "L: second\n"].join
     output = [" 0 - L: first\n", " 1   L: second\n\n"].join
     ToDoZapToPosition.new.run("z 0", session)
-    session.render
+    session.list.render
     expect(io.console_output_content).to eq(output)
   end
 
@@ -175,7 +176,7 @@ describe ToDoZapToPosition do
     io.actions_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
     output = [" 0 - L: second\n", " 1   L: third\n 2   L: first\n\n"].join
     ToDoZapToPosition.new.run("z 2", session)
-    session.render
+    session.list.render
     expect(io.console_output_content).to eq(output)
   end
 
@@ -188,7 +189,7 @@ describe ToDoSurface do
   it 'surfaces a single task' do
     io.actions_content = (0..9).to_a.map { |n| "#{n}\n" }.join($/)
     ToDoSurface.new.run("su", session)
-    session.render
+    session.list.render
     expect(io.console_output_content.split.map(&:to_i)).to_not eq((0..9).to_a)
   end
 
@@ -203,7 +204,7 @@ describe ToDoReTag do
     output = [ " 0   L: first\n", " 1 - R: second\n",  " 2   L: third\n\n"].join    
     ToDoCursorSet.new.run("c 1", session)
     ToDoReTag.new.run("rt r", session)
-    session.render
+    session.list.render
     expect(io.console_output_content).to eq(output)
   end
 
@@ -211,7 +212,7 @@ describe ToDoReTag do
     io.actions_content = "" 
     output = "\n" 
     ToDoReTag.new.run("rt r", session)
-    session.render
+    session.list.render
     expect(io.console_output_content).to eq(output)
    end
 
@@ -219,7 +220,7 @@ describe ToDoReTag do
      io.actions_content = ["first\n"].join
      output = " 0 - L: first\n\n" 
      ToDoReTag.new.run("rt l", session)
-     session.render
+     session.list.render
      expect(io.console_output_content).to eq(output)
    end
 
@@ -227,7 +228,7 @@ describe ToDoReTag do
      io.actions_content = ["R: first\n"].join
      output = " 0 - R: first\n\n" 
      ToDoReTag.new.run("rt", session)
-     session.render
+     session.list.render
      expect(io.console_output_content).to eq(output)
    end
 
@@ -242,7 +243,7 @@ describe ToDoToday do
      io.archive_content = "2020-01-11 R: Thing X\n2020-01-12 R: Thing Y\n"
      io.today_content = Day.from_text("2020-01-12")
      ToDoToday.new.run("t", session)
-     session.render
+     session.list.render
      expect(io.console_output_content).to eq("2020-01-12 R: Thing Y\n\n\n")
    end
 
@@ -252,7 +253,7 @@ describe ToDoToday do
      io.today_content = Day.from_text("2020-01-12")
      output = " 0 - R: first\n\n" 
      ToDoToday.new.run("t 1", session)
-     session.render
+     session.list.render
      expect(io.console_output_content).to eq("2020-01-11 R: Thing X\n\n\n")
    end
 
