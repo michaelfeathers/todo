@@ -351,3 +351,17 @@ class ToDoTagTallies < Command
     CommandDesc.new("tt", "tally of all tag types")
   end
 end
+
+class ToDoSwitchLists < Command
+  def matches? line
+    line.split.count == 1 && line.split[0] == "w"
+  end
+
+  def process line, session
+    session.switch_lists
+  end
+
+  def description
+    CommandDesc.new("w", "switch foreground and background lists")
+  end
+end

@@ -64,21 +64,23 @@ class ToDo
                 ToDoTrendChart.new,
                 ToDoUp.new,
                 ToDoTagTallies.new,
+                ToDoSwitchLists.new,
                 ToDoZapToPosition.new]
 
   def self.registered_commands
     @@commands
   end
 
-  def initialize io
-    ToDoUpdater.new(io).run
-    @io = io
-    @session = Session.new(io)
+  def initialize foreground_io
+    @foreground_io = foreground_io
+    @background_io = nil
+    ToDoUpdater.new(@foreground_io).run
+    @session = Session.new(@foreground_io, @background_io )
     @session.list.render
   end
 
   def run
-    while true; on_line(@io.get_from_console.chomp); end
+    while true; on_line(@foreground_io.get_from_console.chomp); end
   end
 
   def on_line line
