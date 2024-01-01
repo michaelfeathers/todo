@@ -366,3 +366,20 @@ class ToDoSwitchLists < Command
     CommandDesc.new("w", "switch foreground and background lists")
   end
 end
+
+class ToDoMoveTaskToOther < Command
+  def matches? line
+    line.split.count == 1 && line.split[0] == "-"
+  end
+
+  def process line, session
+    session.move_task_to_other
+  end
+
+  def description
+    CommandDesc.new("-", "move task to other list")
+  end
+end
+
+
+

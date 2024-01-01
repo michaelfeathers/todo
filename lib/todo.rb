@@ -66,6 +66,7 @@ class ToDo
                 ToDoUp.new,
                 ToDoTagTallies.new,
                 ToDoSwitchLists.new,
+                ToDoMoveTaskToOther.new,
                 ToDoZapToPosition.new]
 
   def self.registered_commands

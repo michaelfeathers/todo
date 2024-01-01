@@ -270,6 +270,10 @@ class TaskList
     @cursor = [@cursor, @actions.count - 1].min
   end
 
+  def action_at_cursor
+    @actions[@cursor]
+  end
+
   def surface count
     return if @actions.count < 2 
 
