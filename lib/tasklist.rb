@@ -233,7 +233,7 @@ class TaskList
 
   def render
     @io.clear_console
-    @io.append_to_console @description + $/
+    @io.append_to_console @description
      
     lines = @actions.zip((0..))
                     .map {|e,i| "%2d %s %s" % [i, cursor_char(i), e]}

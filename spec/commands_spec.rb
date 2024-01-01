@@ -4,7 +4,7 @@ require 'session'
 require 'commands'
 require 'fakeappio'
 
-RENDER_PAD = "\n\n\n"
+RENDER_PAD = "\n\n"
 
 describe ToDoRemove do
   let(:f_io) { FakeAppIo.new }
