@@ -64,7 +64,7 @@ describe TaskList do
     io.actions_content = "L: task A\nL: task B\n"
     task_list.surface(1)
     task_list.render
-    expect(io.console_output_content).to eq(" 0 - L: task B\n 1   L: task A\n\n")
+    expect(io.console_output_content).to eq("\n\n\n 0 - L: task B\n 1   L: task A\n\n")
   end
 
 
@@ -72,7 +72,7 @@ describe TaskList do
     io.actions_content = "L: task A\nL: task B\n"
     task_list.surface(2)
     task_list.render
-    expect(io.console_output_content).to eq(" 0 - L: task A\n 1   L: task B\n\n")
+    expect(io.console_output_content).to eq("\n\n\n 0 - L: task A\n 1   L: task B\n\n")
   end
 
   
@@ -80,7 +80,7 @@ describe TaskList do
     io.actions_content = "L: task A\nL: task B\n"
     task_list.surface(0)
     task_list.render
-    expect(io.console_output_content).to eq(" 0 - L: task A\n 1   L: task B\n\n")
+    expect(io.console_output_content).to eq("\n\n\n 0 - L: task A\n 1   L: task B\n\n")
   end
 
   
@@ -88,7 +88,7 @@ describe TaskList do
     io.actions_content = ""
     task_list.surface(1)
     task_list.render
-    expect(io.console_output_content).to eq("\n")
+    expect(io.console_output_content).to eq("\n\n\n\n")
   end
 
   
@@ -96,21 +96,21 @@ describe TaskList do
     io.actions_content = "L: task A\n"
     task_list.surface(1)
     task_list.render
-    expect(io.console_output_content).to eq(" 0 - L: task A\n\n")
+    expect(io.console_output_content).to eq("\n\n\n 0 - L: task A\n\n")
   end
 
   it 'adds a task on an empty todo list' do
     io.actions_content = ""
     task_list.todo_add(["this", "is", "a", "test"])
     task_list.render
-    expect(io.console_output_content).to eq(" 0 - this is a test\n\n")
+    expect(io.console_output_content).to eq("\n\n\n 0 - this is a test\n\n")
   end
 
   it 'adds a task on an non-empty todo list' do
     io.actions_content = "L: task A\n"
     task_list.todo_add(["L:", "this", "is", "a", "test"])
     task_list.render
-    expect(io.console_output_content).to eq(" 0 - L: this is a test\n 1   L: task A\n\n")
+    expect(io.console_output_content).to eq("\n\n\n 0 - L: this is a test\n 1   L: task A\n\n")
   end
 
   it 'moves the cursor on an add' do
@@ -118,7 +118,7 @@ describe TaskList do
     task_list.todo_page_down
     task_list.todo_add(["L:", "new", "task"])
     task_list.render
-    expect(io.console_output_content[0..16]).to eq(" 0 - L: new task\n")
+    expect(io.console_output_content[0..19]).to eq("\n\n\n 0 - L: new task\n")
   end
 
   it 'does not write to archive when saving an empty todo list' do
@@ -142,7 +142,7 @@ describe TaskList do
     task_list.todo_push "1"
     task_list.render
     expect(io.update_content.first).to eq("2022-12-22 L: task A\n")
-    expect(io.console_output_content).to eq("\n")
+    expect(io.console_output_content).to eq("\n\n\n\n")
   end
   
   it 'noops push on no tasks' do
@@ -151,21 +151,21 @@ describe TaskList do
     task_list.todo_push "1"
     task_list.render
     expect(io.update_content).to eq([])
-    expect(io.console_output_content).to eq("\n")
+    expect(io.console_output_content).to eq("\n\n\n\n")
   end
 
   it 'edits a task with no tag' do
     io.actions_content = "task\n"
     task_list.todo_edit ["edited", "task"]
     task_list.render
-    expect(io.console_output_content).to eq(" 0 - edited task\n\n")
+    expect(io.console_output_content).to eq("\n\n\n 0 - edited task\n\n")
   end
 
   it 'preserves a tag on editing' do
     io.actions_content = "L: task\n"
     task_list.todo_edit ["edited", "task"]
     task_list.render
-    expect(io.console_output_content).to eq(" 0 - L: edited task\n\n")
+    expect(io.console_output_content).to eq("\n\n\n 0 - L: edited task\n\n")
   end
 
   it 'can return 1 tag tally' do

@@ -11,7 +11,7 @@ class Session
 
   def initialize foreground_io, background_io
     @foreground_tasks = TaskList.new(foreground_io)
-    @background_tasks = TaskList.new(background_io)
+    @background_tasks = TaskList.new(background_io, "BACKGROUND")
 
     @list = @foreground_tasks
   end

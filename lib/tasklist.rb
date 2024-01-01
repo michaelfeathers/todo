@@ -19,14 +19,16 @@ class TaskList
   PAGE_SIZE    = 40
   TAG_PATTERN  =  /^[A-Z]:\s+/ 
 
-   attr_reader :io
+   attr_reader :io, :description
 
-  def initialize io
+  def initialize io, description = ""
     @io = io
     @actions = io.read_actions.lines
     @cursor = 0
     @grab_mode = false
     @page_no = 0
+
+    @description = description + $/ + $/
   end
 
   def todo_help command_list
@@ -231,7 +233,8 @@ class TaskList
 
   def render
     @io.clear_console
-
+    @io.append_to_console @description + $/
+     
     lines = @actions.zip((0..))
                     .map {|e,i| "%2d %s %s" % [i, cursor_char(i), e]}
                     .drop(@page_no * PAGE_SIZE)

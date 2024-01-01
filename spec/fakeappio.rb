@@ -8,7 +8,8 @@ class FakeAppIo
   attr_accessor :update_content, :today_content
 
   def initialize
-    @archive_content = @console_output_content = @actions_content = ""
+    @archive_content = @actions_content = ""
+    @console_output_content = "" 
     @update_content = []
     @today_day = nil
   end
