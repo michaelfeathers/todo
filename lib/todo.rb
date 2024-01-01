@@ -15,7 +15,7 @@ class ToDoTrendChart < Command
   end
 
   def process line, session
-    session.todo_trend_chart
+    session.list.todo_trend_chart
   end
 
   def description
@@ -24,7 +24,7 @@ class ToDoTrendChart < Command
 end
 
 
-class Session
+class TaskList
   def todo_trend_chart
     g = Gruff::Line.new(1600)
     g.theme = {
