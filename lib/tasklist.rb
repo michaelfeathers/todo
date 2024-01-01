@@ -130,7 +130,6 @@ class TaskList
   end
   
   def todo_month_summaries month = nil
-
     month ||= @io.today.year
 
     task_descs = @io.read_archive
@@ -161,8 +160,6 @@ class TaskList
       @io.append_to_console "Today %10d %10d %10d\n" % [todays.select {|d| d[1] == "R" }.count,
                                          todays.select {|d| d[1] == "L" }.count,
                                          todays.count]
-    else
-      @io.append_to_console "Today %10d %10d %10d\n" % [0, 0, 0]
     end
 
     @io.append_to_console $/
