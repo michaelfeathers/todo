@@ -43,6 +43,7 @@ describe TaskList do
   end
 
   it 'produces a summary for an empty archive' do
+    io.today_content = Day.from_text("2020-01-01")
     task_list.todo_month_summaries
     expect(io.console_output_content).to eq(empty_archive_expected)
   end

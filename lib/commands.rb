@@ -257,11 +257,12 @@ end
 
 class ToDoMonthSummaries < Command
   def matches? line
-    line.split.take(1) == ["m"]
+    (1..2).include?(line.split.count) && line.split.first == "m"
   end
 
   def process line, session
-    session.list.todo_month_summaries
+    session.list.todo_month_summaries if line.split.count == 1
+    session.list.todo_month_summaries(line.split[1]) if line.split.count == 2
   end
 
   def description

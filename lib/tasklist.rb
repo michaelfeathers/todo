@@ -129,12 +129,15 @@ class TaskList
     @grab_mode = (not @grab_mode)
   end
   
-  def todo_month_summaries 
+  def todo_month_summaries month = nil
+
+    month ||= @io.today.year
+
     task_descs = @io.read_archive
                     .lines
                     .map {|l| [Day.from_text(l.split[0]), l.split[1].chars.first] }
 
-    year_descs =  task_descs.select {|td| td.first.year.to_i == 2023 }
+    year_descs =  task_descs.select {|td| td.first.year.to_i == month.to_i }
       @io.append_to_console "\n\n      %10s %10s %10s\n\n" % ["R7K", "Life", "Total"]
 
       (1..12).each do |month|
