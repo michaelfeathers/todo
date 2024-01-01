@@ -3,6 +3,7 @@ $:.unshift File.dirname(__FILE__)
 require 'session'
 require 'commands'
 require 'appio'
+require 'backgroundio'
 require 'todoupdater'
 
 
@@ -71,16 +72,16 @@ class ToDo
     @@commands
   end
 
-  def initialize foreground_io
+  def initialize foreground_io, background_io
     @foreground_io = foreground_io
-    @background_io = nil
+    @background_io = background_io
     ToDoUpdater.new(@foreground_io).run
-    @session = Session.new(@foreground_io, @background_io )
+    @session = Session.new(@foreground_io, @background_io)
     @session.list.render
   end
 
   def run
-    while true; on_line(@foreground_io.get_from_console.chomp); end
+    while true; on_line(@session.list.io.get_from_console.chomp); end
   end
 
   def on_line line
@@ -92,12 +93,12 @@ class ToDo
 
   def process_result result, line
     return unless result.match_count == 0 && line.split.count > 0
-    @io.append_to_console("Unrecognized command: " + line + $/)
-    @io.get_from_console
+    @session.list.io.append_to_console("Unrecognized command: " + line + $/)
+    @session.list.io.get_from_console
   end
 
 end
 
 
-ToDo.new(AppIo.new).run
+ToDo.new(AppIo.new, BackgroundIo.new).run
 

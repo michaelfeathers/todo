@@ -275,7 +275,7 @@ describe ToDoSwitchLists do
 
   it 'switches away foreground' do
      f_io.actions_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
-     output = [ " 0 - L: first\n", " 1   L: second\n",  " 2   L: third\n\n"].join    
+     output = " 0 - L: first\n 1   L: second\n 2   L: third\n\n" 
      session.list.render
      expect(session.list.io.console_output_content).to eq(output)
 
@@ -287,8 +287,9 @@ describe ToDoSwitchLists do
   it 'switches foreground and background' do
      f_io.actions_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
      b_io.actions_content = [ "R: first\n", "R: second\n",  "R: third\n"].join
-     output_before = [ " 0 - L: first\n", " 1   L: second\n",  " 2   L: third\n\n"].join    
-     output_after  = [ " 0 - R: first\n", " 1   R: second\n",  " 2   R: third\n\n"].join    
+     output_before = [" 0 - L: first\n", " 1   L: second\n",  " 2   L: third\n\n"].join    
+     output_after  = [" 0 - R: first\n 1   R: second\n 2   R: third\n\n"].join
+
      session.list.render
      expect(session.list.io.console_output_content).to eq(output_before)
 

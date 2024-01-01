@@ -10,14 +10,14 @@ class Session
 
 
   def initialize foreground_io, background_io
-    @foreground_io = foreground_io
-    @background_io = background_io
-    @list = TaskList.new(@foreground_io)
+    @foreground_tasks = TaskList.new(foreground_io)
+    @background_tasks = TaskList.new(background_io)
+
+    @list = @foreground_tasks
   end
 
   def switch_lists 
-    return unless @background_io
-    @list = TaskList.new(@background_io)
+    @list = @list.equal?(@foreground_tasks) ? @background_tasks : @foreground_tasks
   end
 
 end
