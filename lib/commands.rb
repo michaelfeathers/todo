@@ -50,7 +50,8 @@ class ToDoQuit < Command
   end
 
   def process line, session
-    session.list.todo_quit
+    session.save
+    exit
   end
 
   def description

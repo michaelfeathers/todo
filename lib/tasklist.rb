@@ -46,9 +46,8 @@ class TaskList
     adjust_page
   end
 
-  def todo_quit
+  def save_all
     @io.write_actions(@actions)
-    exit
   end
 
   def todo_cursor_set line_no

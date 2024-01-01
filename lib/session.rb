@@ -20,6 +20,11 @@ class Session
     @list = @list.equal?(@foreground_tasks) ? @background_tasks : @foreground_tasks
   end
 
+  def save
+    @foreground_tasks.save_all
+    @background_tasks.save_all
+  end
+
 end
 
 
