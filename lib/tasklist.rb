@@ -17,7 +17,7 @@ end
 class TaskList
 
   PAGE_SIZE    = 40
-  TAG_PATTERN  =  /^[A-Z]:\s+/ 
+  TAG_PATTERN  =  /^[A-Z]:$/ 
 
    attr_reader :io, :description
 
@@ -117,7 +117,7 @@ class TaskList
     return if @actions.empty?
 
     old_tokens = @actions[@cursor].split
-    @actions[@cursor] = if old_tokens.first =~ /^[A-Z]*:$/
+    @actions[@cursor] = if old_tokens.first =~ TAG_PATTERN 
                           ([old_tokens.first] + new_tokens).join(" ")
                         else
                           new_tokens.join(" ")
@@ -225,7 +225,7 @@ class TaskList
     tokens = current_action.split
     tag_text = "#{new_tag.upcase}:"
 
-    tokens.first =~ /^[A-Z]*:$/ ? tokens[0] = tag_text : tokens.unshift(tag_text)
+    tokens.first =~ TAG_PATTERN ? tokens[0] = tag_text : tokens.unshift(tag_text)
     @actions[@cursor] = tokens.join(" ") + $/
   end
   
@@ -290,13 +290,19 @@ class TaskList
        .freq
   end
 
+
   def tag_tallies 
-    @actions.grep(TAG_PATTERN) {|l| l.split.first}
+    @actions.select {|l| l =~ /\S/ }
+            .map {|l| l.split.first }
+            .select {|t| t =~ TAG_PATTERN } 
             .freq
   end
 
   def untagged_tally
-    @actions.grep_v(TAG_PATTERN).count {|l| not l.strip.empty? } 
+    @actions.select {|l| l =~ /\S/ }
+            .map {|l| l.split.first }
+            .reject {|t| t =~ TAG_PATTERN } 
+            .count
   end
 
   def todo_tag_tallies
