@@ -21,12 +21,12 @@ class Session
   end
 
   def move_task_to_other
-    self_list = @list
-    other_list = @list.equal?(@foreground_tasks) ? @background_tasks : @foreground_tasks
+    task = @list.action_at_cursor 
+    @list.remove_action_at_cursor
 
-    task = self_list.action_at_cursor 
-    self_list.remove_action_at_cursor
-    other_list.todo_add(task.split)
+    switch_lists
+    @list.todo_add(task.split)
+    switch_lists
   end
 
   def save

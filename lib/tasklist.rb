@@ -229,17 +229,16 @@ class TaskList
     @actions[@cursor] = tokens.join(" ") + $/
   end
   
-
   def render
     @io.clear_console
     @io.append_to_console @description
-     
-    lines = @actions.zip((0..))
-                    .map {|e,i| "%2d %s %s" % [i, cursor_char(i), e]}
-                    .drop(@page_no * PAGE_SIZE)
-                    .take(PAGE_SIZE)
 
-    @io.append_to_console lines.join + $/
+    lines = @actions.zip((0..))
+                    .map { |e, i| "%2d %s %s" % [i, cursor_char(i), e] }
+                    .drop(@page_no * PAGE_SIZE).take(PAGE_SIZE)
+                    .join
+
+    @io.append_to_console lines + $/
   end
 
   def count_month_entries month_no, type, descs
