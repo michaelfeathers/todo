@@ -32,15 +32,14 @@ class TaskList
   end
 
   def todo_help command_list
-     max = command_list.map {|cmd| cmd[0].length }.max
+    max_length = command_list.map { |cmd| cmd[0].length }.max
 
-     output = command_list.sort_by {|n,_| n }
-                          .map {|n, l| "#{n.ljust(max + 5)}- #{l}" }
-                          .join("\n") 
-     
-     @io.append_to_console $/ + output + $/ + $/ 
+    output = command_list.sort_by(&:first)
+                         .map { |name, desc| "%-#{max_length + 5}s- %s" % [name, desc] }
+                         .join("\n")
+
+    @io.append_to_console "\n#{output}\n\n"
   end
-
 
   def todo_add tokens
     @actions = [tokens.join(" ") + $/] + @actions

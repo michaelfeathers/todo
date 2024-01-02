@@ -33,11 +33,12 @@ class ToDoUpdater
 
   def due? line 
     tokens = line.split
-    return false unless tokens.size > 0
+    return false unless tokens.any?
     Day.from_text(tokens.first).date <= @io.today.date
   rescue
     false
   end
+
 end
 
 
