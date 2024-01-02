@@ -51,6 +51,7 @@ class ToDo
                 ToDoGrabToggle.new,
                 ToDoHelp.new,
                 ToDoMonthSummaries.new,
+                ToDoMoveTaskToOther.new,
                 ToDoPageDown.new,
                 ToDoPageUp.new,
                 ToDoPush.new,
@@ -60,13 +61,12 @@ class ToDo
                 ToDoSave.new,
                 ToDoSaveNoRemove.new,
                 ToDoSurface.new,
+                ToDoSwitchLists.new,
+                ToDoTagTallies.new,
                 ToDoToday.new,
                 ToDoTrend.new,
                 ToDoTrendChart.new,
                 ToDoUp.new,
-                ToDoTagTallies.new,
-                ToDoSwitchLists.new,
-                ToDoMoveTaskToOther.new,
                 ToDoZapToPosition.new]
 
   def self.registered_commands
