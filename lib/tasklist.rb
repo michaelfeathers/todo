@@ -291,15 +291,15 @@ class TaskList
   end
 
 
-  def tag_tallies 
-    @actions.select {|l| l =~ /\S/ }
+  def tag_tallies
+    @actions.select {|l| l.strip.length > 0 }
             .map {|l| l.split.first }
             .select {|t| t =~ TAG_PATTERN } 
             .freq
   end
 
   def untagged_tally
-    @actions.select {|l| l =~ /\S/ }
+    @actions.select {|l| l.strip.length > 0 }
             .map {|l| l.split.first }
             .reject {|t| t =~ TAG_PATTERN } 
             .count
