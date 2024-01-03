@@ -283,10 +283,11 @@ class TaskList
     todo_cursor_set(0)
   end
 
-  def day_frequencies
+  def day_frequencies year = nil
     @io.read_archive
        .lines 
        .map {|line| line.split.first }
+       .select {|d| !year || Day.from_text(d).year ==  year }
        .freq
   end
 

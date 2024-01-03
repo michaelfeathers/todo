@@ -11,11 +11,12 @@ require 'gruff'
 
 class ToDoTrendChart < Command
   def matches? line
-    line.split == ["tc"]
+    (1..2).include?(line.split.count) && line.split.first == "tc"
   end
 
   def process line, session
-    session.list.todo_trend_chart
+    opt_year = line.split[1] if line.split.count == 2
+    session.list.todo_trend_chart opt_year
   end
 
   def description
@@ -25,7 +26,7 @@ end
 
 
 class TaskList
-  def todo_trend_chart
+  def todo_trend_chart opt_year
     g = Gruff::Line.new(1600)
     g.theme = {
       colors: %w[red],
@@ -33,7 +34,7 @@ class TaskList
       font_color: 'black',
       background_colors: 'white'
     }
-    g.data('', day_frequencies.map {|e| e[1] })  
+    g.data('', day_frequencies(opt_year).map {|e| e[1] })  
     g.write('trend.png')
     `open trend.png`
   end
