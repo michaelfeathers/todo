@@ -35,15 +35,14 @@ class Session
   end
 
   def global_find text
-    io = AppIo.new
-
-    io.clear_console
+    io = AppIO.new
 
     fore = @foreground_tasks.find(text)
-    io.append_to_console fore.join + $/ + $/  unless fore.empty?
+    @io.append_to_console fore.join + $/ + found.count.to_s + $/ + $/ + $/
 
-    back = @background_tasks.find(text)
-    io.append_to_console "Background:" + $/ + back.join + $/ + $/ + $/ unless back.empty?
+    background_found = @background_tasks.find(text)
+
+    
   end
 
 end

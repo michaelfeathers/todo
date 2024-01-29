@@ -49,6 +49,7 @@ class ToDo
                 ToDoDown.new,
                 ToDoEdit.new,
                 ToDoFind.new,
+                ToDoGlobalFind.new,
                 ToDoGrabToggle.new,
                 ToDoHelp.new,
                 ToDoMonthSummaries.new,

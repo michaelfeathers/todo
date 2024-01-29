@@ -116,6 +116,21 @@ class ToDoFind < Command
   end
 end
 
+class ToDoGlobalFind < Command
+  def matches? line
+    line.split.count == 2 && line.split[0] == "gf"
+  end
+
+  def process line, session
+    session.global_find(line.split[1])
+    gets
+  end
+
+  def description
+    CommandDesc.new("gf text", "find text across all task lists")
+  end
+end
+
 class ToDoPush < Command
   def matches? line
     line.split.count == 2 && line.split.take(1) == ["p"]
