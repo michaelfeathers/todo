@@ -46,6 +46,21 @@ class Session
     io.append_to_console "Background:" + $/ + back.join + $/ + $/ + $/ unless back.empty?
   end
 
+  def global_find(text)
+    io = AppIo.new
+    io.clear_console
+
+    tasks = { '' => @foreground_tasks, 'Background:' => @background_tasks }
+
+    tasks.each do |label, task_list|
+      found = task_list.find(text)
+      next if found.empty?
+
+      io.append_to_console "#{label}#{$/}" unless label.empty?
+      io.append_to_console found.join + $/ + $/
+    end
+  end
+
 end
 
 
