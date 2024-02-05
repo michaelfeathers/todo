@@ -2,7 +2,7 @@ $:.unshift File.dirname(__FILE__)
 
 ROOT_DIR     = "/Users/michaelfeathers/Projects/todo/lib/"
 TODO_FILE    = ROOT_DIR + "todo.txt"
-UPDATER_FILE = ROOT_DIR + "updates.txt"
+UPDATE_FILE  = ROOT_DIR + "updates.txt"
 ARCHIVE_FILE = ROOT_DIR + "archive.txt"
 
 
@@ -24,11 +24,11 @@ class AppIo
   end
 
   def read_updates
-    File.read(UPDATER_FILE)
+    File.read(UPDATE_FILE)
   end
   
   def write_updates updates
-    File.open(UPDATER_FILE, 'w') { |f| f.write(updates.join) }
+    File.open(UPDATE_FILE, 'w') { |f| f.write(updates.join) }
   end
 
   def append_to_console text
