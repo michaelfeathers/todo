@@ -16,7 +16,7 @@ end
 
 class TaskList
 
-  PAGE_SIZE    = 50
+  PAGE_SIZE    = 40
   TAG_PATTERN  = /^[A-Z]:$/ 
 
    attr_reader :io, :description
