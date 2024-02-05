@@ -187,6 +187,20 @@ class ToDoSaveNoRemove < Command
   end
 end
 
+class ToDoShowUpdates < Command
+  def matches? line
+    line.split == ["pp"]
+  end
+
+  def process line, session
+    session.list.todo_show_updates
+  end
+
+  def description
+    CommandDesc.new("pp", "show updates")
+  end
+end
+
 class ToDoToday < Command
   def matches? line
     (1..2).include?(line.split.count) && line.split.first == "t"

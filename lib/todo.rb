@@ -62,6 +62,7 @@ class ToDo
                 ToDoRemove.new,
                 ToDoSave.new,
                 ToDoSaveNoRemove.new,
+                ToDoShowUpdates.new,
                 ToDoSurface.new,
                 ToDoSwitchLists.new,
                 ToDoTagTallies.new,

@@ -112,6 +112,12 @@ class TaskList
     return if @actions.count < 1
     @io.append_to_archive(@io.today.to_s + " " + @actions[@cursor]) 
   end
+  
+  def todo_show_updates
+    @io.clear_console
+    @io.append_to_console @io.read_updates
+    @io.get_from_console
+  end
 
   def todo_edit new_tokens  
     return if @actions.empty?
