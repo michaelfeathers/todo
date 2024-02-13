@@ -66,6 +66,7 @@ class ToDo
                 ToDoSurface.new,
                 ToDoSwitchLists.new,
                 ToDoTagTallies.new,
+                ToDoTodayTargetFor.new,
                 ToDoToday.new,
                 ToDoTrend.new,
                 ToDoTrendChart.new,

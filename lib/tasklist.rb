@@ -234,7 +234,41 @@ class TaskList
     tokens.first =~ TAG_PATTERN ? tokens[0] = tag_text : tokens.unshift(tag_text)
     @actions[@cursor] = tokens.join(" ") + $/
   end
-  
+
+  def todo_today_target_for month_target
+    today = Date.today
+    dates = @io.read_archive
+               .lines
+               .map {|l| DateTime.parse(l.split[0]) }
+
+    current_month_dates = dates.select { |date| date.month == today.month && date.year == today.year }
+    tasks_done_prev     = current_month_dates.count { |date| date < today }
+    tasks_done_today    = current_month_dates.count(today)
+    tasks_done_so_far   = tasks_done_prev + tasks_done_today 
+    
+    if tasks_done_so_far >= month_target
+      @io.append_to_console "\n\n    goal met\n\n"
+      @io.get_from_console
+      return
+    end
+
+    last_day_of_month             = Date.new(today.year, today.month, -1)
+    remaining_days                = (today..last_day_of_month).count
+    remaining_tasks               = month_target - tasks_done_so_far
+    daily_tasks_needed            = (remaining_tasks.to_f / remaining_days).ceil
+
+    if remaining_days == 1
+      @io.append_to_console "\n\n    do %d to meet monthly goal of %d\n\n" % [remaining_tasks, month_target]
+      @io.get_from_console
+      return
+    end
+
+    additional_tasks_needed_today = [daily_tasks_needed - tasks_done_today, 1].max
+    
+    @io.append_to_console "\n\n    do %d to meet daily goal of %d\n\n" % [additional_tasks_needed_today, daily_tasks_needed]
+    @io.get_from_console
+  end
+
   def render
     @io.clear_console
     @io.append_to_console @description

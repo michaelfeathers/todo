@@ -341,6 +341,20 @@ class ToDoZapToPosition < Command
   end
 end
 
+class ToDoTodayTargetFor < Command
+  def matches? line
+    line.split.count == 2 && line.split[0] == "tf" 
+  end
+
+  def process line, session
+    session.list.todo_today_target_for(line.split[1].to_i)
+  end
+
+  def description
+    CommandDesc.new("tf n", "show how many more tasks are needed today to stay on track for n this month")
+  end
+end
+
 class ToDoSurface < Command
   def matches? line
     line.split.count == 1 && line.split[0] == "su" 
