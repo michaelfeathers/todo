@@ -41,7 +41,13 @@ class TaskList
 end
 
 
+class HeadlessIo < AppIo
+  def get_from_console
+  end
 
+  def clear_console
+  end
+end
 
 class ToDo
   @@commands = [ToDoAdd.new,
@@ -78,6 +84,10 @@ class ToDo
   end
 
   def initialize foreground_io, background_io
+    if ARGV.length > 0
+      run_headless
+      exit
+    end
     @foreground_io = foreground_io
     @background_io = background_io
     ToDoUpdater.new(@foreground_io).run
@@ -86,14 +96,21 @@ class ToDo
   end
 
   def run
-    while true; on_line(@session.list.io.get_from_console.chomp); end
+    while true 
+      on_line(@session.list.io.get_from_console.chomp, @session)
+      @session.list.render
+    end
   end
 
-  def on_line line
+  def on_line line, session
     result = CommandResult.new
-    @@commands.each {|c| c.run(line, @session, result) }
+    @@commands.each {|c| c.run(line, session, result) }
     process_result(result, line)
-    @session.list.render
+  end
+
+  def run_headless
+    headless_session = Session.new(HeadlessIo.new, HeadlessIo.new)
+    on_line(ARGV.join(' '), headless_session)
   end
 
   def process_result result, line

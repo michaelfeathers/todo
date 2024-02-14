@@ -276,7 +276,6 @@ class ToDoHelp < Command
 
   def process line, session
     session.list.todo_help(ToDo.registered_commands.map { |c| [c.description.name, c.description.line] })
-    gets
   end
 
   def description

@@ -39,6 +39,7 @@ class TaskList
                          .join("\n")
 
     @io.append_to_console "\n#{output}\n\n"
+    @io.get_from_console
   end
 
   def todo_add tokens
@@ -263,9 +264,12 @@ class TaskList
       return
     end
 
-    additional_tasks_needed_today = [daily_tasks_needed - tasks_done_today, 1].max
-    
-    @io.append_to_console "\n\n    do %d to meet daily goal of %d\n\n" % [additional_tasks_needed_today, daily_tasks_needed]
+    additional_tasks_needed_today = daily_tasks_needed - tasks_done_today
+    if additional_tasks_needed_today <= 0
+      @io.append_to_console "\n\n    goal met\n\n"
+    else
+      @io.append_to_console "\n\n    do %d to meet daily goal of %d\n\n" % [additional_tasks_needed_today, daily_tasks_needed]
+    end
     @io.get_from_console
   end
 
