@@ -121,6 +121,9 @@ class ToDo
 
 end
 
-
-ToDo.new(AppIo.new, BackgroundIo.new).run
+if ARGV.length == 0
+  ToDo.new(AppIo.new, BackgroundIo.new).run
+else
+  ToDo.new(HeadlessIo.new, HeadlessIo.new).run
+end
 
