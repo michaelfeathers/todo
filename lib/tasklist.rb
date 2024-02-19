@@ -303,7 +303,7 @@ class TaskList
   end
 
   def find text
-    @actions.each_with_index.map {|i,e| "%2d %s" % [e,i] }
+    @actions.each_with_index.map {|e,i| "%2d %s" % [i,e] }
             .grep(/#{Regexp.escape text}/i)
   end
 
