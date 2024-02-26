@@ -4,6 +4,7 @@ ROOT_DIR     = "/Users/michaelfeathers/Projects/todo/lib/"
 TODO_FILE    = ROOT_DIR + "todo.txt"
 UPDATE_FILE  = ROOT_DIR + "updates.txt"
 ARCHIVE_FILE = ROOT_DIR + "archive.txt"
+JUNK_FILE    = ROOT_DIR + "junk.txt"
 
 
 class AppIo
@@ -13,6 +14,10 @@ class AppIo
   
   def append_to_archive line
     File.open(ARCHIVE_FILE, 'a') { |f| f.write(line); }
+  end
+
+  def append_to_junk line
+    File.open(JUNK_FILE, 'a') { |f| f.write(line); }
   end
 
   def read_actions
