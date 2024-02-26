@@ -99,7 +99,8 @@ class TaskList
 
     return unless response.split.first == "Y"
 
-    @io.append_to_junk(@io.today.to_s + " " + @actions[@cursor])
+    line = @actions[@cursor] 
+    @io.append_to_junk(@io.today.to_s + " " + line) unless line.split.empty?
     remove_action_at_cursor
     @io.write_actions(@actions)
   end
