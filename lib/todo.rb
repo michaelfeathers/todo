@@ -77,10 +77,6 @@ class ToDo
   end
 
   def initialize foreground_io, background_io
-    if ARGV.length > 0
-      run_headless
-      exit
-    end
     @foreground_io = foreground_io
     @background_io = background_io
     ToDoUpdater.new(@foreground_io).run

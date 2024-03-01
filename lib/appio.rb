@@ -51,4 +51,8 @@ class AppIo
   def today
     Day.new(DateTime.now)
   end
+
+  def suppress_render_list
+    false
+  end
 end

@@ -276,6 +276,8 @@ class TaskList
   end
 
   def render
+    return if @io.suppress_render_list
+
     @io.clear_console
     @io.append_to_console @description
 

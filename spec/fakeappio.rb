@@ -57,5 +57,9 @@ class FakeAppIo
   def today
     @today_content
   end
+
+  def suppress_render_list
+    false
+  end
 end
 
