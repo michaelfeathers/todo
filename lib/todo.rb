@@ -97,11 +97,6 @@ class ToDo
     process_result(result, line)
   end
 
-  def run_headless
-    headless_session = Session.new(HeadlessIo.new, HeadlessIo.new)
-    on_line(ARGV.join(' '), headless_session)
-  end
-
   def process_result result, line
     return unless result.match_count == 0 && line.split.count > 0
     @session.list.io.append_to_console("Unrecognized command: " + line + $/)
