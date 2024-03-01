@@ -9,14 +9,18 @@ CommandDesc = Struct.new(:name, :line)
 
 
 class CommandResult
-  attr_reader :match_count
+  attr_reader :matches
 
   def initialize
-    @match_count = 0
+    @matches = []
   end
 
   def record_match
-    @match_count = @match_count + 1
+    @matches << self
+  end
+
+  def match_count
+    @matches.count
   end
 end
 
