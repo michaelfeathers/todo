@@ -34,18 +34,6 @@ class Session
     @background_tasks.save_all
   end
 
-  def global_find text
-    io = AppIo.new
-
-    io.clear_console
-
-    fore = @foreground_tasks.find(text)
-    io.append_to_console fore.join + $/ + $/  unless fore.empty?
-
-    back = @background_tasks.find(text)
-    io.append_to_console "Background:" + $/ + back.join + $/ + $/ + $/ unless back.empty?
-  end
-
   def global_find(text)
     io = AppIo.new
     io.clear_console
