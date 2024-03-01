@@ -4,6 +4,7 @@ require 'session'
 require 'commands'
 require 'appio'
 require 'backgroundio'
+require 'headlessio.rb'
 require 'todoupdater'
 
 
@@ -40,14 +41,6 @@ class TaskList
   end
 end
 
-
-class HeadlessIo < AppIo
-  def get_from_console
-  end
-
-  def clear_console
-  end
-end
 
 class ToDo
   @@commands = [ToDoAdd.new,
