@@ -22,6 +22,9 @@ class FakeAppIo
     @archive_content = @archive_content + text
   end
 
+  def append_to_junk text
+  end
+
   def read_actions
     @actions_content
   end
