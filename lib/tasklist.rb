@@ -363,6 +363,25 @@ class TaskList
     @io.get_from_console 
   end
 
+  def todo_show_command_frequencies 
+    results = @io.read_log
+                 .split
+                 .group_by {|e| e }
+                 .map {|n,v| [n,v.count] }
+                 .sort_by {|_,count| -count }
+                 .map {|name, count|"%-3d   %s" % [count, name]}
+                 .join($/)
+    
+    @io.append_to_console $/ + results + $/ + $/ 
+    @io.get_from_console 
+  end
+
+
+  def log_command command_name
+    @io.append_to_log command_name + $/
+  end
+
+
 end
 
 

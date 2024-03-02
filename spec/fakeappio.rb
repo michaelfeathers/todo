@@ -18,8 +18,14 @@ class FakeAppIo
     @archive_content
   end
 
+  def read_log
+  end
+
   def append_to_archive text
     @archive_content = @archive_content + text
+  end
+
+  def append_to_log line
   end
 
   def append_to_junk text

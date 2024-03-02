@@ -5,6 +5,7 @@ TODO_FILE    = ROOT_DIR + "todo.txt"
 UPDATE_FILE  = ROOT_DIR + "updates.txt"
 ARCHIVE_FILE = ROOT_DIR + "archive.txt"
 JUNK_FILE    = ROOT_DIR + "junk.txt"
+LOG_FILE     = ROOT_DIR + "log.txt"
 
 
 class AppIo
@@ -14,6 +15,14 @@ class AppIo
   
   def append_to_archive line
     File.open(ARCHIVE_FILE, 'a') { |f| f.write(line); }
+  end
+
+  def append_to_log line
+    File.open(LOG_FILE, 'a') { |f| f.write(line); }
+  end
+
+  def read_log
+    File.read(LOG_FILE) 
   end
 
   def append_to_junk line

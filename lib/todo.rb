@@ -61,6 +61,7 @@ class ToDo
                 ToDoRemove.new,
                 ToDoSave.new,
                 ToDoSaveNoRemove.new,
+                ToDoShowCommandFrequencices.new,
                 ToDoShowUpdates.new,
                 ToDoSurface.new,
                 ToDoSwitchLists.new,
@@ -94,11 +95,13 @@ class ToDo
   def on_line line, session
     result = CommandResult.new
     @@commands.each {|c| c.run(line, session, result) }
+    @session.list.log_command(result.matches.first.description.name.split.first) if result.match_count > 0
     process_result(result, line)
   end
 
   def process_result result, line
     return unless result.match_count == 0 && line.split.count > 0
+    @session.list.log_comand(result.matches.first.name)
     @session.list.io.append_to_console("Unrecognized command: " + line + $/)
     @session.list.io.get_from_console
   end

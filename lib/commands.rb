@@ -15,8 +15,8 @@ class CommandResult
     @matches = []
   end
 
-  def record_match
-    @matches << self
+  def record_match command
+    @matches << command
   end
 
   def match_count
@@ -28,7 +28,7 @@ class Command
 
   def run line, session, result = CommandResult.new
     return unless matches? line
-    result.record_match
+    result.record_match(self)
     process line, session
   end
 
@@ -425,6 +425,20 @@ class ToDoMoveTaskToOther < Command
 
   def description
     CommandDesc.new("-", "move task to other list")
+  end
+end
+
+class ToDoShowCommandFrequencices  < Command
+  def matches? line
+    line.split.count == 1 && line.split[0] == "sf"
+  end
+
+  def process line, session
+    session.list.todo_show_command_frequencies
+  end
+
+  def description
+    CommandDesc.new("sf ", "show command frequencies")
   end
 end
 
