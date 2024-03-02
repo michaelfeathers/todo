@@ -35,7 +35,7 @@ class Session
   end
 
   def global_find(text)
-    io = AppIo.new
+    io = list.io 
     io.clear_console
 
     tasks = { '' => @foreground_tasks, 'Background:' => @background_tasks }
@@ -47,6 +47,7 @@ class Session
       io.append_to_console "#{label}#{$/}" unless label.empty?
       io.append_to_console found.join + $/ + $/
     end
+    io.get_from_console
   end
 
 end

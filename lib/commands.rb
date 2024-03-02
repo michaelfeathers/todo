@@ -112,7 +112,6 @@ class ToDoFind < Command
 
   def process line, session
     session.list.todo_find(line.split[1])
-    gets
   end
 
   def description
@@ -127,7 +126,6 @@ class ToDoGlobalFind < Command
 
   def process line, session
     session.global_find(line.split[1])
-    gets
   end
 
   def description

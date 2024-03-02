@@ -78,6 +78,7 @@ class TaskList
 
     found = find(text) 
     @io.append_to_console found.join + $/ + found.count.to_s + $/ + $/ + $/
+    @io.get_from_console
   end
   
   def todo_push days_text

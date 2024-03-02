@@ -101,7 +101,6 @@ class ToDo
 
   def process_result result, line
     return unless result.match_count == 0 && line.split.count > 0
-    @session.list.log_comand(result.matches.first.name)
     @session.list.io.append_to_console("Unrecognized command: " + line + $/)
     @session.list.io.get_from_console
   end
