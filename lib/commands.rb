@@ -147,7 +147,7 @@ class ToDoPush < Command
   end
 
   def description
-    CommandDesc.new("p  n", "push forward n number of days")
+    CommandDesc.new("p  n", "push task at cursor forward n number of days")
   end
 end
 
@@ -217,7 +217,7 @@ class ToDoToday < Command
   end
 
   def description
-    CommandDesc.new("t  <n>", "show tasks n days prev. If no arg, defaults to today") 
+    CommandDesc.new("t  [n]", "show tasks n days prev. If no arg, defaults to today") 
   end
 end
 
@@ -370,7 +370,7 @@ class ToDoSurface < Command
   end
 
   def description
-    CommandDesc.new("su", "surfae the last task by putting it first")
+    CommandDesc.new("su", "surface the last task by putting it first")
   end
 end
 
@@ -398,7 +398,7 @@ class ToDoTagTallies < Command
   end
 
   def description
-    CommandDesc.new("tt", "tally of all tag types")
+    CommandDesc.new("tt", "show tally of all tag types")
   end
 end
 
