@@ -95,7 +95,8 @@ class ToDo
   def on_line line, session
     result = CommandResult.new
     @@commands.each {|c| c.run(line, session, result) }
-    @session.list.log_command(result.matches.first.description.name.split.first) if result.match_count > 0
+    # @session.list.log_command(result.matches.first.description.name.split.first) if result.match_count > 0
+    @session.list.log_command(result.matches.first.name) if result.match_count > 0
     process_result(result, line)
   end
 

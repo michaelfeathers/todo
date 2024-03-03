@@ -32,6 +32,10 @@ class Command
     process line, session
   end
 
+  def name
+    description.name.split.first
+  end
+
 end
 
 class ToDoAdd < Command
