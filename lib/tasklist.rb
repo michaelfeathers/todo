@@ -375,12 +375,6 @@ class TaskList
     @io.get_from_console 
   end
 
-
-  def log_command command_name
-    @io.append_to_log command_name + $/
-  end
-
-
 end
 
 
