@@ -367,9 +367,7 @@ class TaskList
   def todo_show_command_frequencies 
     results = @io.read_log
                  .split
-                 .group_by {|e| e }
-                 .map {|n,v| [n,v.count] }
-                 .sort_by {|_,count| -count }
+                 .map { |line| line.split(',') } 
                  .map {|name, count|"%-3d   %s" % [count, name]}
                  .join($/)
     

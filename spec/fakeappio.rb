@@ -6,10 +6,12 @@ class FakeAppIo
   attr_accessor :archive_content, :console_output_content 
   attr_accessor :console_input_content, :actions_content
   attr_accessor :update_content, :today_content
+  attr_accessor :log_content
 
   def initialize
     @archive_content = @actions_content = ""
     @console_output_content = "" 
+    @log_content = ""
     @update_content = []
     @today_day = nil
   end
@@ -19,13 +21,18 @@ class FakeAppIo
   end
 
   def read_log
+    @log_content
+  end
+
+  def write_log text
+    @log_content = text
+  end
+
+  def append_to_log line
   end
 
   def append_to_archive text
     @archive_content = @archive_content + text
-  end
-
-  def append_to_log line
   end
 
   def append_to_junk text

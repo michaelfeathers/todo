@@ -22,7 +22,15 @@ class AppIo
   end
 
   def read_log
-    File.read(LOG_FILE) 
+    begin
+      File.read(LOG_FILE) 
+    rescue => e
+      ""
+    end
+  end
+
+  def write_log text
+    File.open(LOG_FILE, 'w') { |f| f.write(text + $/); }
   end
 
   def append_to_junk line

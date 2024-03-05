@@ -50,6 +50,24 @@ class Session
     io.get_from_console
   end
 
+
+  def log_command command_name
+    io = list.io
+    text = io.read_log 
+             .split("\n")
+             .map { |line| line.split(',') } 
+             .select { |items| items.size == 2 } 
+             .map { |k, v| [k, v.to_i] } 
+             .to_h
+             .tap { |data| data[command_name] = data.fetch(command_name, 0) + 1 } 
+             .sort_by { |_, v| -v } 
+             .to_h 
+             .map { |k, v| "#{k},#{v}" } 
+             .join("\n")
+  
+    io.write_log(text)
+  end
+
 end
 
 
