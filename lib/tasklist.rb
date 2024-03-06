@@ -19,7 +19,7 @@ class TaskList
   PAGE_SIZE    = 40
   TAG_PATTERN  = /^[A-Z]:$/ 
 
-   attr_reader :io, :description
+  attr_reader :io, :description
 
   def initialize io, description = ""
     @io = io
