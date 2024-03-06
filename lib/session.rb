@@ -59,12 +59,13 @@ class Session
                           .select { |items| items.size == 2 } 
                           .map { |k, v| [k, v.to_i] } 
                           .to_h
+                          .tap { |h| h.default = 0 }
   end
 
 
   def log_command command_name
-    @command_log[command_name] =  @command_log.fetch(command_name, 0) + 1 
-    text = @command_log.sort_by { |_, v| -v } 
+    text = @command_log.tap { |h| h[command_name] += 1 }
+                       .sort_by { |_, v| -v } 
                        .to_h 
                        .map { |k, v| "#{k},#{v}" } 
                        .join("\n")
