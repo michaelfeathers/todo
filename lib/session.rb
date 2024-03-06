@@ -12,8 +12,10 @@ class Session
   def initialize foreground_io, background_io
     @foreground_tasks = TaskList.new(foreground_io)
     @background_tasks = TaskList.new(background_io, "BACKGROUND")
+    @command_log = {}
 
     @list = @foreground_tasks
+    load_command_log
   end
 
   def switch_lists 
@@ -50,22 +52,23 @@ class Session
     io.get_from_console
   end
 
+  def load_command_log 
+    @command_log = list.io.read_log 
+                          .split("\n")
+                          .map { |line| line.split(',') } 
+                          .select { |items| items.size == 2 } 
+                          .map { |k, v| [k, v.to_i] } 
+                          .to_h
+  end
+
 
   def log_command command_name
-    io = list.io
-    text = io.read_log 
-             .split("\n")
-             .map { |line| line.split(',') } 
-             .select { |items| items.size == 2 } 
-             .map { |k, v| [k, v.to_i] } 
-             .to_h
-             .tap { |data| data[command_name] = data.fetch(command_name, 0) + 1 } 
-             .sort_by { |_, v| -v } 
-             .to_h 
-             .map { |k, v| "#{k},#{v}" } 
-             .join("\n")
-  
-    io.write_log(text)
+    text = @command_log.tap { |data| data[command_name] = data.fetch(command_name, 0) + 1 } 
+                       .sort_by { |_, v| -v } 
+                       .to_h 
+                       .map { |k, v| "#{k},#{v}" } 
+                       .join("\n")
+    list.io.write_log(text)
   end
 
 end
