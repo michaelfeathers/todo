@@ -377,11 +377,12 @@ end
 
 class ToDoSurface < Command
   def matches? line
-    line.split.count == 1 && line.split[0] == "su" 
+    line.split.count >= 1 && line.split[0] == "su" 
   end
 
   def process line, session
-    session.list.todo_surface(1)
+    count_items = line.split.count > 1 ? line.split[1].to_i : 1
+    session.list.todo_surface(count_items)
   end
 
   def description
