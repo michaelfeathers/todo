@@ -63,11 +63,12 @@ class Session
 
 
   def log_command command_name
-    text = @command_log.tap { |data| data[command_name] = data.fetch(command_name, 0) + 1 } 
-                       .sort_by { |_, v| -v } 
+    @command_log[command_name] =  @command_log.fetch(command_name, 0) + 1 
+    text = @command_log.sort_by { |_, v| -v } 
                        .to_h 
                        .map { |k, v| "#{k},#{v}" } 
                        .join("\n")
+
     list.io.write_log(text)
   end
 
