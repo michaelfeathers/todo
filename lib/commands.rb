@@ -137,6 +137,21 @@ class ToDoGlobalFind < Command
   end
 end
 
+class ToDoInsertBlank < Command
+  def matches?(line)
+    line.strip == "i"  
+  end
+
+  def process(line, session)
+    session.list.todo_insert_blank
+  end
+
+  def description
+    CommandDesc.new("i", "insert a blank line at the cursor")
+  end
+end
+
+
 class ToDoPush < Command
   def matches? line
     line.split.count == 2 && line.split.take(1) == ["p"]

@@ -51,6 +51,7 @@ class ToDo
                 ToDoGlobalFind.new,
                 ToDoGrabToggle.new,
                 ToDoHelp.new,
+                ToDoInsertBlank.new,
                 ToDoMonthSummaries.new,
                 ToDoMoveTaskToOther.new,
                 ToDoPageDown.new,

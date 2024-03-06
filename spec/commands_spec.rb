@@ -297,9 +297,29 @@ describe ToDoSwitchLists do
      expect(session.list.io.console_output_content).to eq(output_after)
   end
   
-  
+end
 
 
+describe ToDoInsertBlank do
+  let(:f_io) { FakeAppIo.new }
+  let(:b_io) { FakeAppIo.new }
+  let(:session) { Session.new(f_io, b_io) }
+
+  it 'inserts a blank line at the current cursor position' do
+    f_io.actions_content = "L: task AA\nL: task BB\n"
+    session.list.todo_cursor_set(0) # Ensure cursor is at the first position
+    ToDoInsertBlank.new.run("i", session)
+    session.list.render
+    expect(f_io.console_output_content).to eq("\n\n 0 - \n 1   L: task AA\n 2   L: task BB\n\n")
+  end
+
+  it 'inserts a blank line and maintains the cursor position on the same task' do
+    f_io.actions_content = "L: task AA\nL: task BB\n"
+    session.list.todo_cursor_set(0) # Ensure cursor is at the first position
+    ToDoInsertBlank.new.run("i", session)
+    session.list.todo_down # Move cursor down to next task
+    expect(session.list.action_at_cursor).to eq("L: task AA\n") # Cursor should now
+  end 
 end
  
 

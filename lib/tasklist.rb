@@ -375,6 +375,12 @@ class TaskList
     @io.get_from_console 
   end
 
+  def todo_insert_blank
+    @actions.insert(@cursor, $/)
+    adjust_page
+  end
+  
+
 end
 
 
