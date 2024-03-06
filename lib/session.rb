@@ -62,9 +62,8 @@ class Session
                           .tap { |h| h.default = 0 }
   end
 
-
-  def log_command command_name
-    text = @command_log.tap { |h| h[command_name] += 1 }
+  def log_command name
+    text = @command_log.tap { |h| h[name] += 1 }
                        .sort_by { |_, v| -v } 
                        .to_h 
                        .map { |k, v| "#{k},#{v}" } 
