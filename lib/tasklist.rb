@@ -149,10 +149,11 @@ class TaskList
       @io.append_to_console "\n\n      %10s %10s %10s\n\n" % ["R7K", "Life", "Total"]
 
       (1..12).each do |month|
-       @io.append_to_console "%s   %10d %10d %10d\n" % [month_name_of(month), 
+        @io.append_to_console "%s   %10d %10d %10d %10.2f\n" % [month_name_of(month), 
                                                        count_month_entries(month, "R", year_descs),
                                                        count_month_entries(month, "L", year_descs),
-                                                       count_month_entries(month, "*", year_descs)]
+                                                       count_month_entries(month, "*", year_descs),
+                                                       r7k_percent(month, year_descs)]
 
     end
 
@@ -176,6 +177,22 @@ class TaskList
 
     @io.get_from_console
 
+  end
+
+  def count_month_entries month_no, type, descs
+    return descs.select {|d| d.first.month_no == month_no }.count if type == "*"
+
+    descs.select {|d| d.first.month_no == month_no }
+         .select {|dd| dd[1] == type }
+         .count
+  end
+
+  def r7k_percent month_no, year_descs
+    r7k_total = count_month_entries(month_no, "R", year_descs)
+    all_total = count_month_entries(month_no, "*", year_descs)
+    return 0.0 if all_total == 0
+  
+    r7k_total / all_total.to_f
   end
 
   def todo_today days_prev
@@ -288,14 +305,6 @@ class TaskList
                     .join
 
     @io.append_to_console lines + $/
-  end
-
-  def count_month_entries month_no, type, descs
-    return descs.select {|d| d.first.month_no == month_no }.count if type == "*"
-
-    descs.select {|d| d.first.month_no == month_no }
-         .select {|dd| dd[1] == type }
-         .count
   end
 
   def adjust_page
