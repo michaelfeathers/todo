@@ -5,7 +5,7 @@ require 'fakeappio'
 
 empty_archive_expected = "
 
-             R7K       Life      Total
+             R7K       Life      Total      R7K %
 
 Jan            0          0          0       0.00
 Feb            0          0          0       0.00

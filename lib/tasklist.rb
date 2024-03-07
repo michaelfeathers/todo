@@ -146,7 +146,7 @@ class TaskList
                     .map {|l| [Day.from_text(l.split[0]), l.split[1].chars.first] }
 
     year_descs =  task_descs.select {|td| td.first.year.to_i == month.to_i }
-      @io.append_to_console "\n\n      %10s %10s %10s\n\n" % ["R7K", "Life", "Total"]
+      @io.append_to_console "\n\n      %10s %10s %10s %10s\n\n" % ["R7K", "Life", "Total", "R7K %"]
 
       (1..12).each do |month|
         @io.append_to_console "%s   %10d %10d %10d %10.2f\n" % [month_name_of(month), 
