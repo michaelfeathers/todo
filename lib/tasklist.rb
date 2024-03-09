@@ -149,7 +149,7 @@ class TaskList
       @io.append_to_console "\n\n      %10s %10s %10s %10s\n\n" % ["R7K", "Life", "Total", "R7K %"]
 
       (1..12).each do |month|
-        @io.append_to_console "%s   %10d %10d %10d %10.2f\n" % [month_name_of(month), 
+        @io.append_to_console "%s   %10d %10d %10d %10d\n" % [month_name_of(month), 
                                                        count_month_entries(month, "R", year_descs),
                                                        count_month_entries(month, "L", year_descs),
                                                        count_month_entries(month, "*", year_descs),
@@ -190,9 +190,9 @@ class TaskList
   def r7k_percent month_no, year_descs
     r7k_total = count_month_entries(month_no, "R", year_descs)
     all_total = count_month_entries(month_no, "*", year_descs)
-    return 0.0 if all_total == 0
+    return 0 if all_total == 0
   
-    r7k_total / all_total.to_f
+    (100.0 * r7k_total / all_total).to_i
   end
 
   def todo_today days_prev
