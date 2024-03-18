@@ -276,6 +276,22 @@ class ToDoEdit < Command
   end
 end
 
+class ToDoEditReplace < Command
+  def matches? line
+    line.split.take(1) == ["er"] && line.split.count == 3
+  end
+
+  def process line, session
+    old_token = line.split[1]
+    new_token = line.split[2]
+    session.list.todo_edit_replace(old_token, new_token)
+  end
+
+  def description
+    CommandDesc.new("er match replacement", "replace match with replacement in current task") 
+  end
+end
+
 class ToDoGrabToggle < Command
   def matches? line
     line.split.take(1) == ["g"]

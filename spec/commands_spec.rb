@@ -325,5 +325,23 @@ describe ToDoInsertBlank do
     expect(session.list.action_at_cursor).to eq("L: task AA\n") # Cursor should now
   end 
 end
+
+
+describe ToDoEditReplace do
+  let(:f_io) { FakeAppIo.new }
+  let(:b_io) { FakeAppIo.new }
+  let(:session) { Session.new(f_io, b_io) }
+
+  it 'replaces when text to replacement is present' do
+    f_io.actions_content = "L: task AA\nL: task BB\n"
+    session.list.todo_cursor_set(1) 
+
+    ToDoEditReplace.new.run("er BB bb", session)
+    session.list.render
+
+    expect(f_io.console_output_content).to eq("\n\n 0   L: task AA\n 1 - L: task bb\n\n")
+  end
+end
+
  
 
