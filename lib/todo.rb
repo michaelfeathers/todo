@@ -56,7 +56,7 @@ class ToDo
                 ToDoMonthSummaries.new,
                 ToDoMoveTaskToOther.new,
                 ToDoPageDown.new,
-                ToDoPageUp.bnew,
+                ToDoPageUp.new,
                 ToDoPush.new,
                 ToDoQuit.new,
                 ToDoReTag.new,
