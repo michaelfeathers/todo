@@ -73,11 +73,15 @@ class TaskList
     adjust_page
   end
 
-  def todo_find text
+  def todo_find text, limit = nil 
     @io.clear_console
 
-    found = find(text) 
-    @io.append_to_console found.join + $/ + found.count.to_s + $/ + $/ + $/
+    found = find(text)
+    found_to_report = limit ? found.take(limit) : found
+
+    report = "#{found_to_report.join}#{$/}#{found_to_report.count}#{$/}#{$/}#{$/}"
+    @io.append_to_console(report)
+
     @io.get_from_console
   end
   

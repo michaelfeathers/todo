@@ -111,15 +111,16 @@ end
 
 class ToDoFind < Command
   def matches? line
-    line.split.count == 2 && line.split[0] == "f"
+     (2..3).include?(line.split.count) && line.split[0] == "f"
   end
 
   def process line, session
-    session.list.todo_find(line.split[1])
+    limit = line.split.count == 3 ? line.split[2].to_i : nil
+    session.list.todo_find(line.split[1], limit)
   end
 
   def description
-    CommandDesc.new("f  text", "find all tasks containing specified text")
+    CommandDesc.new("f  text [n]", "find all (or [n]) tasks containing specified text")
   end
 end
 
