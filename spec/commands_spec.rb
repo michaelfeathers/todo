@@ -253,7 +253,7 @@ describe ToDoToday do
      f_io.archive_content = "2020-01-11 R: Thing X\n2020-01-12 R: Thing Y\n"
      f_io.today_content = Day.from_text("2020-01-12")
      ToDoToday.new.run("t", session)
-     expect(f_io.console_output_content).to eq("2020-01-12 R: Thing Y\n\n")
+     expect(f_io.console_output_content).to eq("\n2020-01-12 R: Thing Y\n\n1\n\n")
    end
 
 
@@ -261,7 +261,7 @@ describe ToDoToday do
      f_io.archive_content = "2020-01-11 R: Thing X\n2020-01-12 R: Thing Y\n"
      f_io.today_content = Day.from_text("2020-01-12")
      ToDoToday.new.run("t 1", session)
-     expect(f_io.console_output_content).to eq("2020-01-11 R: Thing X\n\n")
+     expect(f_io.console_output_content).to eq("\n2020-01-11 R: Thing X\n\n1\n\n")
    end
 
 end

@@ -207,11 +207,13 @@ class TaskList
 
   def todo_today days_prev
     day_to_display = @io.today.with_fewer_days(days_prev.to_i) 
-    @io.read_archive
-       .lines 
-       .select {|line| Day.from_text(line.split.first) === day_to_display }
-       .each {|line| @io.append_to_console(line) }
-    @io.append_to_console($/)
+    found = @io.read_archive
+               .lines 
+               .select {|line| Day.from_text(line.split.first) === day_to_display }
+
+    @io.append_to_console("\n")
+    found.each {|line| @io.append_to_console(line) }
+    @io.append_to_console("\n#{found.count}\n\n")
     @io.get_from_console
   end
 

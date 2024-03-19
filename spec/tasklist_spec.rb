@@ -51,7 +51,7 @@ describe TaskList do
     io.archive_content = "2020-01-11 R: Thing X\n2020-01-12 R: Thing Y\n"
     io.today_content = Day.from_text("2020-01-12")
     task_list.todo_today 0
-    expect(io.console_output_content).to eq("2020-01-12 R: Thing Y\n\n")
+    expect(io.console_output_content).to eq("\n2020-01-12 R: Thing Y\n\n1\n\n")
   end
 
   it 'shows trend' do 
