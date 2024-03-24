@@ -336,7 +336,7 @@ describe ToDoEditReplace do
     f_io.actions_content = "L: task AA\nL: task BB\n"
     session.list.todo_cursor_set(1) 
 
-    ToDoEditReplace.new.run("er BB bb", session)
+    ToDoEditReplace.new.run("er 2 bb", session)
     session.list.render
 
     expect(f_io.console_output_content).to eq("\n\n 0   L: task AA\n 1 - L: task bb\n\n")

@@ -138,12 +138,12 @@ class TaskList
                         end + $/
   end
 
-  def todo_edit_replace old_token, new_token  
+  def todo_edit_replace position, new_token  
     return if @actions.empty?
 
     current_tokens = @actions[@cursor].split
 
-    @actions[@cursor] = current_tokens.map { |t| t == old_token ? new_token : t }
+    @actions[@cursor] = current_tokens.map.with_index{ |t,i| i == position.to_i ? new_token : t }
                                       .join(" ") 
                                       .concat($/)
   end

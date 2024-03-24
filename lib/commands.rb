@@ -283,9 +283,9 @@ class ToDoEditReplace < Command
   end
 
   def process line, session
-    old_token = line.split[1]
+    position = line.split[1]
     new_token = line.split[2]
-    session.list.todo_edit_replace(old_token, new_token)
+    session.list.todo_edit_replace(position, new_token)
   end
 
   def description
