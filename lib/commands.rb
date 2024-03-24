@@ -223,6 +223,20 @@ class ToDoShowUpdates < Command
   end
 end
 
+class ToDoCursorToStart < Command
+  def matches?(line)
+    line.split.count == 1 && line.split[0] == "cc"
+  end
+
+  def process(line, session)
+    session.list.todo_cursor_set(0)
+  end
+
+  def description
+    CommandDesc.new("cc", "move cursor to the 0th task")
+  end
+end
+
 class ToDoToday < Command
   def matches? line
     (1..2).include?(line.split.count) && line.split.first == "t"

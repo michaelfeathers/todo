@@ -58,6 +58,48 @@ describe ToDoPageDown do
   end
 end
 
+describe ToDoCursorToStart do
+  let(:f_io) { FakeAppIo.new }
+  let(:b_io) { FakeAppIo.new }
+  let(:session) { Session.new(f_io, b_io) }
+
+  it 'moves the cursor to the 0th task when not already there' do
+    actions = [
+      "L: task 0\n",
+      "L: task 1\n",
+      "L: task 2\n"
+    ]
+    output = actions.map.with_index do |action, i|
+      cursor = i.zero? ? '-' : ' '
+      "%2d %s %s" % [i, cursor, action]
+    end.join
+
+    f_io.actions_content = actions.join
+    session.list.todo_cursor_set(2)
+    ToDoCursorToStart.new.run("cc", session)
+    session.list.render
+    
+    expect(f_io.console_output_content).to eq(RENDER_PAD + output + "\n")
+  end
+
+  it 'does nothing when cursor is already at 0th task' do
+    actions = [
+      "L: task 0\n",
+      "L: task 1\n",
+      "L: task 2\n" 
+    ]
+    output = actions.map.with_index do |action, i|
+      cursor = i.zero? ? '-' : ' '
+      "%2d %s %s" % [i, cursor, action]  
+    end.join
+    
+    f_io.actions_content = actions.join
+    session.list.render
+    ToDoCursorToStart.new.run("cc", session)
+    
+    expect(f_io.console_output_content).to eq(RENDER_PAD + output + "\n")
+  end
+end
 
 describe ToDoPageUp do
   let(:f_io) { FakeAppIo.new }
@@ -137,6 +179,7 @@ describe ToDoUp do
     expect(f_io.console_output_content).to eq(RENDER_PAD + output.take(TaskList::PAGE_SIZE).join + "\n")
   end
 end
+
 
 describe ToDoZapToPosition do
   let(:f_io) { FakeAppIo.new }

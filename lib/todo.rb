@@ -45,6 +45,7 @@ end
 class ToDo
   @@commands = [ToDoAdd.new,
                 ToDoCursorSet.new,
+                ToDoCursorToStart.new,
                 ToDoDown.new,
                 ToDoEdit.new,
                 ToDoEditReplace.new,
