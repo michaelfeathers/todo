@@ -101,6 +101,76 @@ describe ToDoCursorToStart do
   end
 end
 
+describe ToDoFindFromCursor do
+  let(:f_io) { FakeAppIo.new }
+  let(:b_io) { FakeAppIo.new }
+  let(:session) { Session.new(f_io, b_io) }
+
+  it 'finds the token and moves the cursor to the line where it is first found' do
+    actions = [
+      "L: task 0\n",
+      "L: task 1\n",
+      "L: task 2 with token\n",
+      "L: task 3 with token\n",
+      "L: task 4\n"
+    ]
+    output = actions.map.with_index do |action, i|
+      cursor = i == 2 ? '-' : ' '
+      "%2d %s %s" % [i, cursor, action]
+    end.join
+
+    f_io.actions_content = actions.join
+    session.list.todo_cursor_set(1)
+    ToDoFindFromCursor.new.run("ff token", session)
+    session.list.render
+
+    expect(f_io.console_output_content).to eq(RENDER_PAD + output + "\n")
+  end
+
+  it 'does not change the cursor position if the token is not found' do
+    actions = [
+      "L: task 0\n",
+      "L: task 1\n",
+      "L: task 2\n",
+      "L: task 3\n",
+      "L: task 4\n"
+    ]
+    output = actions.map.with_index do |action, i|
+      cursor = i == 1 ? '-' : ' '
+      "%2d %s %s" % [i, cursor, action]
+    end.join
+
+    f_io.actions_content = actions.join
+    session.list.todo_cursor_set(1)
+    ToDoFindFromCursor.new.run("ff token", session)
+    session.list.render
+
+    expect(f_io.console_output_content).to eq(RENDER_PAD + output + "\n")
+  end
+
+  it 'does not change the cursor position if the token is found before the cursor' do
+    actions = [
+      "L: task 0 with token\n",
+      "L: task 1\n",
+      "L: task 2\n",
+      "L: task 3\n",
+      "L: task 4\n"
+    ]
+    output = actions.map.with_index do |action, i|
+      cursor = i == 2 ? '-' : ' '
+      "%2d %s %s" % [i, cursor, action]
+    end.join
+
+    f_io.actions_content = actions.join
+    session.list.todo_cursor_set(2)
+    ToDoFindFromCursor.new.run("ff token", session)
+    session.list.render
+
+    expect(f_io.console_output_content).to eq(RENDER_PAD + output + "\n")
+  end
+end
+
+
 describe ToDoPageUp do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }

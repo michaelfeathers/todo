@@ -50,6 +50,7 @@ class ToDo
                 ToDoEdit.new,
                 ToDoEditReplace.new,
                 ToDoFind.new,
+                ToDoFindFromCursor.new,
                 ToDoGlobalFind.new,
                 ToDoGrabToggle.new,
                 ToDoHelp.new,

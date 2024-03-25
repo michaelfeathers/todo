@@ -405,9 +405,19 @@ class TaskList
     adjust_page
   end
   
+  def todo_find_from_cursor text
+    found_position = nil
+
+    @actions.each_with_index do |action, index|
+      next if index < @cursor
+
+      if action =~ (/#{Regexp.escape text}/i)
+        found_position = index
+        break
+      end
+    end
+    todo_cursor_set(found_position) if found_position
+  end
 
 end
-
-
-
 
