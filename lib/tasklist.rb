@@ -419,5 +419,15 @@ class TaskList
     todo_cursor_set(found_position) if found_position
   end
 
+  def todo_zap_to_top
+    cursor_position = @cursor
+    return if cursor_position.zero?
+
+    task = @actions[cursor_position]
+    @actions.delete_at(cursor_position)
+    @actions.unshift(task)
+    todo_cursor_set(0)
+  end
+
 end
 

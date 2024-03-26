@@ -506,5 +506,16 @@ class ToDoShowCommandFrequencices  < Command
   end
 end
 
+class ToDoZapToTop < Command
+  def matches?(line)
+    line.strip == "zz"
+  end
 
+  def process(line, session)
+    session.list.todo_zap_to_top
+  end
 
+  def description
+    CommandDesc.new("zz", "move the task at the cursor to the top (position 0)")
+  end
+end
