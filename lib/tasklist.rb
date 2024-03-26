@@ -409,7 +409,7 @@ class TaskList
     found_position = nil
 
     @actions.each_with_index do |action, index|
-      next if index < @cursor
+      next if index <= @cursor
 
       if action =~ (/#{Regexp.escape text}/i)
         found_position = index
