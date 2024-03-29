@@ -454,8 +454,37 @@ describe ToDoEditReplace do
 
     expect(f_io.console_output_content).to eq("\n\n 0   L: task AA\n 1 - L: task bb\n\n")
   end
-end
 
+  it 'replaces multiple tokens' do
+    f_io.actions_content = "L: old task here\n"
+    session.list.todo_cursor_set(0)
+
+    ToDoEditReplace.new.run("er 2 new task there", session)
+    session.list.render
+
+    expect(f_io.console_output_content).to eq("\n\n 0 - L: old new task there\n\n")
+  end
+
+  it 'replaces tokens until replacements run out' do
+    f_io.actions_content = "L: old old old task\n"
+    session.list.todo_cursor_set(0)
+
+    ToDoEditReplace.new.run("er 2 new new", session)
+    session.list.render
+
+    expect(f_io.console_output_content).to eq("\n\n 0 - L: old new new task\n\n")
+  end
+
+  it 'deletes token at position when no replacement provided' do
+    f_io.actions_content = "L: this is a task\n"
+    session.list.todo_cursor_set(0)
+
+    ToDoEditReplace.new.run("er 2", session)
+    session.list.render
+
+    expect(f_io.console_output_content).to eq("\n\n 0 - L: this a task\n\n")
+  end
+end
  
 describe ToDoZapToTop do
   let(:f_io) { FakeAppIo.new }

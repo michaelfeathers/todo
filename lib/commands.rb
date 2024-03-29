@@ -308,19 +308,22 @@ end
 
 class ToDoEditReplace < Command
   def matches? line
-    line.split.take(1) == ["er"] && line.split.count == 3
+    line.split.count >= 2 && line.split[0] == "er"
   end
 
   def process line, session
-    position = line.split[1]
-    new_token = line.split[2]
-    session.list.todo_edit_replace(position, new_token)
+    tokens = line.split
+    position = tokens[1].to_i
+    new_tokens = tokens.drop(2)
+    
+    session.list.todo_edit_replace(position, new_tokens)
   end
 
   def description
-    CommandDesc.new("er match replacement", "replace match with replacement in current task") 
+    CommandDesc.new("er position [token...]", "replace token(s) starting at pos with replacement token(s). Delete token at pos if none.")
   end
 end
+
 
 class ToDoGrabToggle < Command
   def matches? line

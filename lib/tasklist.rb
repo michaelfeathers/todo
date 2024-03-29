@@ -138,14 +138,17 @@ class TaskList
                         end + $/
   end
 
-  def todo_edit_replace position, new_token  
-    return if @actions.empty?
+  def todo_edit_replace(position, new_tokens)
+    action = action_at_cursor
+    return if action.nil?
 
-    current_tokens = @actions[@cursor].split
-
-    @actions[@cursor] = current_tokens.map.with_index{ |t,i| i == position.to_i ? new_token : t }
-                                      .join(" ") 
-                                      .concat($/)
+    tokens = action.split
+    if new_tokens.nil? || new_tokens.empty?
+      tokens.delete_at(position)
+    else
+      tokens[position, new_tokens.count] = new_tokens
+    end
+    update_action_at_cursor(tokens.join(' '))
   end
 
   def todo_grab_toggle
@@ -427,6 +430,10 @@ class TaskList
     @actions.delete_at(cursor_position)
     @actions.unshift(task)
     todo_cursor_set(0)
+  end
+
+  def update_action_at_cursor action_text
+    @actions[@cursor] = action_text + $/
   end
 
 end
