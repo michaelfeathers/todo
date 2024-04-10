@@ -24,6 +24,8 @@ class TaskList
   def initialize io, description = ""
     @io = io
     @actions = io.read_actions.lines
+
+    @last_search_text = nil
     @cursor = 0
     @grab_mode = false
     @page_no = 0
@@ -420,6 +422,22 @@ class TaskList
       end
     end
     todo_cursor_set(found_position) if found_position
+  end
+
+  def todo_find_from_cursor(text, from_top)
+    if text
+      @last_search_text = text
+      found_position = @actions.index { |action| action =~ /#{Regexp.escape(text)}/i }
+  else
+    text = @last_search_text
+    return unless text
+
+    start_index = from_top ? 0 : [@cursor + 1, @actions.count - 1].min
+    found_position = @actions[start_index..-1].index { |action| action =~ /#{Regexp.escape(text)}/i }
+    found_position += start_index if found_position
+  end
+
+  todo_cursor_set(found_position) if found_position
   end
 
   def todo_zap_to_top

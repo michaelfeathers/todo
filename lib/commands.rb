@@ -239,16 +239,21 @@ end
 
 class ToDoFindFromCursor < Command
   def matches?(line)
-    line.split.count == 2 && line.split[0] == "ff"
+    line.split.count >= 1 && line.split[0] == "ff"
   end
 
   def process(line, session)
-    token = line.split[1]
-    session.list.todo_find_from_cursor(token)
+    tokens = line.split
+    if tokens.count > 1
+      text = tokens[1]
+      session.list.todo_find_from_cursor(text, true)
+    else
+      session.list.todo_find_from_cursor(nil, false)
+    end
   end
 
   def description
-    CommandDesc.new("ff text", "find the first occurrence of text starting from the cursor position and mnove to that position")
+    CommandDesc.new("ff [text]", "find the first occurrence of text starting from the cursor position (or from the top if text is provided")
   end
 end
 

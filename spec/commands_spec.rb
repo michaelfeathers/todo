@@ -148,26 +148,28 @@ describe ToDoFindFromCursor do
     expect(f_io.console_output_content).to eq(RENDER_PAD + output + "\n")
   end
 
-  it 'does not change the cursor position if the token is found before the cursor' do
+  it 'finds the token from the next line after the cursor when no text is provided' do
     actions = [
-      "L: task 0 with token\n",
-      "L: task 1\n",
+      "L: task 0\n",
+      "L: task 1 with token\n",
       "L: task 2\n",
-      "L: task 3\n",
+      "L: task 3 with token\n",
       "L: task 4\n"
     ]
     output = actions.map.with_index do |action, i|
-      cursor = i == 2 ? '-' : ' '
+      cursor = i == 3 ? '-' : ' '
       "%2d %s %s" % [i, cursor, action]
     end.join
 
     f_io.actions_content = actions.join
-    session.list.todo_cursor_set(2)
+    session.list.todo_cursor_set(1)
     ToDoFindFromCursor.new.run("ff token", session)
+    ToDoFindFromCursor.new.run("ff", session)
     session.list.render
 
     expect(f_io.console_output_content).to eq(RENDER_PAD + output + "\n")
   end
+
 end
 
 
