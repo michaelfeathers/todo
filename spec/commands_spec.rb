@@ -101,7 +101,7 @@ describe ToDoCursorToStart do
   end
 end
 
-describe ToDoFindFromCursor do
+describe ToDoIterativeFind do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
   let(:session) { Session.new(f_io, b_io) }
@@ -121,7 +121,7 @@ describe ToDoFindFromCursor do
 
     f_io.actions_content = actions.join
     session.list.todo_cursor_set(1)
-    ToDoFindFromCursor.new.run("ff token", session)
+    ToDoIterativeFind.new.run("ff token", session)
     session.list.render
 
     expect(f_io.console_output_content).to eq(RENDER_PAD + output + "\n")
@@ -142,7 +142,7 @@ describe ToDoFindFromCursor do
 
     f_io.actions_content = actions.join
     session.list.todo_cursor_set(1)
-    ToDoFindFromCursor.new.run("ff token", session)
+    ToDoIterativeFind.new.run("ff token", session)
     session.list.render
 
     expect(f_io.console_output_content).to eq(RENDER_PAD + output + "\n")
@@ -163,8 +163,8 @@ describe ToDoFindFromCursor do
 
     f_io.actions_content = actions.join
     session.list.todo_cursor_set(1)
-    ToDoFindFromCursor.new.run("ff token", session)
-    ToDoFindFromCursor.new.run("ff", session)
+    ToDoIterativeFind.new.run("ff token", session)
+    ToDoIterativeFind.new.run("ff", session)
     session.list.render
 
     expect(f_io.console_output_content).to eq(RENDER_PAD + output + "\n")

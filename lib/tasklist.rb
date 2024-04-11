@@ -410,7 +410,7 @@ class TaskList
     adjust_page
   end
   
-  def todo_find_from_cursor(text, from_top)
+  def todo_iterative_find(text, from_top)
     if text
       @last_search_text = text
       found_position = @actions.index { |action| action =~ /#{Regexp.escape(text)}/i }

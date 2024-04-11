@@ -237,7 +237,7 @@ class ToDoCursorToStart < Command
   end
 end
 
-class ToDoFindFromCursor < Command
+class ToDoIterativeFind < Command
   def matches?(line)
     line.split.count >= 1 && line.split[0] == "ff"
   end
@@ -246,9 +246,9 @@ class ToDoFindFromCursor < Command
     tokens = line.split
     if tokens.count > 1
       text = tokens[1]
-      session.list.todo_find_from_cursor(text, true)
+      session.list.todo_iterative_find(text, true)
     else
-      session.list.todo_find_from_cursor(nil, false)
+      session.list.todo_iterative_find(nil, false)
     end
   end
 
