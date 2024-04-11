@@ -246,9 +246,9 @@ class ToDoIterativeFind < Command
     tokens = line.split
     if tokens.count > 1
       text = tokens[1]
-      session.list.todo_iterative_find(text, true)
+      session.list.todo_iterative_find_init(text)
     else
-      session.list.todo_iterative_find(nil, false)
+      session.list.todo_iterative_find_continue
     end
   end
 
