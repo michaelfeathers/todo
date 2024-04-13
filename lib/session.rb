@@ -36,6 +36,10 @@ class Session
     @background_tasks.save_all
   end
 
+  def add tokens
+    @background_tasks.todo_add tokens
+  end
+
   def global_find(text)
     io = list.io 
     io.clear_console

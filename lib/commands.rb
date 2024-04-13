@@ -44,7 +44,7 @@ class ToDoAdd < Command
   end
 
   def process line, session
-    session.list.todo_add(line.split.drop(1))
+    session.add(line.split.drop(1))
   end
 
   def description
