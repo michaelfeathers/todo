@@ -434,7 +434,7 @@ class TaskList
     task = @actions[cursor_position]
     @actions.delete_at(cursor_position)
     @actions.unshift(task)
-    todo_cursor_set(0)
+    # todo_cursor_set(0)
   end
 
   def update_action_at_cursor action_text

@@ -502,9 +502,9 @@ describe ToDoZapToTop do
       "L: task 4\n"
     ]
     output = [
-      " 0 - L: task 2\n",
+      " 0   L: task 2\n",
       " 1   L: task 0\n",
-      " 2   L: task 1\n",
+      " 2 - L: task 1\n",
       " 3   L: task 3\n",
       " 4   L: task 4\n"
     ].join
@@ -541,27 +541,4 @@ describe ToDoZapToTop do
     expect(f_io.console_output_content).to eq(RENDER_PAD + output + "\n")
   end
 
-  it 'moves the task at the cursor to position 0 and keeps the cursor at the moved task' do
-    actions = [
-      "L: task 0\n",
-      "L: task 1\n",
-      "L: task 2\n",
-      "L: task 3\n",
-      "L: task 4\n"
-    ]
-    output = [
-      " 0 - L: task 3\n",
-      " 1   L: task 0\n",
-      " 2   L: task 1\n",
-      " 3   L: task 2\n",
-      " 4   L: task 4\n"
-    ].join
-
-    f_io.actions_content = actions.join
-    session.list.todo_cursor_set(3)
-    ToDoZapToTop.new.run("zz", session)
-    session.list.render
-
-    expect(f_io.console_output_content).to eq(RENDER_PAD + output + "\n")
-  end
 end
