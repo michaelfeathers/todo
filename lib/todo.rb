@@ -1,5 +1,6 @@
 $:.unshift File.dirname(__FILE__)
 
+require 'fileutils'
 require 'session'
 require 'commands'
 require 'appio'
@@ -113,9 +114,24 @@ class ToDo
 
 end
 
-if ARGV.length == 0
-  ToDo.new(AppIo.new, BackgroundIo.new).run
-else
-  ToDo.new(HeadlessIo.new, HeadlessIo.new).run
+
+if File.exist?(LOCK_FILE)
+  puts "Another instance of todo is already running."
+  exit
 end
+
+begin
+  # Create the lock file
+  FileUtils.touch(LOCK_FILE)
+
+  if ARGV.length == 0
+    ToDo.new(AppIo.new, BackgroundIo.new).run
+  else
+    ToDo.new(HeadlessIo.new, HeadlessIo.new).run
+  end
+
+ensure
+  FileUtils.rm(LOCK_FILE) if File.exist?(LOCK_FILE)
+end
+
 

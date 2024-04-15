@@ -6,6 +6,7 @@ UPDATE_FILE  = ROOT_DIR + "updates.txt"
 ARCHIVE_FILE = ROOT_DIR + "archive.txt"
 JUNK_FILE    = ROOT_DIR + "junk.txt"
 LOG_FILE     = ROOT_DIR + "log.txt"
+LOCK_FILE    = ROOT_DIR + "todo.lock"
 
 
 class AppIo
