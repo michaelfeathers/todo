@@ -311,6 +311,10 @@ class TaskList
     else
       @io.append_to_console "\n\n    Do %d to meet daily goal of %d\n\n" % [additional_tasks_needed_today, daily_tasks_needed]
     end
+
+    @io.append_to_console "\n\n   Average so far:   %f" % [tasks_done_so_far.to_f / today.day]
+    @io.append_to_console   "\n   Average needed:   %f" % [remaining_tasks.to_f / remaining_days]
+    @io.append_to_console "\n\n"
     @io.get_from_console
   end
 
