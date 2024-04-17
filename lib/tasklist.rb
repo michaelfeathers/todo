@@ -402,7 +402,7 @@ class TaskList
     results = @io.read_log
                  .split
                  .map { |line| line.split(',') } 
-                 .map {|name, count|"%-3d   %s" % [count, name]}
+                 .map {|name, count|"%-4d   %s" % [count, name]}
                  .join($/)
     
     @io.append_to_console $/ + results + $/ + $/ 
