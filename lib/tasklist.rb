@@ -33,6 +33,10 @@ class TaskList
     @description = description + $/ + $/
   end
 
+  def empty?
+    @actions.empty?
+  end
+
   def todo_help command_list
     max_length = command_list.map { |cmd| cmd[0].length }.max
 
@@ -262,10 +266,6 @@ class TaskList
     @actions = @actions.insert(line_no, @actions.delete_at(@cursor))
   end               
 
-  def todo_surface no_elements
-    surface(no_elements)
-  end
-
   def todo_retag new_tag
     current_action = @actions[@cursor]
     return unless current_action
@@ -355,17 +355,6 @@ class TaskList
     @actions[@cursor]
   end
 
-  def surface count
-    return if @actions.count < 2 
-
-    count.times do 
-      todo_cursor_set(@actions.count - 1)
-      todo_zap_to_position(0)
-    end
-
-    todo_cursor_set(0)
-  end
-
   def day_frequencies year = nil
     @io.read_archive
        .lines 
@@ -440,4 +429,3 @@ class TaskList
   end
 
 end
-

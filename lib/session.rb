@@ -76,6 +76,19 @@ class Session
     list.io.write_log(text)
   end
 
+  def surface count
+    @background_tasks.todo_cursor_set(0)
+
+    count.times do
+      return if @background_tasks.empty?
+
+      task = @background_tasks.action_at_cursor
+      @foreground_tasks.todo_add(task.split)
+      @background_tasks.remove_action_at_cursor
+    end
+    
+  end
+
 end
 
 

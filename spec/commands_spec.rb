@@ -304,20 +304,6 @@ describe ToDoZapToPosition do
 
 end
 
-describe ToDoSurface do
-  let(:f_io) { FakeAppIo.new }
-  let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.new(f_io, b_io) }
-
-  it 'surfaces a single task' do
-    f_io.actions_content = (0..9).to_a.map { |n| "#{n}\n" }.join($/)
-    ToDoSurface.new.run("su", session)
-    session.list.render
-    expect(f_io.console_output_content.split.drop(3).map(&:to_i)).to_not eq((0..9).to_a)
-  end
-
-end
-
 describe ToDoReTag do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }

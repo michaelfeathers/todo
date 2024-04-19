@@ -60,45 +60,6 @@ describe TaskList do
     expect(io.console_output_content).to eq("  1  2020-01-11\n  2  2020-01-12\n\n")
   end
 
-  it 'surfaces one action' do
-    io.actions_content = "L: task A\nL: task B\n"
-    task_list.surface(1)
-    task_list.render
-    expect(io.console_output_content).to eq("\n\n 0 - L: task B\n 1   L: task A\n\n")
-  end
-
-
-  it 'noops on surface 2 actions on a list of 2' do
-    io.actions_content = "L: task A\nL: task B\n"
-    task_list.surface(2)
-    task_list.render
-    expect(io.console_output_content).to eq("\n\n 0 - L: task A\n 1   L: task B\n\n")
-  end
-
-  
-  it 'noops on surface 0 actions on a list of 2' do
-    io.actions_content = "L: task A\nL: task B\n"
-    task_list.surface(0)
-    task_list.render
-    expect(io.console_output_content).to eq("\n\n 0 - L: task A\n 1   L: task B\n\n")
-  end
-
-  
-  it 'noops on surface 1 action on a list of 0' do
-    io.actions_content = ""
-    task_list.surface(1)
-    task_list.render
-    expect(io.console_output_content).to eq("\n\n\n")
-  end
-
-  
-  it 'noops on surface 1 action on a list of 1' do
-    io.actions_content = "L: task A\n"
-    task_list.surface(1)
-    task_list.render
-    expect(io.console_output_content).to eq("\n\n 0 - L: task A\n\n")
-  end
-
   it 'adds a task on an empty todo list' do
     io.actions_content = ""
     task_list.todo_add(["this", "is", "a", "test"])

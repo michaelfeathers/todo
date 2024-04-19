@@ -436,7 +436,7 @@ class ToDoSurface < Command
 
   def process line, session
     count_items = line.split.count > 1 ? line.split[1].to_i : 1
-    session.list.todo_surface(count_items)
+    session.surface(count_items)
   end
 
   def description
