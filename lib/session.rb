@@ -27,7 +27,7 @@ class Session
     @list.remove_action_at_cursor
 
     switch_lists
-    @list.todo_add(task.split)
+    @list.todo_add(task.split.join(" "))
     switch_lists
   end
 
@@ -83,7 +83,7 @@ class Session
       return if @background_tasks.empty?
 
       task = @background_tasks.action_at_cursor
-      @foreground_tasks.todo_add(task.split)
+      @foreground_tasks.todo_add(task.split.join(" "))
       @background_tasks.remove_action_at_cursor
     end
     
