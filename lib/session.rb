@@ -36,8 +36,8 @@ class Session
     @background_tasks.save_all
   end
 
-  def add tokens
-    @background_tasks.todo_add tokens
+  def add task_line
+    @background_tasks.todo_add task_line
   end
 
   def global_find(text)

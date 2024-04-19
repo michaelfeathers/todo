@@ -48,8 +48,8 @@ class TaskList
     @io.get_from_console
   end
 
-  def todo_add tokens
-    @actions = [tokens.join(" ") + $/] + @actions
+  def todo_add task_line
+    @actions = [task_line + $/] + @actions
     @cursor = 0
     adjust_page
   end
