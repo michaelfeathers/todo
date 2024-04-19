@@ -423,7 +423,7 @@ describe ToDoInsertBlank do
     ToDoInsertBlank.new.run("i", session)
     session.list.todo_down 
 
-    expect(session.list.action_at_cursor).to eq("L: task AA\n") # Cursor should now
+    expect(session.list.action_at_cursor).to eq("L: task AA") # Cursor should now
   end 
 end
 

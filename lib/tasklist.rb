@@ -352,7 +352,7 @@ class TaskList
   end
 
   def action_at_cursor
-    @actions[@cursor]
+    @actions[@cursor].chomp
   end
 
   def day_frequencies year = nil

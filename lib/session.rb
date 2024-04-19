@@ -83,7 +83,7 @@ class Session
       return if @background_tasks.empty?
 
       task = @background_tasks.action_at_cursor
-      @foreground_tasks.todo_add(task.split.join(" "))
+      @foreground_tasks.todo_add(task)
       @background_tasks.remove_action_at_cursor
     end
     
