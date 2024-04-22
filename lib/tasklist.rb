@@ -325,7 +325,7 @@ class TaskList
     @io.append_to_console @description
 
     lines = @actions.zip((0..))
-                    .map { |e, i| "%2d %s %s" % [i, cursor_char(i), e] }
+                    .map { |e, i| "%3d %s %s" % [i, cursor_char(i), e] }
                     .drop(@page_no * PAGE_SIZE).take(PAGE_SIZE)
                     .join
 
@@ -342,7 +342,7 @@ class TaskList
   end
 
   def find text
-    @actions.each_with_index.map {|e,i| "%2d %s" % [i,e] }
+    @actions.each_with_index.map {|e,i| "%3d %s" % [i,e] }
             .grep(/#{Regexp.escape text}/i)
   end
 
