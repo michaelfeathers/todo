@@ -32,9 +32,21 @@ class TaskSelection
   end
 
   def day day
-    TaskSelecton.new(@descs.select {|d| d.first.day == day })
+    TaskSelection.new(@descs.select {|d| d.first.day == day })
+  end
+  
+  def today
+    TaskSelection.new(@descs.select {|d| d.first === Day.today }) 
   end
 
+  def percent_of other_tasks
+    other_total = count 
+    all_total = other_tasks.count 
+
+    return 0 if all_total == 0
+  
+    (100.0 * other_total / all_total).to_i
+  end
 
   def count
     @descs.count

@@ -45,6 +45,10 @@ class Day
     @date.strftime("%Y")
   end
 
+  def year_no
+    @date.year
+  end
+
   def date
     @date
   end

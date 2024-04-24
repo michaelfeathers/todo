@@ -166,35 +166,32 @@ class TaskList
     year ||= @io.today.year
 
     task_descs = read_task_descs
-
-    year_descs = task_descs.select {|td| td.first.year.to_i == year.to_i }
     year_tasks = TaskSelection.new(task_descs).year(year.to_i)
 
-    @io.append_to_console "\n\n      %10s %10s %10s %10s\n\n" % ["R7K", "Life", "Total", "R7K %"]
+
+    columns = [["R7K",   ->(tasks) { tasks.R.count } ],
+               ["Life",  ->(tasks) { tasks.L.count } ],
+               ["Total", ->(tasks) { tasks.count } ],
+               ["R7K %", ->(tasks) { tasks.R.percent_of(tasks) } ]]
+
+
+    @io.append_to_console "\n\n      %10s %10s %10s %10s\n\n" % (columns.map {|c| c.first })
 
     (1..12).each do |month|
       month_tasks = year_tasks.month(month)
 
-      @io.append_to_console "%s   %10d %10d %10d %10d\n" % [month_name_of(month), 
-                                                            month_tasks.R.count,
-                                                            month_tasks.L.count,
-                                                            month_tasks.count,
-                                                            r7k_percent(month, year_descs)]
+      @io.append_to_console "%s   %10d %10d %10d %10d\n" % ([month_name_of(month), columns.map { |c| c[1].call(month_tasks) }].flatten)
     end
 
     @io.append_to_console $/
-    @io.append_to_console "      %10d %10d %10d\n" % [year_descs.select {|dd| dd[1] == "R" }.count,
-                                                      year_descs.select {|dd| dd[1] == "L" }.count,
-                                                      year_descs.count]
+    @io.append_to_console "      %10d %10d %10d\n" % (columns.map { |c| c[1].call(year_tasks) }.flatten)
 
     @io.append_to_console $/
 
-    todays = year_descs.select {|d| d.first === Day.today } 
+    today_tasks = TaskSelection.new(task_descs).today
 
-    if todays.count > 0
-      @io.append_to_console "Today %10d %10d %10d\n" % [todays.select {|d| d[1] == "R" }.count,
-                                         todays.select {|d| d[1] == "L" }.count,
-                                         todays.count]
+    if today_tasks.count > 0 && year.to_i == @io.today.year_no
+      @io.append_to_console "Today %10d %10d %10d\n" % (columns.map { |c| c[1].call(today_tasks) }.flatten)
     end
 
     @io.append_to_console $/
@@ -209,22 +206,6 @@ class TaskList
       @io.read_archive
          .lines
          .map {|l| [Day.from_text(l.split[0]), l.split[1].chars.first] }
-  end
-
-  def count_month_entries month_no, type, descs
-    return descs.select {|d| d.first.month_no == month_no }.count if type == "*"
-
-    descs.select {|d| d.first.month_no == month_no }
-         .select {|dd| dd[1] == type }
-         .count
-  end
-
-  def r7k_percent month_no, year_descs
-    r7k_total = count_month_entries(month_no, "R", year_descs)
-    all_total = count_month_entries(month_no, "*", year_descs)
-    return 0 if all_total == 0
-  
-    (100.0 * r7k_total / all_total).to_i
   end
 
   def todo_today days_prev
