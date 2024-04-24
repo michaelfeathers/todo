@@ -1,6 +1,7 @@
 $:.unshift File.dirname(__FILE__)
 
 require 'day'
+require 'taskselection'
 require 'appio'
 require 'array_ext'
 
@@ -161,23 +162,24 @@ class TaskList
     @grab_mode = (not @grab_mode)
   end
   
-  def todo_month_summaries month = nil
-    month ||= @io.today.year
+  def todo_month_summaries year = nil
+    year ||= @io.today.year
 
-    task_descs = @io.read_archive
-                    .lines
-                    .map {|l| [Day.from_text(l.split[0]), l.split[1].chars.first] }
+    task_descs = read_task_descs
 
-    year_descs =  task_descs.select {|td| td.first.year.to_i == month.to_i }
-      @io.append_to_console "\n\n      %10s %10s %10s %10s\n\n" % ["R7K", "Life", "Total", "R7K %"]
+    year_descs = task_descs.select {|td| td.first.year.to_i == year.to_i }
+    year_tasks = TaskSelection.new(task_descs).year(year.to_i)
 
-      (1..12).each do |month|
-        @io.append_to_console "%s   %10d %10d %10d %10d\n" % [month_name_of(month), 
-                                                       count_month_entries(month, "R", year_descs),
-                                                       count_month_entries(month, "L", year_descs),
-                                                       count_month_entries(month, "*", year_descs),
-                                                       r7k_percent(month, year_descs)]
+    @io.append_to_console "\n\n      %10s %10s %10s %10s\n\n" % ["R7K", "Life", "Total", "R7K %"]
 
+    (1..12).each do |month|
+      month_tasks = year_tasks.month(month)
+
+      @io.append_to_console "%s   %10d %10d %10d %10d\n" % [month_name_of(month), 
+                                                            month_tasks.R.count,
+                                                            month_tasks.L.count,
+                                                            month_tasks.count,
+                                                            r7k_percent(month, year_descs)]
     end
 
     @io.append_to_console $/
@@ -200,6 +202,13 @@ class TaskList
 
     @io.get_from_console
 
+  end
+
+
+  def read_task_descs
+      @io.read_archive
+         .lines
+         .map {|l| [Day.from_text(l.split[0]), l.split[1].chars.first] }
   end
 
   def count_month_entries month_no, type, descs
@@ -325,7 +334,7 @@ class TaskList
     @io.append_to_console @description
 
     lines = @actions.zip((0..))
-                    .map { |e, i| "%3d %s %s" % [i, cursor_char(i), e] }
+                    .map { |e, i| "%2d %s %s" % [i, cursor_char(i), e] }
                     .drop(@page_no * PAGE_SIZE).take(PAGE_SIZE)
                     .join
 
@@ -342,7 +351,7 @@ class TaskList
   end
 
   def find text
-    @actions.each_with_index.map {|e,i| "%3d %s" % [i,e] }
+    @actions.each_with_index.map {|e,i| "%2d %s" % [i,e] }
             .grep(/#{Regexp.escape text}/i)
   end
 
