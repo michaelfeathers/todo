@@ -23,6 +23,10 @@ class TaskSelection
     TaskSelection.new(@descs.select{|d| d[1] == "R" })
   end
 
+  def G
+    TaskSelection.new(@descs.select{|d| d[1] == "G" })
+  end
+
   def year year
     TaskSelection.new(@descs.select {|d| d.first.year.to_i == year })
   end

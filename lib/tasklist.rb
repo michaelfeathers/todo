@@ -175,23 +175,21 @@ class TaskList
                ["R7K %", ->(tasks) { tasks.R.percent_of(tasks) } ]]
 
 
-    @io.append_to_console "\n\n      %10s %10s %10s %10s\n\n" % (columns.map {|c| c.first })
+    @io.append_to_console "\n\n      %10s %10s %10s %10s\n\n" % column_names_row(columns) 
 
     (1..12).each do |month|
       month_tasks = year_tasks.month(month)
 
-      @io.append_to_console "%s   %10d %10d %10d %10d\n" % ([month_name_of(month), columns.map { |c| c[1].call(month_tasks) }].flatten)
+      @io.append_to_console "%s   %10d %10d %10d %10d\n" % ([month_name_of(month), row(columns, month_tasks)].flatten) 
     end
 
     @io.append_to_console $/
-    @io.append_to_console "      %10d %10d %10d\n" % (columns.map { |c| c[1].call(year_tasks) }.flatten)
-
+    @io.append_to_console "      %10d %10d %10d\n" % row(columns, year_tasks)
     @io.append_to_console $/
 
     today_tasks = TaskSelection.new(task_descs).today
-
     if today_tasks.count > 0 && year.to_i == @io.today.year_no
-      @io.append_to_console "Today %10d %10d %10d\n" % (columns.map { |c| c[1].call(today_tasks) }.flatten)
+      @io.append_to_console "Today %10d %10d %10d\n" % row(columns, today_tasks) 
     end
 
     @io.append_to_console $/
@@ -206,6 +204,14 @@ class TaskList
       @io.read_archive
          .lines
          .map {|l| [Day.from_text(l.split[0]), l.split[1].chars.first] }
+  end
+
+  def row columns, tasks
+    columns.map { |c| c[1].call(tasks) }.flatten
+  end
+
+  def column_names_row columns
+    columns.map {|c| c.first }
   end
 
   def todo_today days_prev
