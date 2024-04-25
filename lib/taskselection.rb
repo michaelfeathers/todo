@@ -39,8 +39,8 @@ class TaskSelection
     TaskSelection.new(@descs.select {|d| d.first.day == day })
   end
   
-  def today
-    TaskSelection.new(@descs.select {|d| d.first === Day.today }) 
+  def date date
+    TaskSelection.new(@descs.select {|d| d.first === date }) 
   end
 
   def percent_of other_tasks

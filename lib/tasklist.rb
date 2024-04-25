@@ -164,11 +164,11 @@ class TaskList
   end
   
   def todo_month_summaries year = nil
-    year ||= @io.today.year
+    year ||= @io.today.year_no
 
     task_descs = read_task_descs
-    year_tasks = TaskSelection.new(task_descs).year(year.to_i)
-
+    year_tasks = TaskSelection.new(task_descs).year(year)
+    today_tasks = TaskSelection.new(task_descs).date(@io.today)
 
     columns = [["R7K",   ->(tasks) { tasks.R.count } ],
                ["Life",  ->(tasks) { tasks.L.count } ],
@@ -176,10 +176,24 @@ class TaskList
                ["R7K %", ->(tasks) { tasks.R.percent_of(tasks) } ]]
 
 
+    print_header                columns
+    print_months_statistics     columns, year_tasks
+    print_year_statistics       columns, year_tasks
+    print_today_statistics      columns, today_tasks, year
+
+
+    @io.append_to_console $/
+    @io.get_from_console
+  end
+
+  def print_header columns
     @io.append_to_console "\n\n"
     @io.append_to_console column_names_row("", columns)
-    @io.append_to_console $/
 
+    @io.append_to_console $/
+  end
+
+  def print_months_statistics columns, year_tasks
     (1..12).each do |month|
       month_tasks = year_tasks.month(month)
 
@@ -187,19 +201,19 @@ class TaskList
     end
 
     @io.append_to_console $/
-    @io.append_to_console row("", columns, year_tasks)
-    @io.append_to_console $/
+  end
 
-    today_tasks = TaskSelection.new(task_descs).today
-    if today_tasks.count > 0 && year.to_i == @io.today.year_no
+  def print_today_statistics columns, today_tasks, year
+    if today_tasks.count > 0 && year == @io.today.year_no
       @io.append_to_console row("Today", columns, today_tasks)
     end
 
     @io.append_to_console $/
+  end
+
+  def print_year_statistics columns, year_tasks
+    @io.append_to_console row("", columns, year_tasks)
     @io.append_to_console $/
-
-    @io.get_from_console
-
   end
 
 

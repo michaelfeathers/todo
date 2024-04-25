@@ -365,7 +365,7 @@ class ToDoMonthSummaries < Command
 
   def process line, session
     session.list.todo_month_summaries if line.split.count == 1
-    session.list.todo_month_summaries(line.split[1]) if line.split.count == 2
+    session.list.todo_month_summaries(line.split[1].to_i) if line.split.count == 2
   end
 
   def description
