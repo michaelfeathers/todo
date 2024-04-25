@@ -11,10 +11,11 @@ end
 
 class MonthsReport
 
+  FORMAT = "%-5s %10s %10s %10s %10s\n" 
+
   def initialize io, year
     @io = io
     @year = year
-    @format = "%-5s %10s %10s %10s %10s\n" 
   end
 
   def run 
@@ -68,7 +69,6 @@ class MonthsReport
     @io.append_to_console $/
   end
 
-
   def read_task_descs
       @io.read_archive
          .lines
@@ -76,11 +76,11 @@ class MonthsReport
   end
 
   def row label, columns, tasks
-    @format % [label, columns.map { |c| c[1].call(tasks) }].flatten
+    FORMAT % ([label] + columns.map { |c| c[1].call(tasks) })
   end
 
   def column_names_row label, columns
-    @format % [label, columns.map {|c| c.first }].flatten
+    FORMAT % ([label] + columns.map {|c| c.first })
   end
 
 end
