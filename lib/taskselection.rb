@@ -4,11 +4,6 @@ require 'day'
 require 'appio'
 
 
-def month_name_of month_no
-  DateTime.parse("2023-#{month_no}-01").strftime("%b")
-end
-
-
 class TaskSelection
 
   def initialize descs 
