@@ -76,11 +76,11 @@ class MonthsReport
   end
 
   def row label, columns, tasks
-    FORMAT % ([label] + columns.map { |c| c[1].call(tasks) })
+    FORMAT % [label].concat(columns.map { |c| c[1].call(tasks) })
   end
 
   def column_names_row label, columns
-    FORMAT % ([label] + columns.map {|c| c.first })
+    FORMAT % [label].concat(columns.map { |c| c.first })
   end
 
 end
