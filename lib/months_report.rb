@@ -1,6 +1,7 @@
 $:.unshift File.dirname(__FILE__)
 
 require 'day'
+require 'taskdesc'
 require 'appio'
 
 
@@ -72,7 +73,7 @@ class MonthsReport
   def read_task_descs
       @io.read_archive
          .lines
-         .map {|l| [Day.from_text(l.split[0]), l.split[1].chars.first] }
+         .map {|l| TaskDesc.new(Day.from_text(l.split[0]), l.split[1].chars.first) }
   end
 
   def row label, columns, tasks
