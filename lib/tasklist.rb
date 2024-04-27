@@ -87,6 +87,12 @@ class TaskList
 
     @io.get_from_console
   end
+
+  def todo_print_archive
+    @io.clear_console
+    @io.append_to_console(@io.read_archive)
+    @io.get_from_console
+  end
   
   def todo_push days_text
     return if @actions.count < 1

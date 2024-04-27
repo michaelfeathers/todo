@@ -60,6 +60,7 @@ class ToDo
                 ToDoMoveTaskToOther.new,
                 ToDoPageDown.new,
                 ToDoPageUp.new,
+                ToDoPrintArchive.new,
                 ToDoPush.new,
                 ToDoQuit.new,
                 ToDoReTag.new,

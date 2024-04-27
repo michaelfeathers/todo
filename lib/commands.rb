@@ -401,6 +401,20 @@ class ToDoPageUp < Command
   end
 end
 
+class ToDoPrintArchive < Command
+  def matches?(line)
+    line.split == ["pa"]
+  end
+
+  def process(line, session)
+    session.list.todo_print_archive
+  end
+
+  def description
+    CommandDesc.new("pa", "print the archive")
+  end
+end
+
 class ToDoZapToPosition < Command
   def matches? line
     line.split.count == 2 && line.split[0] == "z" 

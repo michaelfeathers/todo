@@ -200,6 +200,30 @@ describe ToDoPageUp do
   
 end
 
+describe ToDoPrintArchive do
+  let(:f_io) { FakeAppIo.new }
+  let(:b_io) { FakeAppIo.new }
+  let(:session) { Session.new(f_io, b_io) }
+
+  it 'prints the contents of the archive' do
+    archive_content = "2023-06-07 L: Task 1\n2023-06-08 R: Task 2\n"
+    f_io.archive_content = archive_content
+
+    ToDoPrintArchive.new.run("pa", session)
+
+    expect(f_io.console_output_content).to eq(archive_content)
+  end
+
+  it 'prints an empty archive when there are no saved tasks' do
+    f_io.archive_content = ""
+
+    ToDoPrintArchive.new.run("pa", session)
+
+    expect(f_io.console_output_content).to eq("")
+  end
+
+end
+
 describe ToDoCursorSet do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
