@@ -29,6 +29,8 @@ class MonthsReport
                ["Total", ->(tasks) { tasks.count } ],
                ["R7K %", ->(tasks) { tasks.R.percent_of(tasks) } ]]
 
+    @format = "%-5s" + columns.size.times.map { " %10s" }.join + "\n"
+
 
     print_header                columns
     print_months_statistics     columns, year_tasks
@@ -77,11 +79,11 @@ class MonthsReport
   end
 
   def row label, columns, tasks
-    FORMAT % [label].concat(columns.map { |c| c[1].call(tasks) })
+    @format % [label].concat(columns.map { |c| c[1].call(tasks) })
   end
 
   def column_names_row label, columns
-    FORMAT % [label].concat(columns.map { |c| c.first })
+    @format % [label].concat(columns.map { |c| c.first })
   end
 
 end
