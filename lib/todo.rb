@@ -66,6 +66,7 @@ class ToDo
                 ToDoReTag.new,
                 ToDoRemove.new,
                 ToDoSave.new,
+                ToDoSaveActions.new,
                 ToDoSaveNoRemove.new,
                 ToDoShowCommandFrequencices.new,
                 ToDoShowUpdates.new,

@@ -552,3 +552,18 @@ describe ToDoZapToTop do
   end
 
 end
+
+describe ToDoSaveActions do
+  let(:f_io) { FakeAppIo.new }
+  let(:b_io) { FakeAppIo.new }
+  let(:session) { Session.new(f_io, b_io) }
+
+  it 'saves the actions without quitting' do
+    actions_content = "L: task 1\nL: task 2\n"
+    f_io.actions_content = actions_content
+
+    ToDoSaveActions.new.run("@", session)
+
+    expect(f_io.actions_content).to eq(actions_content)
+  end
+end

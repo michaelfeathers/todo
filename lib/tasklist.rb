@@ -127,6 +127,10 @@ class TaskList
     remove_action_at_cursor
   end
 
+  def todo_save_all
+    save_all
+  end
+
   def todo_save_no_remove
     return if @actions.count < 1
     return if action_at_cursor.strip.empty?

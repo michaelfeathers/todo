@@ -152,6 +152,19 @@ class ToDoInsertBlank < Command
   end
 end
 
+class ToDoSaveActions < Command
+  def matches?(line)
+    line.strip == "@"
+  end
+
+  def process(line, session)
+    session.list.todo_save_all
+  end
+
+  def description
+    CommandDesc.new("@", "save the actions without quitting")
+  end
+end
 
 class ToDoPush < Command
   def matches? line
