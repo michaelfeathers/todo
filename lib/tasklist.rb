@@ -388,4 +388,8 @@ class TaskList
     @actions[@cursor] = action_text + $/
   end
 
+  def count
+    @actions.count
+  end
+
 end

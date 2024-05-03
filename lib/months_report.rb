@@ -26,8 +26,8 @@ class MonthsReport
 
     columns = [["R7K",   ->(tasks) { tasks.R.count } ],
                ["Life",  ->(tasks) { tasks.L.count } ],
-               ["Total", ->(tasks) { tasks.count } ],
-               ["R7K %", ->(tasks) { tasks.R.percent_of(tasks) } ]]
+               ["Total", ->(tasks) { tasks.count } ]]
+               # ["R7K %", ->(tasks) { tasks.R.percent_of(tasks) } ]]
 
     @format = "%-5s" + columns.size.times.map { " %10s" }.join + "\n"
 

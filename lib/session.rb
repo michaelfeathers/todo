@@ -77,11 +77,10 @@ class Session
   end
 
   def surface count
-    @background_tasks.todo_cursor_set(0)
-
     count.times do
       return if @background_tasks.empty?
 
+      @background_tasks.todo_cursor_set(rand(@background_tasks.count))
       task = @background_tasks.action_at_cursor
       @foreground_tasks.todo_add(task)
       @background_tasks.remove_action_at_cursor
