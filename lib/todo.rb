@@ -58,6 +58,7 @@ class ToDo
                 ToDoIterativeFind.new,
                 ToDoMonthSummaries.new,
                 ToDoMoveTaskToOther.new,
+                ToDoMoveToRandomPositionOnOtherList.new,
                 ToDoPageDown.new,
                 ToDoPageUp.new,
                 ToDoPrintArchive.new,

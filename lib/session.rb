@@ -88,6 +88,15 @@ class Session
     
   end
 
+  def move_task_to_random_position_on_other_list
+    task = @list.action_at_cursor
+    @list.remove_action_at_cursor
+    other_list = (@list == @foreground_tasks) ? @background_tasks : @foreground_tasks
+    random_position = rand(other_list.count)
+    other_list.todo_add(task)
+    other_list.todo_zap_to_position(random_position)
+  end
+
 end
 
 

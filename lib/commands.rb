@@ -357,6 +357,20 @@ class ToDoGrabToggle < Command
   end
 end
 
+class ToDoMoveToRandomPositionOnOtherList < Command
+  def matches?(line)
+    line.strip == "_"
+  end
+
+  def process(line, session)
+    session.move_task_to_random_position_on_other_list
+  end
+
+  def description
+    CommandDesc.new("_", "move the task at the cursor to a random position on the other list")
+  end
+end
+
 class ToDoHelp < Command
   def matches? line
     line.split.take(1) == ["h"]
