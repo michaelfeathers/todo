@@ -3,7 +3,7 @@ $:.unshift File.dirname(__FILE__)
 require 'tasklist'
 require 'fakeappio'
 
-empty_archive_expected = "
+empty_archive_with_percent_expected = "
 
              R7K       Life      Total      R7K %
 
@@ -26,6 +26,32 @@ Dec            0          0          0          0
 
 "
 
+empty_archive_expected = "
+
+             R7K       Life      Total
+
+Jan            0          0          0
+Feb            0          0          0
+Mar            0          0          0
+Apr            0          0          0
+May            0          0          0
+Jun            0          0          0
+Jul            0          0          0
+Aug            0          0          0
+Sep            0          0          0
+Oct            0          0          0
+Nov            0          0          0
+Dec            0          0          0
+
+               0          0          0
+
+
+
+"
+
+
+
+
 describe TaskList do
 
   let(:io) { FakeAppIo.new }
@@ -41,7 +67,7 @@ describe TaskList do
     expect(task_list.find("b")).to eq([" 1 L: task B\n"])
   end
 
-  xit 'produces a summary for an empty archive' do
+  it 'produces a summary for an empty archive' do
     io.today_content = Day.from_text("2020-01-01")
     task_list.todo_month_summaries
     expect(io.console_output_content).to eq(empty_archive_expected)
