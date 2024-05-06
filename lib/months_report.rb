@@ -12,8 +12,6 @@ end
 
 class MonthsReport
 
-  FORMAT = "%-5s %10s %10s %10s %10s\n" 
-
   def initialize io, year
     @io = io
     @year = year
@@ -73,9 +71,9 @@ class MonthsReport
   end
 
   def read_task_descs
-      @io.read_archive
-         .lines
-         .map {|l| TaskDesc.new(Day.from_text(l.split[0]), l.split[1].chars.first) }
+    @io.read_archive
+       .lines
+       .map {|l| TaskDesc.new(Day.from_text(l.split[0]), l.split[1].chars.first) }
   end
 
   def row label, columns, tasks
