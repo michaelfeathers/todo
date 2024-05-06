@@ -12,9 +12,19 @@ end
 
 class MonthsReport
 
+  
+  COLUMNS = [["R7K",   ->(tasks) { tasks.R.count } ],
+             ["Life",  ->(tasks) { tasks.L.count } ],
+             ["Total", ->(tasks) { tasks.count } ]]
+             #["R7K %", ->(tasks) { tasks.R.percent_of(tasks) } ]]
+
+
+
   def initialize io, year
     @io = io
     @year = year
+
+    @format = "%-5s" + COLUMNS.size.times.map { " %10s" }.join + "\n"
   end
 
   def run 
@@ -22,51 +32,43 @@ class MonthsReport
     year_tasks = TaskSelection.new(task_descs).year(@year)
     today_tasks = TaskSelection.new(task_descs).date(@io.today)
 
-    columns = [["R7K",   ->(tasks) { tasks.R.count } ],
-               ["Life",  ->(tasks) { tasks.L.count } ],
-               ["Total", ->(tasks) { tasks.count } ]]
-               # ["R7K %", ->(tasks) { tasks.R.percent_of(tasks) } ]]
-
-    @format = "%-5s" + columns.size.times.map { " %10s" }.join + "\n"
-
-
-    print_header                columns
-    print_months_statistics     columns, year_tasks
-    print_year_statistics       columns, year_tasks
-    print_today_statistics      columns, today_tasks
+    print_header                
+    print_months_statistics     year_tasks
+    print_year_statistics       year_tasks
+    print_today_statistics      today_tasks
 
 
     @io.append_to_console $/
     @io.get_from_console
   end
 
-  def print_header columns
+  def print_header 
     @io.append_to_console "\n\n"
-    @io.append_to_console column_names_row("", columns)
+    @io.append_to_console column_names_row("", COLUMNS)
 
     @io.append_to_console $/
   end
 
-  def print_months_statistics columns, year_tasks
+  def print_months_statistics year_tasks
     (1..12).each do |month|
       month_tasks = year_tasks.month(month)
 
-      @io.append_to_console row(month_name_of(month), columns, month_tasks)
+      @io.append_to_console row(month_name_of(month), COLUMNS, month_tasks)
     end
 
     @io.append_to_console $/
   end
 
-  def print_today_statistics columns, today_tasks
+  def print_today_statistics today_tasks
     if today_tasks.count > 0 && @year == @io.today.year_no
-      @io.append_to_console row("Today", columns, today_tasks)
+      @io.append_to_console row("Today", COLUMNS, today_tasks)
     end
 
     @io.append_to_console $/
   end
 
-  def print_year_statistics columns, year_tasks
-    @io.append_to_console row("", columns, year_tasks)
+  def print_year_statistics year_tasks
+    @io.append_to_console row("", COLUMNS, year_tasks)
     @io.append_to_console $/
   end
 
