@@ -13,6 +13,10 @@ class Array
   def freq
     freq_by {|e| e }
   end
+
+  def second
+    self[1]
+  end
 end
 
 

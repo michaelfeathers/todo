@@ -36,7 +36,7 @@ class MonthsReport
 
   def print_header 
     @io.append_to_console "\n\n"
-    @io.append_to_console column_names_row("", COLUMNS)
+    @io.append_to_console header_row
 
     @io.append_to_console $/
   end
@@ -54,8 +54,7 @@ class MonthsReport
   def print_months_statistics
     (1..12).each do |month|
       month_tasks = year_tasks.month(month)
-
-      @io.append_to_console row(month_name_of(month), COLUMNS, month_tasks)
+      @io.append_to_console body_row(month_name_of(month), month_tasks)
     end
 
     @io.append_to_console $/
@@ -63,14 +62,15 @@ class MonthsReport
 
   def print_today_statistics 
     if today_tasks.count > 0 && @year == @io.today.year_no
-      @io.append_to_console row("Today", COLUMNS, today_tasks)
+      @io.append_to_console body_row("Today", today_tasks)
     end
 
     @io.append_to_console $/
   end
 
   def print_year_statistics 
-    @io.append_to_console row("", COLUMNS, year_tasks)
+    @io.append_to_console body_row("", year_tasks)
+
     @io.append_to_console $/
   end
 
@@ -88,12 +88,12 @@ class MonthsReport
     TaskSelection.new(read_task_descs).date(@io.today)
   end
 
-  def row label, columns, tasks
-    @format % [label].concat(columns.map { |c| c[1].call(tasks) })
+  def body_row label, tasks
+    @format % [label].concat(COLUMNS.map { |c| c.second.call(tasks) })
   end
 
-  def column_names_row label, columns
-    @format % [label].concat(columns.map { |c| c.first })
+  def header_row 
+    @format % [""].concat(COLUMNS.map { |c| c.first })
   end
 
 end
