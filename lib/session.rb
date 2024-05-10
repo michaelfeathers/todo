@@ -58,7 +58,7 @@ class Session
 
   def load_command_log 
     @command_log = list.io.read_log 
-                          .split("\n")
+                          .split($/)
                           .map { |line| line.split(',') } 
                           .select { |items| items.size == 2 } 
                           .map { |k, v| [k, v.to_i] } 
@@ -71,7 +71,7 @@ class Session
                        .sort_by { |_, v| -v } 
                        .to_h 
                        .map { |k, v| "#{k},#{v}" } 
-                       .join("\n")
+                       .join($/)
 
     list.io.write_log(text)
   end

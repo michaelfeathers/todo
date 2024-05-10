@@ -39,9 +39,9 @@ class TaskList
 
     output = command_list.sort_by(&:first)
                          .map { |name, desc| "%-#{max_length + 5}s- %s" % [name, desc] }
-                         .join("\n")
+                         .join($/)
 
-    @io.append_to_console "\n#{output}\n\n"
+    @io.append_to_console $/ + "#{output}" + $/ + $/
     @io.get_from_console
   end
 
@@ -108,7 +108,7 @@ class TaskList
   end
 
   def todo_remove
-    @io.append_to_console "Remove current line (Y/N)?\n"
+    @io.append_to_console "Remove current line (Y/N)?" + $/
     response = @io.get_from_console
 
     return unless response.split.first == "Y"
@@ -184,9 +184,9 @@ class TaskList
                .lines 
                .select {|line| Day.from_text(line.split.first) === day_to_display }
 
-    @io.append_to_console("\n")
+    @io.append_to_console($/)
     found.each {|line| @io.append_to_console(line) }
-    @io.append_to_console("\n#{found.count}\n\n")
+    @io.append_to_console($/ + "#{found.count}" + $/ + $/)
     @io.get_from_console
   end
 
@@ -249,7 +249,7 @@ class TaskList
     tasks_done_so_far   = tasks_done_prev + tasks_done_today 
     
     if tasks_done_so_far >= month_target
-      @io.append_to_console "\n\n    Goal met\n\n"
+      @io.append_to_console $/ + $/ + "    Goal met" + $/ + $/
       @io.get_from_console
       return
     end

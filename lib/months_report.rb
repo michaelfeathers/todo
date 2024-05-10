@@ -23,7 +23,7 @@ class MonthsReport
     @year = year
     @tasks = nil
 
-    @format = "%-5s" + COLUMNS.size.times.map { " %10s" }.join + "\n"
+    @format = "%-5s" + COLUMNS.size.times.map { " %10s" }.join + $/ 
   end
 
   def run 
@@ -35,7 +35,7 @@ class MonthsReport
   end
 
   def print_header 
-    @io.append_to_console "\n\n"
+    @io.append_to_console $/ + $/
     @io.append_to_console header_row
 
     @io.append_to_console $/
