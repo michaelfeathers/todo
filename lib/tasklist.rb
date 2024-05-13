@@ -155,7 +155,7 @@ class TaskList
                         end + $/
   end
 
-  def todo_edit_replace(position, new_tokens)
+  def todo_edit_replace position, new_tokens 
     action = action_at_cursor
     return if action.nil?
 
@@ -163,9 +163,16 @@ class TaskList
     if new_tokens.nil? || new_tokens.empty?
       tokens.delete_at(position)
     else
-      tokens[position, new_tokens.count] = new_tokens
+      tokens = replace_tokens(tokens, position, new_tokens)
     end
     update_action_at_cursor(tokens.join(' '))
+  end
+
+  def replace_tokens tokens, position, new_tokens 
+    pre = tokens.take(position)
+    post = tokens.drop(pre.count + new_tokens.count)
+
+    pre + new_tokens + post
   end
 
   def todo_grab_toggle
@@ -343,7 +350,7 @@ class TaskList
     text = tag_tallies.map { |t, n| mask % [t, n] }.join($/)
     untagged = mask % ["Untagged", untagged_tally]
 
-    @io.append_to_console "\n\n#{text}\n\n#{untagged}\n\n"
+    @io.append_to_console $/ + $/ + "#{text}\n\n#{untagged}" + $/ + $/
     @io.get_from_console 
   end
 
@@ -351,9 +358,10 @@ class TaskList
     data    = @io.read_log
                  .split
                  .map {|line| line.split(',') } 
-                 .map {|name,count| [name,count.to_i] }
+                 .map {|name,count| [name, count.to_i] }
 
     total   = data.sum {|_,count| count }
+
     results = data.map {|name, count| "%-5.2f  %-4d   %s" % [count * 100.0 / total, count, name]}
                   .join($/)
     
