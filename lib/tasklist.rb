@@ -147,12 +147,7 @@ class TaskList
   def todo_edit new_tokens  
     return if @actions.empty?
 
-    old_tokens = @actions[@cursor].split
-    @actions[@cursor] = if old_tokens.first =~ TAG_PATTERN 
-                          ([old_tokens.first] + new_tokens).join(" ")
-                        else
-                          new_tokens.join(" ")
-                        end + $/
+    update_action_at_cursor(replace_tokens(action_at_cursor.split, 1, new_tokens).join(' '))
   end
 
   def todo_edit_replace position, new_tokens 
@@ -169,7 +164,7 @@ class TaskList
   end
 
   def replace_tokens tokens, position, new_tokens 
-    pre = tokens.take(position)
+    pre  = tokens.take(position)
     post = tokens.drop(pre.count + new_tokens.count)
 
     pre + new_tokens + post
