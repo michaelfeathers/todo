@@ -18,7 +18,12 @@ class Session
     load_command_log
   end
 
-  def switch_lists 
+  def switch_lists(target_position = nil)
+    toggle_active_list
+    @list.todo_cursor_set(target_position) if target_position
+  end
+
+  def toggle_active_list
     @list = @list.equal?(@foreground_tasks) ? @background_tasks : @foreground_tasks
   end
 

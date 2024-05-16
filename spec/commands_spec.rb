@@ -421,6 +421,26 @@ describe ToDoSwitchLists do
      session.list.render
      expect(session.list.io.console_output_content).to eq(output_after)
   end
+
+  it 'switches to the background list and moves the cursor to the specified position' do
+    f_io.actions_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
+    b_io.actions_content = [ "R: first\n", "R: second\n",  "R: third\n"].join
+    output_after  = "BACKGROUND" + RENDER_PAD + [" 0   R: first\n", " 1 - R: second\n", " 2   R: third\n\n"].join
+
+    ToDoSwitchLists.new.run("w 1", session)
+    session.list.render
+    expect(session.list.io.console_output_content).to eq(output_after)
+  end
+
+  it 'does not change the cursor position if no position is specified' do
+    f_io.actions_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
+    b_io.actions_content = [ "R: first\n", "R: second\n",  "R: third\n"].join
+    output_after  = "BACKGROUND" + RENDER_PAD + [" 0 - R: first\n", " 1   R: second\n", " 2   R: third\n\n"].join
+
+    ToDoSwitchLists.new.run("w", session)
+    session.list.render
+    expect(session.list.io.console_output_content).to eq(output_after)
+  end
   
 end
 

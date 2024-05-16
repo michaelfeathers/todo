@@ -515,15 +515,23 @@ end
 
 class ToDoSwitchLists < Command
   def matches? line
-    line.split.count == 1 && line.split[0] == "w"
+    tokens = line.split
+    tokens.first == "w" && (tokens.count == 1 || (tokens.count == 2 && tokens[1] =~ /^\d+$/))
   end
 
   def process line, session
-    session.switch_lists
+    tokens = line.split
+    if tokens.count == 2
+      target_position = tokens[1].to_i
+    else
+      target_position = nil
+    end
+    
+    session.switch_lists(target_position)
   end
 
   def description
-    CommandDesc.new("w", "switch foreground and background lists")
+    CommandDesc.new("w [n]", "switch foreground and background lists, optionally moving cursor to position n")
   end
 end
 
