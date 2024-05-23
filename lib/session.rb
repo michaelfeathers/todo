@@ -42,7 +42,7 @@ class Session
   end
 
   def add task_line
-    @background_tasks.todo_add task_line
+    @foreground_tasks.todo_add task_line
   end
 
   def global_find(text)
