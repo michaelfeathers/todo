@@ -15,7 +15,7 @@ class TaskSelection
   end
 
   def R
-    TaskSelection.new(@descs.select{|d| d.task_type == "R" })
+    TaskSelection.new(@descs.select{|d| d.task_type == "R" || d.task_type == "W" })
   end
 
   def G
