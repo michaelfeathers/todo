@@ -3,9 +3,9 @@ $:.unshift File.dirname(__FILE__)
 require 'tasklist'
 require 'fakeappio'
 
-empty_archive_with_percent_expected = "
+empty_archive_expected = "
 
-             R7K       Life      Total      R7K %
+             Win        R7K       Life      Total
 
 Jan            0          0          0          0
 Feb            0          0          0          0
@@ -25,30 +25,6 @@ Dec            0          0          0          0
 
 
 "
-
-empty_archive_expected = "
-
-             R7K       Life      Total
-
-Jan            0          0          0
-Feb            0          0          0
-Mar            0          0          0
-Apr            0          0          0
-May            0          0          0
-Jun            0          0          0
-Jul            0          0          0
-Aug            0          0          0
-Sep            0          0          0
-Oct            0          0          0
-Nov            0          0          0
-Dec            0          0          0
-
-               0          0          0
-
-
-
-"
-
 
 
 
