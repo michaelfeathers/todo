@@ -30,37 +30,41 @@ Dec            0          0          0          0
 
 
 describe TaskList do
-
   let(:io) { FakeAppIo.new }
   let(:task_list) { TaskList.new(io) }
 
-=begin
-  describe '#todo_help' do
+   describe '#todo_help' do
     it 'displays help information for each command' do
       commands = [
-       [CommandDesc.new("cmd1", "description 1"),
-        CommandDesc.new("cmd2", "description 2")]
-       ]  
-       task_list.todo_help(commands)
+        ["cmd1", "description 1"],
+        ["cmd2", "description 2"],
+        ["cmd3", "description 3"]
+      ]
+      
+      task_list.todo_help(commands)
 
-       expect(io.console_output_content).to include("cmd1     - description 1")
-       expect(io.console_output_content).to include("cmd2     - description 2")
+      expect(io.console_output_content).to include("cmd1     - description 1")
+      expect(io.console_output_content).to include("cmd2     - description 2")
+      expect(io.console_output_content).to include("cmd3     - description 3")
     end
 
-    it 'aligns command names and descriptions properly' do
+
+    xit 'aligns command names and descriptions properly' do
       commands = [
-        [CommandDesc.new("short", "a short command"), 
-         CommandDesc.new("a_very_long_command", "a long command")]
-       ]
-  
+        ["short", "a short command"],
+        ["a_very_long_command", "a long command"],
+        ["medium_length", "a medium length command"]
+      ]
+      
       task_list.todo_help(commands)
       lines = io.console_output_content.split("\n")
 
-      expect(lines[1]).to match(/^short\s+-/)
-      expect(lines[2]).to match(/^a_very_long_command\s+-/)
+      expect(lines[0]).to match(/^short\s+- a short command$/)
+      expect(lines[1]).to match(/^a_very_long_command\s+- a long command$/)
+      expect(lines[2]).to match(/^medium_length\s+- a medium length command$/)
     end
-  end
-=end
+
+   end
 
   it 'finds simple text' do
     io.actions_content = "L: task AA\nL: task BB\n"
