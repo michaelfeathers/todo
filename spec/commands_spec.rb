@@ -1,5 +1,6 @@
 $:.unshift File.dirname(__FILE__)
 
+require 'spec_helper'
 require 'session'
 require 'commands'
 require 'fakeappio'

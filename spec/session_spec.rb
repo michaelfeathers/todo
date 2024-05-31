@@ -1,5 +1,5 @@
 
-
+require 'spec_helper'
 require 'session'
 require 'commands'
 require 'fakeappio'

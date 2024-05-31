@@ -1,5 +1,6 @@
 $:.unshift File.dirname(__FILE__)
 
+require 'spec_helper'
 require 'tasklist'
 require 'fakeappio'
 
@@ -32,6 +33,34 @@ describe TaskList do
 
   let(:io) { FakeAppIo.new }
   let(:task_list) { TaskList.new(io) }
+
+=begin
+  describe '#todo_help' do
+    it 'displays help information for each command' do
+      commands = [
+       [CommandDesc.new("cmd1", "description 1"),
+        CommandDesc.new("cmd2", "description 2")]
+       ]  
+       task_list.todo_help(commands)
+
+       expect(io.console_output_content).to include("cmd1     - description 1")
+       expect(io.console_output_content).to include("cmd2     - description 2")
+    end
+
+    it 'aligns command names and descriptions properly' do
+      commands = [
+        [CommandDesc.new("short", "a short command"), 
+         CommandDesc.new("a_very_long_command", "a long command")]
+       ]
+  
+      task_list.todo_help(commands)
+      lines = io.console_output_content.split("\n")
+
+      expect(lines[1]).to match(/^short\s+-/)
+      expect(lines[2]).to match(/^a_very_long_command\s+-/)
+    end
+  end
+=end
 
   it 'finds simple text' do
     io.actions_content = "L: task AA\nL: task BB\n"
