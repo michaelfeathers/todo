@@ -48,20 +48,34 @@ describe TaskList do
       expect(io.console_output_content).to include("cmd3     - description 3")
     end
 
-
-    xit 'aligns command names and descriptions properly' do
+    it 'aligns command names and descriptions properly' do
       commands = [
         ["short", "a short command"],
         ["a_very_long_command", "a long command"],
         ["medium_length", "a medium length command"]
       ]
+    
+      sorted_commands = commands.sort_by { |cmd| cmd[0] } 
+
+      max_length = 19
+      format = "%-#{max_length + 5}s- %s"
+      
+      expected_output = "\n" + sorted_commands.map { |cmd| format % cmd }.join("\n") + "\n\n"
+      
+      task_list.todo_help(sorted_commands)
+      
+      expect(io.console_output_content).to eq(expected_output)
+    end
+
+    it 'returns to the prompt after displaying help' do
+      commands = [
+        ["cmd1", "description 1"],
+        ["cmd2", "description 2"]
+      ]
+      
+      expect(io).to receive(:get_from_console)
       
       task_list.todo_help(commands)
-      lines = io.console_output_content.split("\n")
-
-      expect(lines[0]).to match(/^short\s+- a short command$/)
-      expect(lines[1]).to match(/^a_very_long_command\s+- a long command$/)
-      expect(lines[2]).to match(/^medium_length\s+- a medium length command$/)
     end
 
    end
