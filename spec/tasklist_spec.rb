@@ -156,6 +156,72 @@ describe TaskList do
     end
   end
 
+    describe '#todo_save_no_remove' do
+    context 'when there are tasks in the list' do
+      before do
+        io.actions_content = "L: task 1\nL: task 2\nL: task 3\n"
+        io.today_content = Day.new(DateTime.new(2023, 6, 1))
+        task_list.todo_cursor_set(1)
+      end
+
+      it 'appends the task at the cursor to the archive' do
+        task_list.todo_save_no_remove
+
+        expect(io.archive_content).to eq("2023-06-01 L: task 2\n")
+      end
+
+      it 'does not remove the task at the cursor from the actions' do
+        task_list.todo_save_no_remove
+
+        expect(io.actions_content).to eq("L: task 1\nL: task 2\nL: task 3\n")
+      end
+
+      it 'does not modify the cursor position' do
+        task_list.todo_save_no_remove
+        task_list.render
+
+        expect(io.console_output_content).to include(" 1 - L: task 2\n")
+      end
+    end
+
+    context 'when the list is empty' do
+      before do
+        io.actions_content = ""
+      end
+
+      it 'does not append anything to the archive' do
+        task_list.todo_save_no_remove
+
+        expect(io.archive_content).to eq("")
+      end
+
+      it 'does not modify the actions' do
+        task_list.todo_save_no_remove
+
+        expect(io.actions_content).to eq("")
+      end
+    end
+
+    context 'when the task at the cursor is empty' do
+      before do
+        io.actions_content = "L: task 1\n\nL: task 3\n"
+        task_list.todo_cursor_set(1)
+      end
+
+      it 'does not append anything to the archive' do
+        task_list.todo_save_no_remove
+
+        expect(io.archive_content).to eq("")
+      end
+
+      it 'does not modify the actions' do
+        task_list.todo_save_no_remove
+
+        expect(io.actions_content).to eq("L: task 1\n\nL: task 3\n")
+      end
+    end
+  end
+
    
   describe '#todo_up' do
     it 'moves the cursor up by one position' do
