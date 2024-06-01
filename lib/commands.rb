@@ -363,6 +363,7 @@ class ToDoMoveToRandomPositionOnOtherList < Command
   end
 
   def process(line, session)
+    return if session.list.empty?
     session.move_task_to_random_position_on_other_list
   end
 

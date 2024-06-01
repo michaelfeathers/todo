@@ -122,6 +122,64 @@ describe ToDoMoveTaskToOther do
   end
 end
 
+describe ToDoMoveToRandomPositionOnOtherList do
+  let(:f_io) { FakeAppIo.new }
+  let(:b_io) { FakeAppIo.new }
+  let(:session) { Session.new(f_io, b_io) }
+
+  describe '#run' do
+    it 'moves the task at the cursor from the foreground list to a random position on the background list' do
+      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+      b_io.actions_content = "Task A\nTask B\nTask C\n"
+      session.list.todo_cursor_set(1)
+
+      expect_any_instance_of(Session).to receive(:move_task_to_random_position_on_other_list)
+
+      ToDoMoveToRandomPositionOnOtherList.new.run('_', session)
+    end
+
+    it 'moves the task at the cursor from the background list to a random position on the foreground list' do
+      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+      b_io.actions_content = "Task A\nTask B\nTask C\n"
+      session.switch_lists
+      session.list.todo_cursor_set(1)
+
+      expect_any_instance_of(Session).to receive(:move_task_to_random_position_on_other_list)
+
+      ToDoMoveToRandomPositionOnOtherList.new.run('_', session)
+    end
+
+    it 'does not modify the lists if the foreground list is empty' do
+      f_io.actions_content = ""
+      b_io.actions_content = "Task A\nTask B\nTask C\n"
+
+      expect_any_instance_of(Session).not_to receive(:move_task_to_random_position_on_other_list)
+
+      ToDoMoveToRandomPositionOnOtherList.new.run('_', session)
+    end
+
+    it 'does not modify the lists if the background list is empty' do
+      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+      b_io.actions_content = ""
+      session.switch_lists
+
+      expect_any_instance_of(Session).not_to receive(:move_task_to_random_position_on_other_list)
+
+      ToDoMoveToRandomPositionOnOtherList.new.run('_', session)
+    end
+  end
+
+  describe '#matches?' do
+    it 'matches a command with "_"' do
+      expect(ToDoMoveToRandomPositionOnOtherList.new.matches?('_')).to be_truthy
+    end
+
+    it 'does not match a command other than "_"' do
+      expect(ToDoMoveToRandomPositionOnOtherList.new.matches?('x')).to be_falsey
+    end
+  end
+end
+
 describe ToDoRemove do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
