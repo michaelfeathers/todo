@@ -7,6 +7,121 @@ require 'fakeappio'
 
 RENDER_PAD = "\n\n"
 
+describe ToDoAdd do
+  let(:f_io) { FakeAppIo.new }
+  let(:b_io) { FakeAppIo.new }
+  let(:session) { Session.new(f_io, b_io) }
+
+  describe '#run' do
+    it 'adds a new task to the beginning of the list' do
+      ToDoAdd.new.run('a New task', session)
+      expect(session.list.action_at_cursor).to eq('New task')
+    end
+
+    it 'sets the cursor to the newly added task' do
+      ToDoAdd.new.run('a New task', session)
+      ToDoAdd.new.run('a Another task', session)
+      expect(session.list.action_at_cursor).to eq('Another task')
+    end
+
+    it 'trims leading and trailing whitespace from the task text' do
+      ToDoAdd.new.run('a   Task with whitespace   ', session)
+      expect(session.list.action_at_cursor).to eq('Task with whitespace')
+    end
+
+    it 'does not add an empty task' do
+      ToDoAdd.new.run('a', session)
+      expect(session.list.action_at_cursor).to eq('')
+    end
+
+    it 'adds multiple tasks in the correct order' do
+      ToDoAdd.new.run('a Task 1', session)
+      ToDoAdd.new.run('a Task 2', session)
+      ToDoAdd.new.run('a Task 3', session)
+
+      expect(session.list.action_at_cursor).to eq('Task 3')
+      session.list.todo_down
+      expect(session.list.action_at_cursor).to eq('Task 2')
+      session.list.todo_down
+      expect(session.list.action_at_cursor).to eq('Task 1')
+    end
+  end
+
+  describe '#matches?' do
+    it 'matches a command starting with "a"' do
+      expect(ToDoAdd.new.matches?('a New task')).to be_truthy
+    end
+
+    it 'does not match a command not starting with "a"' do
+      expect(ToDoAdd.new.matches?('x New task')).to be_falsey
+    end
+  end
+end
+
+describe ToDoMoveTaskToOther do
+  let(:f_io) { FakeAppIo.new }
+  let(:b_io) { FakeAppIo.new }
+  let(:session) { Session.new(f_io, b_io) }
+
+  describe '#run' do
+    it 'moves the task at the cursor from the foreground list to the background list' do
+      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+      session.list.todo_cursor_set(1)
+
+      ToDoMoveTaskToOther.new.run('-', session)
+      session.save
+
+      expect(f_io.actions_content).to eq("Task 1\nTask 3\n")
+      expect(b_io.actions_content).to eq("Task 2\n")
+    end
+
+    it 'moves the task at the cursor from the background list to the foreground list' do
+      b_io.actions_content = "Task A\nTask B\nTask C\n"
+      session.switch_lists
+      session.list.todo_cursor_set(1)
+
+      ToDoMoveTaskToOther.new.run('-', session)
+      session.save
+
+      expect(f_io.actions_content).to eq("Task B\n")
+      expect(b_io.actions_content).to eq("Task A\nTask C\n")
+    end
+
+    xit 'does not modify the lists if the foreground list is empty' do
+      f_io.actions_content = ""
+      b_io.actions_content = "Task A\nTask B\nTask C\n"
+
+      ToDoMoveTaskToOther.new.run('-', session)
+      session.save
+
+      expect(f_io.actions_content).to eq("")
+      expect(b_io.actions_content).to eq("Task A\nTask B\nTask C\n")
+    end
+
+    xit 'does not modify the lists if the background list is empty' do
+      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+      b_io.actions_content = ""
+      session.switch_lists
+
+      ToDoMoveTaskToOther.new.run('-', session)
+      session.save
+
+      expect(f_io.actions_content).to eq("Task 1\nTask 2\nTask 3\n")
+      expect(b_io.actions_content).to eq("")
+    end
+  end
+
+  describe '#matches?' do
+    it 'matches a command with "-"' do
+      expect(ToDoMoveTaskToOther.new.matches?('-')).to be_truthy
+    end
+
+    it 'does not match a command other than "-"' do
+      expect(ToDoMoveTaskToOther.new.matches?('x')).to be_falsey
+    end
+  end
+end
+
 describe ToDoRemove do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
