@@ -30,6 +30,15 @@ class TaskList
     @description = description + $/ + $/
   end
 
+  def reload
+    @actions = io.read_actions.lines
+
+    @last_search_text = nil
+    @cursor = 0
+    @grab_mode = false
+    @page_no = 0
+  end
+
   def empty?
     @actions.empty?
   end
