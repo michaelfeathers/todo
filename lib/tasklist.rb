@@ -314,6 +314,7 @@ class TaskList
   end
 
   def action_at_cursor
+    return "" if @actions.empty?
     @actions[@cursor].chomp
   end
 

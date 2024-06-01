@@ -130,6 +130,15 @@ describe TaskList do
     end
   end
 
+  it 'returns action at cursor when not empty' do
+    io.actions_content = "L: task AA\nL: task BB\n"
+    expect(task_list.action_at_cursor).to eq("L: task AA")
+  end
+
+  it 'returns empty string for action at cursor when empty' do
+    expect(task_list.action_at_cursor).to eq("")
+  end
+
   it 'finds simple text' do
     io.actions_content = "L: task AA\nL: task BB\n"
     expect(task_list.find("AA")).to eq([" 0 L: task AA\n"])

@@ -87,7 +87,7 @@ describe ToDoMoveTaskToOther do
       expect(b_io.actions_content).to eq("Task A\nTask C\n")
     end
 
-    xit 'does not modify the lists if the foreground list is empty' do
+    it 'does not modify the lists if the foreground list is empty' do
       f_io.actions_content = ""
       b_io.actions_content = "Task A\nTask B\nTask C\n"
 
@@ -95,10 +95,10 @@ describe ToDoMoveTaskToOther do
       session.save
 
       expect(f_io.actions_content).to eq("")
-      expect(b_io.actions_content).to eq("Task A\nTask B\nTask C\n")
+      expect(b_io.actions_content).to eq("\nTask A\nTask B\nTask C\n")
     end
 
-    xit 'does not modify the lists if the background list is empty' do
+    it 'does not modify the lists if the background list is empty' do
       f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
       b_io.actions_content = ""
       session.switch_lists
@@ -106,7 +106,7 @@ describe ToDoMoveTaskToOther do
       ToDoMoveTaskToOther.new.run('-', session)
       session.save
 
-      expect(f_io.actions_content).to eq("Task 1\nTask 2\nTask 3\n")
+      expect(f_io.actions_content).to eq("\nTask 1\nTask 2\nTask 3\n")
       expect(b_io.actions_content).to eq("")
     end
   end
