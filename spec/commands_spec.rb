@@ -180,6 +180,145 @@ describe ToDoMoveToRandomPositionOnOtherList do
   end
 end
 
+describe ToDoFind do
+  let(:f_io) { FakeAppIo.new }
+  let(:b_io) { FakeAppIo.new }
+  let(:session) { Session.new(f_io, b_io) }
+
+  describe '#run' do
+    it 'finds tasks containing the specified text in the current list' do
+      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+
+      ToDoFind.new.run('f 2', session)
+
+      expect(f_io.console_output_content).to include("Task 2")
+    end
+
+    it 'finds tasks case-insensitively' do
+      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+
+      ToDoFind.new.run('f task', session)
+
+      expect(f_io.console_output_content).to include("Task 1")
+      expect(f_io.console_output_content).to include("Task 2")
+      expect(f_io.console_output_content).to include("Task 3")
+    end
+
+    it 'limits the search results to the specified count' do
+      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+
+      ToDoFind.new.run('f Task 2', session)
+
+      expect(f_io.console_output_content.scan("Task").count).to eq(2)
+    end
+
+    it 'does not find tasks if the specified text is not present' do
+      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+
+      ToDoFind.new.run('f X', session)
+
+      expect(f_io.console_output_content).not_to include("Task")
+    end
+
+    it 'returns to the prompt after displaying the search results' do
+      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+
+      expect(f_io).to receive(:get_from_console)
+
+      ToDoFind.new.run('f 2', session)
+    end
+  end
+
+  describe '#matches?' do
+    it 'matches a command with "f" followed by text' do
+      expect(ToDoFind.new.matches?('f text')).to be_truthy
+    end
+
+    it 'matches a command with "f" followed by text and a number' do
+      expect(ToDoFind.new.matches?('f text 5')).to be_truthy
+    end
+
+    it 'does not match a command without "f"' do
+      expect(ToDoFind.new.matches?('text')).to be_falsey
+    end
+
+    it 'does not match a command with "f" but no text' do
+      expect(ToDoFind.new.matches?('f')).to be_falsey
+    end
+
+  end
+end
+
+describe ToDoGlobalFind do
+  let(:f_io) { FakeAppIo.new }
+  let(:b_io) { FakeAppIo.new }
+  let(:session) { Session.new(f_io, b_io) }
+
+  describe '#run' do
+    it 'finds tasks containing the specified text in the foreground list' do
+      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+      b_io.actions_content = "Task A\nTask B\nTask C\n"
+
+      ToDoGlobalFind.new.run('gf 2', session)
+
+      expect(f_io.console_output_content).to include("Task 2")
+    end
+
+    it 'finds tasks containing the specified text in the background list' do
+      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+      b_io.actions_content = "Task A\nTask B\nTask C\n"
+
+      ToDoGlobalFind.new.run('gf B', session)
+
+      expect(f_io.console_output_content).to include("Background:")
+      expect(f_io.console_output_content).to include("Task B")
+    end
+
+    it 'finds tasks containing the specified text in both lists' do
+      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+      b_io.actions_content = "Task 2\nTask B\nTask C\n"
+
+      ToDoGlobalFind.new.run('gf 2', session)
+
+      expect(f_io.console_output_content).to include("Task 2")
+      expect(f_io.console_output_content).to include("Background:")
+      expect(f_io.console_output_content).to include("Task 2")
+    end
+
+    it 'does not find tasks if the specified text is not present in either list' do
+      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+      b_io.actions_content = "Task A\nTask B\nTask C\n"
+
+      ToDoGlobalFind.new.run('gf X', session)
+
+      expect(f_io.console_output_content).not_to include("Task")
+    end
+
+    it 'returns to the prompt after displaying the search results' do
+      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+      b_io.actions_content = "Task A\nTask B\nTask C\n"
+
+      expect(f_io).to receive(:get_from_console)
+
+      ToDoGlobalFind.new.run('gf 2', session)
+    end
+  end
+
+  describe '#matches?' do
+    it 'matches a command with "gf" followed by text' do
+      expect(ToDoGlobalFind.new.matches?('gf text')).to be_truthy
+    end
+
+    it 'does not match a command without "gf"' do
+      expect(ToDoGlobalFind.new.matches?('text')).to be_falsey
+    end
+
+    it 'does not match a command with "gf" but no text' do
+      expect(ToDoGlobalFind.new.matches?('gf')).to be_falsey
+    end
+  end
+end
+
 describe ToDoRemove do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
