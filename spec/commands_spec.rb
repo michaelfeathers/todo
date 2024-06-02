@@ -7,6 +7,7 @@ require 'fakeappio'
 
 RENDER_PAD = "\n\n"
 
+
 describe ToDoAdd do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
@@ -57,6 +58,7 @@ describe ToDoAdd do
     end
   end
 end
+
 
 describe ToDoMoveTaskToOther do
   let(:f_io) { FakeAppIo.new }
@@ -176,6 +178,86 @@ describe ToDoMoveToRandomPositionOnOtherList do
 
     it 'does not match a command other than "_"' do
       expect(ToDoMoveToRandomPositionOnOtherList.new.matches?('x')).to be_falsey
+    end
+  end
+end
+
+describe ToDoSurface do
+  let(:f_io) { FakeAppIo.new }
+  let(:b_io) { FakeAppIo.new }
+  let(:session) { Session.new(f_io, b_io) }
+
+  describe '#run' do
+    context 'when no count is specified' do
+      xit 'moves the last task from the background list to the first position on the foreground list' do
+        f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+        b_io.actions_content = "Task A\nTask B\nTask C\n"
+
+        ToDoSurface.new.run('su', session)
+
+        expect(f_io.actions_content).to eq("Task C\nTask 1\nTask 2\nTask 3\n")
+        expect(b_io.actions_content).to eq("Task A\nTask B\n")
+      end
+
+      xit 'does not modify the lists if the background list is empty' do
+        f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+        b_io.actions_content = ""
+
+        ToDoSurface.new.run('su', session)
+
+        expect(f_io.actions_content).to eq("Task 1\nTask 2\nTask 3\n")
+        expect(b_io.actions_content).to eq("")
+      end
+    end
+
+    context 'when a count is specified' do
+      xit 'moves the specified number of tasks from the background list to the foreground list' do
+        f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+        b_io.actions_content = "Task A\nTask B\nTask C\n"
+
+        ToDoSurface.new.run('su 2', session)
+
+        expect(f_io.actions_content).to eq("Task B\nTask C\nTask 1\nTask 2\nTask 3\n")
+        expect(b_io.actions_content).to eq("Task A\n")
+      end
+
+      xit 'moves all tasks from the background list if count exceeds the number of tasks' do
+        f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+        b_io.actions_content = "Task A\nTask B\n"
+
+        ToDoSurface.new.run('su 5', session)
+
+        expect(f_io.actions_content).to eq("Task A\nTask B\nTask 1\nTask 2\nTask 3\n")
+        expect(b_io.actions_content).to eq("")
+      end
+
+      xit 'does not modify the lists if the background list is empty' do
+        f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+        b_io.actions_content = ""
+
+        ToDoSurface.new.run('su 2', session)
+
+        expect(f_io.actions_content).to eq("Task 1\nTask 2\nTask 3\n")
+        expect(b_io.actions_content).to eq("")
+      end
+    end
+  end
+
+  describe '#matches?' do
+    it 'matches a command with "su"' do
+      expect(ToDoSurface.new.matches?('su')).to be_truthy
+    end
+
+    it 'matches a command with "su" and a count' do
+      expect(ToDoSurface.new.matches?('su 3')).to be_truthy
+    end
+
+    it 'does not match a command without "su"' do
+      expect(ToDoSurface.new.matches?('sx')).to be_falsey
+    end
+
+    xit 'does not match a command with "su" and non-integer count' do
+      expect(ToDoSurface.new.matches?('su abc')).to be_falsey
     end
   end
 end

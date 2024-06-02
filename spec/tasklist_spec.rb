@@ -78,7 +78,20 @@ describe TaskList do
       task_list.todo_help(commands)
     end
 
+    it 'lists all the commands' do
+      NON_COMMAND_LINE_COUNT = 2
+      COMMAND_COUNT = 39
+      commands = ObjectSpace.each_object(Class)
+                        .select { |klass| klass < Command }
+                        .sort_by { |klass| klass.name }
+                        .map {|k| k.new.description }
 
+      task_list.todo_help(commands)
+      task_list.render
+
+      expect(io.console_output_content.lines.count).to eq(COMMAND_COUNT + NON_COMMAND_LINE_COUNT)
+    end
+      
    end
    
    describe '#todo_save' do
