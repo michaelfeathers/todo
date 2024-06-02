@@ -60,6 +60,19 @@ class TaskList
     adjust_page
   end
 
+  def todo_display_edit
+    line = action_at_cursor
+    words = line.split.drop(1)
+    pads = words.map {|w| " " * w.size }
+    output = [ line + "\n   "]
+    pads.each_with_index do |e, i|
+      output << (i + 1).to_s
+      output << e 
+    end
+    @io.append_to_console output.take(output.size - 1).join + "\n\n"
+    @io.get_from_console
+  end
+
   def todo_down
     return unless @actions.count > 1 && @cursor < @actions.count - 1
     

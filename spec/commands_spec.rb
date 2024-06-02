@@ -933,6 +933,50 @@ describe ToDoInsertBlank do
   end 
 end
 
+describe ToDoDisplayEdit do
+  let(:f_io) { FakeAppIo.new }
+  let(:b_io) { FakeAppIo.new }
+  let(:session) { Session.new(f_io, b_io) }
+
+  it 'displays the line at the cursor with numbered columns' do
+    f_io.actions_content = "L: This is a test line\n"
+    session.list.todo_cursor_set(0)
+
+    ToDoDisplayEdit.new.run("ed", session)
+
+    expected_output = "L: This is a test line\n" + 
+                      "   1    2  3 4    5\n\n"
+    expect(f_io.console_output_content).to eq(expected_output)
+  end
+
+  it 'returns to the prompt after displaying the numbered line' do
+    f_io.actions_content = "W: Yet another test\n"
+    session.list.todo_cursor_set(0)
+    
+    expect(f_io).to receive(:get_from_console)
+
+    ToDoDisplayEdit.new.run("ed", session) 
+  end
+
+  it 'displays an empty line if the cursor is on an empty line' do
+    f_io.actions_content = "\n"
+    session.list.todo_cursor_set(0)
+
+    ToDoDisplayEdit.new.run("ed", session)
+
+    expect(f_io.console_output_content).to eq("\n\n")
+  end
+
+  describe '#matches?' do
+    it 'matches a command with "ed"' do
+      expect(ToDoDisplayEdit.new.matches?('ed')).to be_truthy
+    end
+
+    it 'does not match a command other than "ed"' do
+      expect(ToDoDisplayEdit.new.matches?('zz')).to be_falsey  
+    end
+  end
+end
 
 describe ToDoEditReplace do
   let(:f_io) { FakeAppIo.new }

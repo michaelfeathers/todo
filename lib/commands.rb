@@ -1,4 +1,4 @@
-$:.unshift File.dirname(__FILE__)
+
 
 require 'session'
 require 'appio'
@@ -324,6 +324,21 @@ class ToDoEdit < Command
   end
 end
 
+class ToDoDisplayEdit < Command
+  def matches?(line)
+    line.strip == "ed"
+  end
+
+  def process(line, session)
+    session.list.todo_display_edit
+  end
+
+  def description
+    CommandDesc.new("de", "display the task at the cursor with numbered columns")
+  end
+
+end
+
 class ToDoEditReplace < Command
   def matches? line
     line.split.count >= 2 && line.split[0] == "er"
@@ -341,7 +356,6 @@ class ToDoEditReplace < Command
     CommandDesc.new("er position [token...]", "replace token(s) starting at pos with replacement token(s). Delete token at pos if none.")
   end
 end
-
 
 class ToDoGrabToggle < Command
   def matches? line
