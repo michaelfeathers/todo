@@ -62,14 +62,15 @@ class TaskList
 
   def todo_display_edit
     line = action_at_cursor
+    return if line.split.empty?
+
+    tag = line.split.first
     words = line.split.drop(1)
-    pads = words.map {|w| " " * w.size }
-    output = [ line + "\n   "]
-    pads.each_with_index do |e, i|
-      output << (i + 1).to_s
-      output << e 
-    end
-    @io.append_to_console output.take(output.size - 1).join + "\n\n"
+
+    action_line = words.map {|w| w.ljust(w.size + 1, ' ') }.join
+    counts_line = words.map.with_index {|w,i| (i + 1).to_s.ljust(w.size + 1, ' ') }.join
+
+    @io.append_to_console "#{tag} #{action_line}\n   #{counts_line}\n\n"
     @io.get_from_console
   end
 
