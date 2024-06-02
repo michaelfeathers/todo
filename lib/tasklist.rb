@@ -67,11 +67,15 @@ class TaskList
     tag = line.split.first
     words = line.split.drop(1)
 
-    action_line = words.map {|w| w.ljust(w.size + 1, ' ') }.join
-    counts_line = words.map.with_index {|w,i| (i + 1).to_s.ljust(w.size + 1, ' ') }.join
+    action_line = words.map {|w| w.ljust(w.size + 1, ' ') }
+                       .join
 
-    @io.append_to_console "#{tag} #{action_line}\n   #{counts_line}\n\n"
-    @io.get_from_console
+    counts_line = words.map
+                       .with_index {|w,i| (i + 1).to_s.ljust(w.size + 1, ' ') }
+                       .join
+
+   @io.append_to_console "#{tag} #{action_line}\n   #{counts_line}\n\n"
+   @io.get_from_console
   end
 
   def todo_down
