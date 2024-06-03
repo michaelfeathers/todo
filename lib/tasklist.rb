@@ -215,8 +215,7 @@ class TaskList
       @io.get_from_console
   end
 
-=begin
-  def todo_trend_chart
+  def todo_trend_chart opt_year
     g = Gruff::Line.new(1600)
     g.theme = {
       colors: %w[red],
@@ -224,11 +223,10 @@ class TaskList
       font_color: 'black',
       background_colors: 'white'
     }
-    g.data('', day_frequencies.map {|e| e[1] })  
+    g.data('', day_frequencies(opt_year).map {|e| e[1] })  
     g.write('trend.png')
     `open trend.png`
   end
-=end
 
   def todo_page_down
     return unless ((@page_no + 1) * PAGE_SIZE) < @actions.count

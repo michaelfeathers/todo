@@ -9,6 +9,7 @@ require 'headlessio.rb'
 require 'todoupdater'
 
 
+=begin
 require 'gruff'
 
 class ToDoTrendChart < Command
@@ -41,6 +42,8 @@ class TaskList
     `open trend.png`
   end
 end
+
+=end
 
 
 class ToDo

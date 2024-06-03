@@ -1,6 +1,7 @@
 
 
 require 'session'
+require 'gruff'
 require 'appio'
 
 
@@ -80,6 +81,23 @@ class ToDoCursorSet < Command
     CommandDesc.new("c  n", "set cursor position to line n")
   end
 end
+
+
+class ToDoTrendChart < Command
+  def matches? line
+    (1..2).include?(line.split.count) && line.split.first == "tc"
+  end
+
+  def process line, session
+    opt_year = line.split[1] if line.split.count == 2
+    session.list.todo_trend_chart opt_year
+  end
+
+  def description
+    CommandDesc.new("tc", "show trend chart")
+  end
+end
+
 
 class ToDoDown < Command
   def matches? line
