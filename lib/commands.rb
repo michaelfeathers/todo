@@ -352,7 +352,7 @@ class ToDoDisplayEdit < Command
   end
 
   def description
-    CommandDesc.new("de", "display the task at the cursor with numbered columns")
+    CommandDesc.new("ed", "display the task at the cursor with numbered columns")
   end
 
 end
