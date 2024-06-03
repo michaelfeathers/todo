@@ -64,8 +64,7 @@ class TaskList
     line = action_at_cursor
     return if line.split.empty?
 
-    tag = line.split.first
-    words = line.split.drop(1)
+    tag, *words = line.split
 
     action_line = words.map {|w| w.ljust(w.size + 1, ' ') }
                        .join
