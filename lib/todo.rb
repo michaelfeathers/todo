@@ -9,43 +9,6 @@ require 'headlessio.rb'
 require 'todoupdater'
 
 
-=begin
-require 'gruff'
-
-class ToDoTrendChart < Command
-  def matches? line
-    (1..2).include?(line.split.count) && line.split.first == "tc"
-  end
-
-  def process line, session
-    opt_year = line.split[1] if line.split.count == 2
-    session.list.todo_trend_chart opt_year
-  end
-
-  def description
-    CommandDesc.new("tc", "show trend chart")
-  end
-end
-
-
-class TaskList
-  def todo_trend_chart opt_year
-    g = Gruff::Line.new(1600)
-    g.theme = {
-      colors: %w[red],
-      marker_color: 'gray',
-      font_color: 'black',
-      background_colors: 'white'
-    }
-    g.data('', day_frequencies(opt_year).map {|e| e[1] })  
-    g.write('trend.png')
-    `open trend.png`
-  end
-end
-
-=end
-
-
 class ToDo
   @@commands = [ToDoAdd.new,
                 ToDoCursorSet.new,
