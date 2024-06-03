@@ -51,6 +51,11 @@ class TaskSelection
     (100.0 * other_total / all_total).to_i
   end
 
+  def adjusted_count
+    win_multiplier = 5
+    count + (win_multiplier - 1) * @descs.select {|d| d.task_type == "W"}.count
+  end
+
   def count
     @descs.count
   end
