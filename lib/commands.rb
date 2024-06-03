@@ -316,17 +316,6 @@ class ToDoTrend < Command
   end
 end
 
-=begin
-class ToDoTrendChart < Command
-  def matches? line
-    line.split == ["tc"]
-  end
-
-  def process line, session
-    session.list.todo_trend_chart
-  end
-end
-=end
 
 class ToDoEdit < Command
   def matches? line

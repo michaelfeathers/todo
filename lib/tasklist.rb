@@ -6,10 +6,6 @@ require 'monthsreport'
 require 'appio'
 require 'array_ext'
 
-=begin
-require 'gruff' 
-=end
-
 
 class TaskList
 
