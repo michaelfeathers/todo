@@ -94,6 +94,53 @@ describe TaskList do
     end
       
    end
+
+   describe '#todo_show_updates' do
+    let(:io) { FakeAppIo.new }
+    let(:task_list) { TaskList.new(io) }
+
+    context 'when there are updates' do
+      before do
+        io.update_content = "2023-06-01 Update 1\n2023-06-02 Update 2\n"
+      end
+
+      it 'clears the console' do
+        expect(io).to receive(:clear_console)
+        task_list.todo_show_updates
+      end
+
+      it 'appends the updates to the console' do
+        task_list.todo_show_updates
+        expect(io.console_output_content).to eq("2023-06-01 Update 1\n2023-06-02 Update 2\n")
+      end
+
+      it 'returns to the prompt after displaying the updates' do
+        expect(io).to receive(:get_from_console)
+        task_list.todo_show_updates
+      end
+    end
+
+    context 'when there are no updates' do
+      before do
+        io.update_content = ""
+      end
+
+      it 'clears the console' do
+        expect(io).to receive(:clear_console)
+        task_list.todo_show_updates
+      end
+
+      it 'does not append anything to the console' do
+        task_list.todo_show_updates
+        expect(io.console_output_content).to eq("")
+      end
+
+      it 'returns to the prompt' do
+        expect(io).to receive(:get_from_console)
+        task_list.todo_show_updates
+      end
+    end
+   end
    
    describe '#todo_save' do
      context 'when there are tasks in the list' do
