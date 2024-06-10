@@ -22,10 +22,6 @@ class TaskSelection
     TaskSelection.new(@descs.select{|d| d.task_type == "W" })
   end
 
-  def G
-    TaskSelection.new(@descs.select{|d| d.task_type == "G" })
-  end
-
   def year year
     TaskSelection.new(@descs.select {|d| d.date.year.to_i == year })
   end
@@ -34,10 +30,6 @@ class TaskSelection
     TaskSelection.new(@descs.select {|d| d.date.month_no.to_i == month })
   end
 
-  def day day
-    TaskSelection.new(@descs.select {|d| d.date.day == day })
-  end
-  
   def date date
     TaskSelection.new(@descs.select {|d| d.date === date }) 
   end
