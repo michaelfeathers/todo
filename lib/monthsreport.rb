@@ -15,7 +15,7 @@ class MonthsReport
   COLUMNS = [["Win",   ->(tasks) { tasks.W.count } ],
              ["R7K",   ->(tasks) { tasks.R.count } ],
              ["Life",  ->(tasks) { tasks.L.count } ],
-             ["Total", ->(tasks) { tasks.count } ]] 
+             ["Total", ->(tasks) { tasks.count } ]]
              #["Adjusted", ->(tasks) { tasks.adjusted_count } ]]
              #["R7K %", ->(tasks) { tasks.R.percent_of(tasks) } ]]
 
@@ -25,18 +25,18 @@ class MonthsReport
     @year = year
     @tasks = nil
 
-    @format = "%-5s" + COLUMNS.size.times.map { " %10s" }.join + $/ 
+    @format = "%-5s" + COLUMNS.size.times.map { " %10s" }.join + $/
   end
 
-  def run 
-    print_header                
+  def run
+    print_header
     print_body
     print_footer
 
     @io.get_from_console
   end
 
-  def print_header 
+  def print_header
     @io.append_to_console $/ + $/
     @io.append_to_console header_row
 
@@ -62,7 +62,7 @@ class MonthsReport
     @io.append_to_console $/
   end
 
-  def print_today_statistics 
+  def print_today_statistics
     if today_tasks.count > 0 && @year == @io.today.year_no
       @io.append_to_console body_row("Today", today_tasks)
     end
@@ -70,7 +70,7 @@ class MonthsReport
     @io.append_to_console $/
   end
 
-  def print_year_statistics 
+  def print_year_statistics
     @io.append_to_console body_row("", year_tasks)
 
     @io.append_to_console $/
@@ -79,7 +79,7 @@ class MonthsReport
   def read_task_descs
     @tasks ||= @io.read_archive
                   .lines
-                  .map {|l| TaskDesc.new(Day.from_text(l.split[0]), l.split[1].chars.first) }
+                  .map {|l| TaskDesc.from_line(l) }
   end
 
   def year_tasks
@@ -94,7 +94,7 @@ class MonthsReport
     @format % [label].concat(COLUMNS.map { |c| c.second.call(tasks) })
   end
 
-  def header_row 
+  def header_row
     @format % [""].concat(COLUMNS.map { |c| c.first })
   end
 
