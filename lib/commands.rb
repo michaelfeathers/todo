@@ -1,10 +1,6 @@
-
-
-require 'session'
 require 'gruff'
-require 'appio'
-
-
+require_relative 'session'
+require_relative 'appio'
 
 CommandDesc = Struct.new(:name, :line)
 
@@ -70,7 +66,7 @@ end
 
 class ToDoCursorSet < Command
   def matches? line
-    line.split.count == 2 && line.split[0] == "c" 
+    line.split.count == 2 && line.split[0] == "c"
   end
 
   def process line, session
@@ -120,7 +116,7 @@ class ToDoUp < Command
 
   def process line, session
     session.list.todo_up
-  end  
+  end
 
   def description
     CommandDesc.new("u", "move cursor up")
@@ -158,7 +154,7 @@ end
 
 class ToDoInsertBlank < Command
   def matches?(line)
-    line.strip == "i"  
+    line.strip == "i"
   end
 
   def process(line, session)
@@ -190,7 +186,7 @@ class ToDoPush < Command
   end
 
   def process line, session
-    session.list.todo_push line.split[1] 
+    session.list.todo_push line.split[1]
   end
 
   def description
@@ -298,7 +294,7 @@ class ToDoToday < Command
   end
 
   def description
-    CommandDesc.new("t  [n]", "show tasks n days prev. If no arg, defaults to today") 
+    CommandDesc.new("t  [n]", "show tasks n days prev. If no arg, defaults to today")
   end
 end
 
@@ -312,7 +308,7 @@ class ToDoTrend < Command
   end
 
   def description
-    CommandDesc.new("tr", "show trend") 
+    CommandDesc.new("tr", "show trend")
   end
 end
 
@@ -327,7 +323,7 @@ class ToDoEdit < Command
   end
 
   def description
-    CommandDesc.new("e  text", "edit task at cursor, replacing it with text") 
+    CommandDesc.new("e  text", "edit task at cursor, replacing it with text")
   end
 end
 
@@ -355,7 +351,7 @@ class ToDoEditReplace < Command
     tokens = line.split
     position = tokens[1].to_i
     new_tokens = tokens.drop(2)
-    
+
     session.list.todo_edit_replace(position, new_tokens)
   end
 
@@ -418,7 +414,7 @@ class ToDoMonthSummaries < Command
   end
 
   def description
-    CommandDesc.new("m", "show month summaries") 
+    CommandDesc.new("m", "show month summaries")
   end
 end
 
@@ -466,7 +462,7 @@ end
 
 class ToDoZapToPosition < Command
   def matches? line
-    line.split.count == 2 && line.split[0] == "z" 
+    line.split.count == 2 && line.split[0] == "z"
   end
 
   def process line, session
@@ -480,7 +476,7 @@ end
 
 class ToDoTodayTargetFor < Command
   def matches? line
-    line.split.count == 2 && line.split[0] == "tf" 
+    line.split.count == 2 && line.split[0] == "tf"
   end
 
   def process line, session
@@ -494,7 +490,7 @@ end
 
 class ToDoSurface < Command
   def matches? line
-    line.split.count >= 1 && line.split[0] == "su" 
+    line.split.count >= 1 && line.split[0] == "su"
   end
 
   def process line, session
@@ -507,7 +503,7 @@ class ToDoSurface < Command
   end
 end
 
-class ToDoReTag < Command 
+class ToDoReTag < Command
   def matches? line
     line.split.count == 2 && line.split[0] == "rt"
   end
@@ -521,7 +517,7 @@ class ToDoReTag < Command
   end
 end
 
-class ToDoTagTallies < Command 
+class ToDoTagTallies < Command
   def matches? line
     line.split.count == 1 && line.split[0] == "tt"
   end
@@ -548,7 +544,7 @@ class ToDoSwitchLists < Command
     else
       target_position = nil
     end
-    
+
     session.switch_lists(target_position)
   end
 

@@ -1,16 +1,14 @@
-$:.unshift File.dirname(__FILE__)
-
 
 
 class FakeAppIo
-  attr_accessor :archive_content, :console_output_content 
+  attr_accessor :archive_content, :console_output_content
   attr_accessor :console_input_content, :actions_content
   attr_accessor :update_content, :today_content
   attr_accessor :log_content
 
   def initialize
     @archive_content = @actions_content = ""
-    @console_output_content = "" 
+    @console_output_content = ""
     @log_content = ""
     @update_content = []
     @today_day = nil
@@ -49,17 +47,17 @@ class FakeAppIo
   def read_updates
     @update_content
   end
-  
+
   def write_updates updates
     @update_content = updates
   end
 
   def append_to_console text
-    @console_output_content = @console_output_content + text 
+    @console_output_content = @console_output_content + text
   end
 
   def get_from_console
-    text = @console_input_content 
+    text = @console_input_content
     @console_input_content = ""
     text
   end
@@ -75,4 +73,3 @@ class FakeAppIo
     false
   end
 end
-

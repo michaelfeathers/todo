@@ -1,16 +1,14 @@
-$:.unshift File.dirname(__FILE__)
-
-require 'day'
-require 'taskselection'
-require 'monthsreport'
-require 'appio'
-require 'array_ext'
+require_relative 'day'
+require_relative 'taskselection'
+require_relative 'monthsreport'
+require_relative 'appio'
+require_relative 'array_ext'
 
 
 class TaskList
 
   PAGE_SIZE    = 40
-  TAG_PATTERN  = /^[A-Z]:$/ 
+  TAG_PATTERN  = /^[A-Z]:$/
 
   attr_reader :io, :description
 
@@ -75,7 +73,7 @@ class TaskList
 
   def todo_down
     return unless @actions.count > 1 && @cursor < @actions.count - 1
-    
+
     @actions.swap_elements(@cursor, @cursor + 1) if @grab_mode
     @cursor += 1
     adjust_page
@@ -89,7 +87,7 @@ class TaskList
     adjust_page
   end
 
-  def todo_find text, limit = nil 
+  def todo_find text, limit = nil
     @io.clear_console
 
     found = find(text)
@@ -106,7 +104,7 @@ class TaskList
     @io.append_to_console(@io.read_archive)
     @io.get_from_console
   end
-  
+
   def todo_push days_text
     return if @actions.count < 1
 
@@ -126,7 +124,7 @@ class TaskList
 
     return unless response.split.first == "Y"
 
-    line = @actions[@cursor] 
+    line = @actions[@cursor]
     @io.append_to_junk(@io.today.to_s + " " + line) unless line.split.empty?
     remove_action_at_cursor
     @io.write_actions(@actions)
@@ -136,7 +134,7 @@ class TaskList
     return if @actions.count < 1
     return if action_at_cursor.strip.empty?
 
-    @io.append_to_archive(@io.today.to_s + " " + @actions[@cursor])  
+    @io.append_to_archive(@io.today.to_s + " " + @actions[@cursor])
     remove_action_at_cursor
   end
 
@@ -148,22 +146,22 @@ class TaskList
     return if @actions.count < 1
     return if action_at_cursor.strip.empty?
 
-    @io.append_to_archive(@io.today.to_s + " " + @actions[@cursor]) 
+    @io.append_to_archive(@io.today.to_s + " " + @actions[@cursor])
   end
-  
+
   def todo_show_updates
     @io.clear_console
     @io.append_to_console @io.read_updates
     @io.get_from_console
   end
 
-  def todo_edit new_tokens  
+  def todo_edit new_tokens
     return if @actions.empty?
 
     update_action_at_cursor(replace_tokens(action_at_cursor.split, 1, new_tokens).join(' '))
   end
 
-  def todo_edit_replace position, new_tokens 
+  def todo_edit_replace position, new_tokens
     action = action_at_cursor
     return if action.nil?
 
@@ -176,7 +174,7 @@ class TaskList
     update_action_at_cursor(tokens.join(' '))
   end
 
-  def replace_tokens tokens, position, new_tokens 
+  def replace_tokens tokens, position, new_tokens
     pre  = tokens.take(position)
     post = tokens.drop(pre.count + new_tokens.count)
 
@@ -186,7 +184,7 @@ class TaskList
   def todo_grab_toggle
     @grab_mode = (not @grab_mode)
   end
-  
+
   def todo_month_summaries year = nil
     year ||= @io.today.year_no
 
@@ -194,9 +192,9 @@ class TaskList
   end
 
   def todo_today days_prev
-    day_to_display = @io.today.with_fewer_days(days_prev.to_i) 
+    day_to_display = @io.today.with_fewer_days(days_prev.to_i)
     found = @io.read_archive
-               .lines 
+               .lines
                .select {|line| Day.from_text(line.split.first) === day_to_display }
 
     @io.append_to_console($/)
@@ -206,7 +204,7 @@ class TaskList
   end
 
   def todo_trend
-      day_frequencies.each {|e| @io.append_to_console(("%3s  %s" %  [e[1], e[0]]) + $/) } 
+      day_frequencies.each {|e| @io.append_to_console(("%3s  %s" %  [e[1], e[0]]) + $/) }
       @io.append_to_console($/)
       @io.get_from_console
   end
@@ -219,7 +217,7 @@ class TaskList
       font_color: 'black',
       background_colors: 'white'
     }
-    g.data('', day_frequencies(opt_year).map {|e| e[1] })  
+    g.data('', day_frequencies(opt_year).map {|e| e[1] })
     g.write('trend.png')
     `open trend.png`
   end
@@ -237,12 +235,12 @@ class TaskList
   def todo_zap_to_position line_no
     line_no = [[0, line_no].max, @actions.count-1].min
     @actions = @actions.insert(line_no, @actions.delete_at(@cursor))
-  end               
+  end
 
   def todo_retag new_tag
     current_action = @actions[@cursor]
     return unless current_action
-   
+
     tokens = current_action.split
     tag_text = "#{new_tag.upcase}:"
 
@@ -259,8 +257,8 @@ class TaskList
     current_month_dates = dates.select { |date| date.month == today.month && date.year == today.year }
     tasks_done_prev     = current_month_dates.count { |date| date < today }
     tasks_done_today    = current_month_dates.count(today)
-    tasks_done_so_far   = tasks_done_prev + tasks_done_today 
-    
+    tasks_done_so_far   = tasks_done_prev + tasks_done_today
+
     if tasks_done_so_far >= month_target
       @io.append_to_console $/ + $/ + "    Goal met" + $/ + $/
       @io.get_from_console
@@ -331,7 +329,7 @@ class TaskList
 
   def day_frequencies year = nil
     @io.read_archive
-       .lines 
+       .lines
        .map {|line| line.split.first }
        .select {|d| !year || Day.from_text(d).year ==  year }
        .freq
@@ -341,46 +339,46 @@ class TaskList
   def tag_tallies
     @actions.select {|l| l.strip.length > 0 }
             .map {|l| l.split.first }
-            .select {|t| t =~ TAG_PATTERN } 
+            .select {|t| t =~ TAG_PATTERN }
             .freq
   end
 
   def untagged_tally
     @actions.select {|l| l.strip.length > 0 }
             .map {|l| l.split.first }
-            .reject {|t| t =~ TAG_PATTERN } 
+            .reject {|t| t =~ TAG_PATTERN }
             .count
   end
 
   def todo_tag_tallies
-    mask = "   %-10s%3d" 
+    mask = "   %-10s%3d"
     text = tag_tallies.map { |t, n| mask % [t, n] }.join($/)
     untagged = mask % ["Untagged", untagged_tally]
 
     @io.append_to_console $/ + $/ + "#{text}\n\n#{untagged}" + $/ + $/
-    @io.get_from_console 
+    @io.get_from_console
   end
 
-  def todo_show_command_frequencies 
+  def todo_show_command_frequencies
     data    = @io.read_log
                  .split
-                 .map {|line| line.split(',') } 
+                 .map {|line| line.split(',') }
                  .map {|name,count| [name, count.to_i] }
 
     total   = data.sum {|_,count| count }
 
     results = data.map {|name, count| "%-5.2f  %-4d   %s" % [count * 100.0 / total, count, name]}
                   .join($/)
-    
-    @io.append_to_console $/ + results + $/ + $/ 
-    @io.get_from_console 
+
+    @io.append_to_console $/ + results + $/ + $/
+    @io.get_from_console
   end
 
   def todo_insert_blank
     @actions.insert(@cursor, $/)
     adjust_page
   end
-  
+
   def todo_iterative_find_init text
     @last_search_text = text
     found_position = @actions.index { |action| action =~ /#{Regexp.escape(text)}/i }

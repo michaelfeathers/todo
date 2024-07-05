@@ -1,13 +1,10 @@
-$:.unshift File.dirname(__FILE__)
-
-require 'appio'
-require 'tasklist'
+require_relative 'appio'
+require_relative 'tasklist'
 
 
 class Session
 
   attr_reader :list
-
 
   def initialize foreground_io, background_io
     @foreground_tasks = TaskList.new(foreground_io)
@@ -28,7 +25,7 @@ class Session
   end
 
   def move_task_to_other
-    task = @list.action_at_cursor 
+    task = @list.action_at_cursor
     @list.remove_action_at_cursor
 
     switch_lists
@@ -46,7 +43,7 @@ class Session
   end
 
   def global_find(text)
-    io = list.io 
+    io = list.io
     io.clear_console
 
     tasks = { '' => @foreground_tasks, 'Background:' => @background_tasks }
@@ -61,21 +58,21 @@ class Session
     io.get_from_console
   end
 
-  def load_command_log 
-    @command_log = list.io.read_log 
+  def load_command_log
+    @command_log = list.io.read_log
                           .split($/)
-                          .map { |line| line.split(',') } 
-                          .select { |items| items.size == 2 } 
-                          .map { |k, v| [k, v.to_i] } 
+                          .map { |line| line.split(',') }
+                          .select { |items| items.size == 2 }
+                          .map { |k, v| [k, v.to_i] }
                           .to_h
                           .tap { |h| h.default = 0 }
   end
 
   def log_command name
     text = @command_log.tap { |h| h[name] += 1 }
-                       .sort_by { |_, v| -v } 
-                       .to_h 
-                       .map { |k, v| "#{k},#{v}" } 
+                       .sort_by { |_, v| -v }
+                       .to_h
+                       .map { |k, v| "#{k},#{v}" }
                        .join($/)
 
     list.io.write_log(text)
@@ -91,7 +88,7 @@ class Session
 
       @background_tasks.remove_action_at_cursor
     end
-    
+
   end
 
   def move_task_to_random_position_on_other_list
@@ -106,6 +103,3 @@ class Session
   end
 
 end
-
-
-

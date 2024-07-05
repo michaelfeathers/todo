@@ -1,12 +1,10 @@
-$:.unshift File.dirname(__FILE__)
-
-require 'day'
-require 'appio'
+require_relative 'day'
+require_relative 'appio'
 
 
 class TaskSelection
 
-  def initialize descs 
+  def initialize descs
     @descs = descs
   end
 
@@ -31,15 +29,15 @@ class TaskSelection
   end
 
   def date date
-    TaskSelection.new(@descs.select {|d| d.date === date }) 
+    TaskSelection.new(@descs.select {|d| d.date === date })
   end
 
   def percent_of other_tasks
-    other_total = count 
-    all_total = other_tasks.count 
+    other_total = count
+    all_total = other_tasks.count
 
     return 0 if all_total == 0
-  
+
     (100.0 * other_total / all_total).to_i
   end
 

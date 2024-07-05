@@ -1,4 +1,4 @@
-$:.unshift File.dirname(__FILE__)
+
 
 class Array
   def swap_elements i, j
@@ -18,5 +18,3 @@ class Array
     self[1]
   end
 end
-
-

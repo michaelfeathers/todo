@@ -1,8 +1,6 @@
-$:.unshift File.dirname(__FILE__)
-
-require 'day'
-require 'taskdesc'
-require 'appio'
+require_relative 'day'
+require_relative 'taskdesc'
+require_relative 'appio'
 
 
 def month_name_of month_no

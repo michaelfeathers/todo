@@ -1,7 +1,6 @@
-$:.unshift File.dirname(__FILE__)
-
 require 'spec_helper'
 require 'taskselection'
+
 
 describe TaskSelection do
   describe '#percent_of' do

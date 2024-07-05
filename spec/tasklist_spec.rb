@@ -1,5 +1,3 @@
-$:.unshift File.dirname(__FILE__)
-
 require 'spec_helper'
 require 'tasklist'
 require 'fakeappio'
@@ -40,7 +38,7 @@ describe TaskList do
         ["cmd2", "description 2"],
         ["cmd3", "description 3"]
       ]
-      
+
       task_list.todo_help(commands)
 
       expect(io.console_output_content).to include("cmd1     - description 1")
@@ -54,16 +52,16 @@ describe TaskList do
         ["a_very_long_command", "a long command"],
         ["medium_length", "a medium length command"]
       ]
-    
-      sorted_commands = commands.sort_by { |cmd| cmd[0] } 
+
+      sorted_commands = commands.sort_by { |cmd| cmd[0] }
 
       max_length = 19
       format = "%-#{max_length + 5}s- %s"
-      
+
       expected_output = "\n" + sorted_commands.map { |cmd| format % cmd }.join("\n") + "\n\n"
-      
+
       task_list.todo_help(sorted_commands)
-      
+
       expect(io.console_output_content).to eq(expected_output)
     end
 
@@ -72,9 +70,9 @@ describe TaskList do
         ["cmd1", "description 1"],
         ["cmd2", "description 2"]
       ]
-      
+
       expect(io).to receive(:get_from_console)
-      
+
       task_list.todo_help(commands)
     end
 
@@ -92,7 +90,7 @@ describe TaskList do
 
       expect(io.console_output_content.lines.count - NON_CMD_LINE_COUNT).to eq(CURRENT_CMD_COUNT)
     end
-      
+
    end
 
    describe '#todo_show_updates' do
@@ -141,7 +139,7 @@ describe TaskList do
       end
     end
    end
-   
+
    describe '#todo_save' do
      context 'when there are tasks in the list' do
        before do
@@ -283,7 +281,7 @@ describe TaskList do
     end
   end
 
-   
+
   describe '#todo_up' do
     it 'moves the cursor up by one position' do
       io.actions_content = "L: task 1\nL: task 2\nL: task 3\n"
@@ -347,7 +345,7 @@ describe TaskList do
   end
 
   it 'ignores case when it finds' do
-    io.actions_content = "L: task A\nL: task B\n" 
+    io.actions_content = "L: task A\nL: task B\n"
     expect(task_list.find("b")).to eq([" 1 L: task B\n"])
   end
 
@@ -364,7 +362,7 @@ describe TaskList do
     expect(io.console_output_content).to eq("\n2020-01-12 R: Thing Y\n\n1\n\n")
   end
 
-  it 'shows trend' do 
+  it 'shows trend' do
     io.archive_content = "2020-01-11 R: Thing X\n2020-01-12 R: Thing Y\n2020-01-12 L: Another thing\n"
     task_list.todo_trend
     expect(io.console_output_content).to eq("  1  2020-01-11\n  2  2020-01-12\n\n")
@@ -415,7 +413,7 @@ describe TaskList do
     expect(io.update_content.first).to eq("2022-12-22 L: task A\n")
     expect(io.console_output_content).to eq("\n\n\n")
   end
-  
+
   it 'noops push on no tasks' do
     io.update_content = []
     io.today_content = Day.from_text("2022-12-21")

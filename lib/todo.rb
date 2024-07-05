@@ -1,12 +1,12 @@
-$:.unshift File.dirname(__FILE__)
-
+require 'rubygems'
+require 'bundler/setup'
 require 'fileutils'
-require 'session'
-require 'commands'
-require 'appio'
-require 'backgroundio'
-require 'headlessio.rb'
-require 'todoupdater'
+require_relative 'session'
+require_relative 'commands'
+require_relative 'appio'
+require_relative 'backgroundio'
+require_relative 'headlessio.rb'
+require_relative 'todoupdater'
 
 
 class ToDo
@@ -48,7 +48,7 @@ class ToDo
                 ToDoUp.new,
                 ToDoZapToPosition.new,
                 ToDoZapToTop.new]
-  
+
 
   def self.registered_commands
     @@commands
@@ -63,7 +63,7 @@ class ToDo
   end
 
   def run
-    while true 
+    while true
       on_line(@session.list.io.get_from_console.chomp, @session)
       @session.list.render
     end
@@ -107,5 +107,3 @@ end
 
 
 run
-
-

@@ -1,4 +1,3 @@
-$:.unshift File.dirname(__FILE__)
 
 
 class TaskDesc
@@ -7,7 +6,6 @@ class TaskDesc
 
   def self.from_line line
     date_text, type_text = line.split
-
     TaskDesc.new(Day.from_text(date_text),
                  type_text.chars.first)
   end

@@ -1,5 +1,3 @@
-$:.unshift File.dirname(__FILE__)
-
 require 'date'
 
 
@@ -36,7 +34,7 @@ class Day
   def month_no
     @date.month
   end
-  
+
   def day
     @date.strftime("%d")
   end
@@ -54,6 +52,6 @@ class Day
   end
 
   def to_s
-    @date.to_s[0, 10] 
+    @date.to_s[0, 10]
   end
 end

@@ -1,6 +1,6 @@
 
-
 FNAME = "/Users/michaelfeathers/Projects/todo/lib/archive.txt"
+
 
 class Array
   def freq
@@ -15,4 +15,3 @@ File.read(FNAME)
     .map {|line| line.split[0] }
     .freq
     .each {|e| puts "%s, %s" % [e[0], e[1]] }
-

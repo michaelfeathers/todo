@@ -1,4 +1,3 @@
-$:.unshift File.dirname(__FILE__)
 
 ROOT_DIR     = "/Users/michaelfeathers/Projects/todo/lib/"
 TODO_FILE    = ROOT_DIR + "todo.txt"
@@ -8,12 +7,11 @@ JUNK_FILE    = ROOT_DIR + "junk.txt"
 LOG_FILE     = ROOT_DIR + "log.txt"
 LOCK_FILE    = ROOT_DIR + "todo.lock"
 
-
 class AppIo
   def read_archive
     File.read(ARCHIVE_FILE)
   end
-  
+
   def append_to_archive line
     File.open(ARCHIVE_FILE, 'a') { |f| f.write(line); }
   end
@@ -24,7 +22,7 @@ class AppIo
 
   def read_log
     begin
-      File.read(LOG_FILE) 
+      File.read(LOG_FILE)
     rescue => e
       ""
     end
@@ -41,7 +39,7 @@ class AppIo
   def read_actions
     File.read(TODO_FILE)
   end
-  
+
   def write_actions actions
     File.open(TODO_FILE, 'w') { |f| f.write(actions.join) }
   end
@@ -49,13 +47,13 @@ class AppIo
   def read_updates
     File.read(UPDATE_FILE)
   end
-  
+
   def write_updates updates
     File.open(UPDATE_FILE, 'w') { |f| f.write(updates.join) }
   end
 
   def append_to_console text
-    print text 
+    print text
   end
 
   def get_from_console
@@ -63,7 +61,7 @@ class AppIo
   end
 
   def clear_console
-    puts  "\e[H\e[2J" 
+    puts  "\e[H\e[2J"
   end
 
   def today

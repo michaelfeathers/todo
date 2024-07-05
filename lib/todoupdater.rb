@@ -1,6 +1,4 @@
-$:.unshift File.dirname(__FILE__)
-
-require 'appio'
+require_relative 'appio'
 
 
 class ToDoUpdater
@@ -12,7 +10,7 @@ class ToDoUpdater
   def run
     [[@io.read_actions.lines, @io.read_updates.lines]]
       .map {|ts,us| [due(us) + ts, non_due(us)] }
-      .each  do |ts,us| 
+      .each  do |ts,us|
         @io.write_actions(ts)
         @io.write_updates(us.sort_by {|lines| Day.from_text(lines.split.first).date})
       end
@@ -20,7 +18,7 @@ class ToDoUpdater
 
   def due us
     us.select {|e| due?(e)}
-      .map {|e| strip_date(e)} 
+      .map {|e| strip_date(e)}
   end
 
   def non_due us
@@ -31,7 +29,7 @@ class ToDoUpdater
     line.split.drop(1).join(" ") + $/
   end
 
-  def due? line 
+  def due? line
     tokens = line.split
     return false unless tokens.any?
     Day.from_text(tokens.first).date <= @io.today.date
@@ -40,7 +38,3 @@ class ToDoUpdater
   end
 
 end
-
-
-
-

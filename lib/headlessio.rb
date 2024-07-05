@@ -1,5 +1,4 @@
 
-$:.unshift File.dirname(__FILE__)
 
 class HeadlessIo < AppIo
 
@@ -8,10 +7,10 @@ class HeadlessIo < AppIo
   end
 
   def get_from_console
-    if not @done 
+    if not @done
       @done = true
-      return ARGV.join(' ') + $/  
-    else 
+      return ARGV.join(' ') + $/
+    else
       return "q" + $/
     end
   end
@@ -23,4 +22,3 @@ class HeadlessIo < AppIo
     true
   end
 end
-
