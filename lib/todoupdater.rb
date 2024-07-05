@@ -37,8 +37,7 @@ class ToDoUpdater
   end
 
   def due? line
-    tokens = line.split
-    Day.from_text(tokens.first).date <= @io.today.date
+    Day.from_text(line.split.first).date <= @io.today.date
   rescue
     false
   end
