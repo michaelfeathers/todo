@@ -8,12 +8,19 @@ class ToDoUpdater
   end
 
   def run
-    [[@io.read_actions.lines, @io.read_updates.lines]]
-      .map {|ts,us| [due(us) + ts, non_due(us)] }
-      .each  do |ts,us|
-        @io.write_actions(ts)
-        @io.write_updates(us.sort_by {|lines| Day.from_text(lines.split.first).date})
-      end
+    actions = @io.read_actions.lines
+    updates = @io.read_updates.lines
+
+    due_updates = due(updates)
+    non_due_updates = non_due(updates)
+
+    new_actions = due_updates + actions
+    @io.write_actions(new_actions)
+
+    sorted_non_due = non_due_updates.sort_by do |line|
+      Day.from_text(line.split.first).date
+    end
+    @io.write_updates(sorted_non_due)
   end
 
   def due us
