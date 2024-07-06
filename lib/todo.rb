@@ -59,13 +59,13 @@ class ToDo
     @background_io = background_io
     ToDoUpdater.new(@foreground_io).run
     @session = Session.new(@foreground_io, @background_io)
-    @session.list.render
+    @session.render
   end
 
   def run
     while true
-      on_line(@session.list.io.get_from_console.chomp, @session)
-      @session.list.render
+      on_line(@session.get_line, @session)
+      @session.render
     end
   end
 
@@ -78,8 +78,7 @@ class ToDo
 
   def process_result result, line
     return unless result.match_count == 0 && line.split.count > 0
-    @session.list.io.append_to_console("Unrecognized command: " + line + $/)
-    @session.list.io.get_from_console
+    @session.message_and_wait("Unrecognized command: " + line + $/)
   end
 
 end

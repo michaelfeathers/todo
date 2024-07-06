@@ -43,7 +43,7 @@ class Session
   end
 
   def global_find(text)
-    io = list.io
+    io = @list.io
     io.clear_console
 
     tasks = { '' => @foreground_tasks, 'Background:' => @background_tasks }
@@ -59,13 +59,13 @@ class Session
   end
 
   def load_command_log
-    @command_log = list.io.read_log
-                          .split($/)
-                          .map { |line| line.split(',') }
-                          .select { |items| items.size == 2 }
-                          .map { |k, v| [k, v.to_i] }
-                          .to_h
-                          .tap { |h| h.default = 0 }
+    @command_log = @list.io.read_log
+                           .split($/)
+                           .map { |line| line.split(',') }
+                           .select { |items| items.size == 2 }
+                           .map { |k, v| [k, v.to_i] }
+                           .to_h
+                           .tap { |h| h.default = 0 }
   end
 
   def log_command name
@@ -75,7 +75,7 @@ class Session
                        .map { |k, v| "#{k},#{v}" }
                        .join($/)
 
-    list.io.write_log(text)
+    @list.io.write_log(text)
   end
 
   def surface count
@@ -101,5 +101,19 @@ class Session
     other_list.todo_add(task)
     other_list.todo_zap_to_position(random_position)
   end
+
+  def get_line
+    @list.io.get_from_console.chomp
+  end
+
+  def message_and_wait text
+    @list.io.append_to_console text
+    @list.io.get_from_console
+  end
+
+  def render
+    @list.render
+  end
+
 
 end
