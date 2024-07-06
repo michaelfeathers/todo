@@ -7,12 +7,14 @@ class Session
   attr_reader :list
 
   def self.from_ios foreground_io, background_io
-    new(foreground_io, background_io)
-  end
-
-  def initialize foreground_io, background_io
     @foreground_tasks = TaskList.new(foreground_io)
     @background_tasks = TaskList.new(background_io, "BACKGROUND")
+    new(@foreground_tasks, @background_tasks)
+  end
+
+  def initialize foreground_tasks, background_tasks
+    @foreground_tasks = foreground_tasks
+    @background_tasks = background_tasks
     @command_log = {}
 
     @list = @foreground_tasks
