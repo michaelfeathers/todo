@@ -451,7 +451,7 @@ class ToDoPrintArchive < Command
     line.split == ["pa"]
   end
 
-  def process(line, session)
+  def process line, session
     session.list.todo_print_archive
   end
 

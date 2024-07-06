@@ -29,10 +29,10 @@ class TaskList
   end
 
   def todo_help command_list
-    max_length = command_list.map { |cmd| cmd[0].length }.max
+    max_length = command_list.map {|cmd| cmd[0].length }.max
 
     output = command_list.sort_by(&:first)
-                         .map { |name, desc| "%-#{max_length + 5}s- %s" % [name, desc] }
+                         .map {|name, desc| "%-#{max_length + 5}s- %s" % [name, desc] }
                          .join($/)
 
     @io.append_to_console $/ + "#{output}" + $/ + $/
@@ -254,8 +254,8 @@ class TaskList
                .lines
                .map {|l| DateTime.parse(l.split[0]) }
 
-    current_month_dates = dates.select { |date| date.month == today.month && date.year == today.year }
-    tasks_done_prev     = current_month_dates.count { |date| date < today }
+    current_month_dates = dates.select {|date| date.month == today.month && date.year == today.year }
+    tasks_done_prev     = current_month_dates.count {|date| date < today }
     tasks_done_today    = current_month_dates.count(today)
     tasks_done_so_far   = tasks_done_prev + tasks_done_today
 
@@ -296,7 +296,7 @@ class TaskList
     @io.append_to_console @description
 
     lines = @actions.zip((0..))
-                    .map { |e, i| "%2d %s %s" % [i, cursor_char(i), e] }
+                    .map {|e, i| "%2d %s %s" % [i, cursor_char(i), e] }
                     .drop(@page_no * PAGE_SIZE).take(PAGE_SIZE)
                     .join
 
@@ -313,7 +313,7 @@ class TaskList
   end
 
   def find text
-    @actions.each_with_index.map {|e,i| "%2d %s" % [i,e] }
+    @actions.each_with_index.map {|e, i| "%2d %s" % [i,e] }
             .grep(/#{Regexp.escape text}/i)
   end
 
@@ -352,7 +352,7 @@ class TaskList
 
   def todo_tag_tallies
     mask = "   %-10s%3d"
-    text = tag_tallies.map { |t, n| mask % [t, n] }.join($/)
+    text = tag_tallies.map {|t, n| mask % [t, n] }.join($/)
     untagged = mask % ["Untagged", untagged_tally]
 
     @io.append_to_console $/ + $/ + "#{text}\n\n#{untagged}" + $/ + $/
@@ -362,8 +362,8 @@ class TaskList
   def todo_show_command_frequencies
     data    = @io.read_log
                  .split
-                 .map {|line| line.split(',') }
-                 .map {|name,count| [name, count.to_i] }
+                 .map{|line| line.split(',') }
+                 .map{|name,count| [name, count.to_i] }
 
     total   = data.sum {|_,count| count }
 
