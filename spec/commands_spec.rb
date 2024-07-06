@@ -9,7 +9,7 @@ RENDER_PAD = "\n\n"
 describe ToDoAdd do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.new(f_io, b_io) }
+  let(:session) { Session.from_ios(f_io, b_io) }
 
   describe '#run' do
     it 'adds a new task to the beginning of the list' do
@@ -61,7 +61,7 @@ end
 describe ToDoMoveTaskToOther do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.new(f_io, b_io) }
+  let(:session) { Session.from_ios(f_io, b_io) }
 
   describe '#run' do
     it 'moves the task at the cursor from the foreground list to the background list' do
@@ -125,7 +125,7 @@ end
 describe ToDoMoveToRandomPositionOnOtherList do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.new(f_io, b_io) }
+  let(:session) { Session.from_ios(f_io, b_io) }
 
   describe '#run' do
     it 'moves the task at the cursor from the foreground list to a random position on the background list' do
@@ -184,7 +184,7 @@ end
 describe ToDoTagTallies do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.new(f_io, b_io) }
+  let(:session) { Session.from_ios(f_io, b_io) }
 
   describe '#run' do
     it 'displays tag tallies and untagged count' do
@@ -251,7 +251,7 @@ end
 describe ToDoFind do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.new(f_io, b_io) }
+  let(:session) { Session.from_ios(f_io, b_io) }
 
   describe '#run' do
     it 'finds tasks containing the specified text in the current list' do
@@ -320,7 +320,7 @@ end
 describe ToDoGlobalFind do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.new(f_io, b_io) }
+  let(:session) { Session.from_ios(f_io, b_io) }
 
   describe '#run' do
     it 'finds tasks containing the specified text in the foreground list' do
@@ -390,7 +390,7 @@ end
 describe ToDoRemove do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.new(f_io, b_io) }
+  let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'removes an action' do
     f_io.actions_content = "L: task AA\nL: task BB\n"
@@ -409,7 +409,7 @@ end
 describe ToDoPageDown do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.new(f_io, b_io) }
+  let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'shows the first page of tasks' do
     actions =  50.times.map {|n| "L: task #{n}\n" }
@@ -442,7 +442,7 @@ end
 describe ToDoCursorToStart do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.new(f_io, b_io) }
+  let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'moves the cursor to the 0th task when not already there' do
     actions = [
@@ -485,7 +485,7 @@ end
 describe ToDoIterativeFind do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.new(f_io, b_io) }
+  let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'finds the token and moves the cursor to the line where it is first found' do
     actions = [
@@ -557,7 +557,7 @@ end
 describe ToDoPageUp do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.new(f_io, b_io) }
+  let(:session) { Session.from_ios(f_io, b_io) }
 
 
   it 'shows the first page of tasks' do
@@ -584,7 +584,7 @@ end
 describe ToDoPrintArchive do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.new(f_io, b_io) }
+  let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'prints the contents of the archive' do
     archive_content = "2023-06-07 L: Task 1\n2023-06-08 R: Task 2\n"
@@ -608,7 +608,7 @@ end
 describe ToDoCursorSet do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.new(f_io, b_io) }
+  let(:session) { Session.from_ios(f_io, b_io) }
 
 
   it 'pages when cursor set off page' do
@@ -625,7 +625,7 @@ end
 describe ToDoDown do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.new(f_io, b_io) }
+  let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'pages when cursor set off page' do
     pos = TaskList::PAGE_SIZE  - 1
@@ -642,7 +642,7 @@ end
 describe ToDoUp do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.new(f_io, b_io) }
+  let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'pages when cursor set off page' do
     pos = TaskList::PAGE_SIZE - 1
@@ -661,7 +661,7 @@ end
 describe ToDoZapToPosition do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.new(f_io, b_io) }
+  let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'zaps the item at zero to one' do
     f_io.actions_content = [ "L: first\n", "L: second\n"].join
@@ -712,7 +712,7 @@ end
 describe ToDoReTag do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.new(f_io, b_io) }
+  let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'retags an L to an R' do
     f_io.actions_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
@@ -753,7 +753,7 @@ describe ToDoReTag do
 describe ToDoToday do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.new(f_io, b_io) }
+  let(:session) { Session.from_ios(f_io, b_io) }
 
    it'shows the tasks for the current day' do
      f_io.archive_content = "2020-01-11 R: Thing X\n2020-01-12 R: Thing Y\n"
@@ -776,7 +776,7 @@ end
 describe ToDoSwitchLists do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.new(f_io, b_io) }
+  let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'switches away foreground' do
      f_io.actions_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
@@ -829,7 +829,7 @@ end
 describe ToDoInsertBlank do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.new(f_io, b_io) }
+  let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'inserts a blank line at the current cursor position' do
     f_io.actions_content = "L: task AA\nL: task BB\n"
@@ -855,7 +855,7 @@ end
 describe ToDoDisplayEdit do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.new(f_io, b_io) }
+  let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'displays the line at the cursor with numbered columns' do
     f_io.actions_content = "L: This is a test line\n"
@@ -900,7 +900,7 @@ end
 describe ToDoEditReplace do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.new(f_io, b_io) }
+  let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'replaces when text to replacement is present' do
     f_io.actions_content = "L: task AA\nL: task BB\n"
@@ -946,7 +946,7 @@ end
 describe ToDoZapToTop do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.new(f_io, b_io) }
+  let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'moves the task at the cursor to position 0' do
     actions = [
@@ -1001,7 +1001,7 @@ end
 describe ToDoSaveActions do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.new(f_io, b_io) }
+  let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'saves the actions without quitting' do
     actions_content = "L: task 1\nL: task 2\n"

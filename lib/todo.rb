@@ -58,7 +58,7 @@ class ToDo
     @foreground_io = foreground_io
     @background_io = background_io
     ToDoUpdater.new(@foreground_io).run
-    @session = Session.new(@foreground_io, @background_io)
+    @session = Session.from_ios(@foreground_io, @background_io)
     @session.render
   end
 
