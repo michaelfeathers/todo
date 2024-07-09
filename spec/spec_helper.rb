@@ -9,6 +9,8 @@ SimpleCov.start do
   add_filter '/lib/appio.rb'
 end
 
+Dir[File.expand_path('../lib/**/*.rb', __FILE__)].each { |f| require f }
+
 RSpec.configure do |config|
   # Additional RSpec configuration can go here
 end
