@@ -1,12 +1,12 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'fileutils'
-require_relative 'session'
-require_relative 'commands'
-require_relative 'appio'
-require_relative 'backgroundio'
-require_relative 'headlessio.rb'
-require_relative 'todoupdater'
+require_relative 'lib/session'
+require_relative 'lib/commands'
+require_relative 'lib/appio'
+require_relative 'lib/backgroundio'
+require_relative 'lib/headlessio.rb'
+require_relative 'lib/todoupdater'
 
 
 class ToDo
