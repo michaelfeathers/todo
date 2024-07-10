@@ -3,8 +3,6 @@ require 'session'
 require 'commands/cursor_set'
 require 'fakeappio'
 
-RENDER_PAD = "\n\n"
-
 
 describe CursorSet do
   let(:f_io) { FakeAppIo.new }
