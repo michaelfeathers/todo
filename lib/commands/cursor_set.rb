@@ -13,7 +13,7 @@ class CursorSet < Command
   end
 
   def process line, session
-    session.list.todo_cursor_set(line.split[1].to_i)
+    session.list.cursor_set(line.split[1].to_i)
   end
 
 end

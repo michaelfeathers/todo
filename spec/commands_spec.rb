@@ -13,7 +13,7 @@ describe ToDoMoveTaskToOther do
   describe '#run' do
     it 'moves the task at the cursor from the foreground list to the background list' do
       f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
-      session.list.todo_cursor_set(1)
+      session.list.cursor_set(1)
 
       ToDoMoveTaskToOther.new.run('-', session)
       session.save
@@ -25,7 +25,7 @@ describe ToDoMoveTaskToOther do
     it 'moves the task at the cursor from the background list to the foreground list' do
       b_io.actions_content = "Task A\nTask B\nTask C\n"
       session.switch_lists
-      session.list.todo_cursor_set(1)
+      session.list.cursor_set(1)
 
       ToDoMoveTaskToOther.new.run('-', session)
       session.save
@@ -78,7 +78,7 @@ describe ToDoMoveToRandomPositionOnOtherList do
     it 'moves the task at the cursor from the foreground list to a random position on the background list' do
       f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
       b_io.actions_content = "Task A\nTask B\nTask C\n"
-      session.list.todo_cursor_set(1)
+      session.list.cursor_set(1)
 
       expect_any_instance_of(Session).to receive(:move_task_to_random_position_on_other_list)
 
@@ -89,7 +89,7 @@ describe ToDoMoveToRandomPositionOnOtherList do
       f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
       b_io.actions_content = "Task A\nTask B\nTask C\n"
       session.switch_lists
-      session.list.todo_cursor_set(1)
+      session.list.cursor_set(1)
 
       expect_any_instance_of(Session).to receive(:move_task_to_random_position_on_other_list)
 
@@ -403,7 +403,7 @@ describe ToDoCursorToStart do
     end.join
 
     f_io.actions_content = actions.join
-    session.list.todo_cursor_set(2)
+    session.list.cursor_set(2)
     ToDoCursorToStart.new.run("cc", session)
     session.list.render
 
@@ -448,7 +448,7 @@ describe ToDoIterativeFind do
     end.join
 
     f_io.actions_content = actions.join
-    session.list.todo_cursor_set(1)
+    session.list.cursor_set(1)
     ToDoIterativeFind.new.run("ff token", session)
     session.list.render
 
@@ -469,7 +469,7 @@ describe ToDoIterativeFind do
     end.join
 
     f_io.actions_content = actions.join
-    session.list.todo_cursor_set(1)
+    session.list.cursor_set(1)
     ToDoIterativeFind.new.run("ff token", session)
     session.list.render
 
@@ -490,7 +490,7 @@ describe ToDoIterativeFind do
     end.join
 
     f_io.actions_content = actions.join
-    session.list.todo_cursor_set(1)
+    session.list.cursor_set(1)
     ToDoIterativeFind.new.run("ff token", session)
     ToDoIterativeFind.new.run("ff", session)
     session.list.render
@@ -763,7 +763,7 @@ describe ToDoInsertBlank do
 
   it 'inserts a blank line at the current cursor position' do
     f_io.actions_content = "L: task AA\nL: task BB\n"
-    session.list.todo_cursor_set(0)
+    session.list.cursor_set(0)
 
     ToDoInsertBlank.new.run("i", session)
     session.list.render
@@ -773,7 +773,7 @@ describe ToDoInsertBlank do
 
   it 'inserts a blank line and maintains the cursor position on the same task' do
     f_io.actions_content = "L: task AA\nL: task BB\n"
-    session.list.todo_cursor_set(0)
+    session.list.cursor_set(0)
 
     ToDoInsertBlank.new.run("i", session)
     session.list.todo_down
@@ -789,7 +789,7 @@ describe ToDoDisplayEdit do
 
   it 'displays the line at the cursor with numbered columns' do
     f_io.actions_content = "L: This is a test line\n"
-    session.list.todo_cursor_set(0)
+    session.list.cursor_set(0)
 
     ToDoDisplayEdit.new.run("ed", session)
 
@@ -800,7 +800,7 @@ describe ToDoDisplayEdit do
 
   it 'returns to the prompt after displaying the numbered line' do
     f_io.actions_content = "W: Yet another test\n"
-    session.list.todo_cursor_set(0)
+    session.list.cursor_set(0)
 
     expect(f_io).to receive(:get_from_console)
 
@@ -809,7 +809,7 @@ describe ToDoDisplayEdit do
 
   it 'displays an empty line if the cursor is on an empty line' do
     f_io.actions_content = "\n"
-    session.list.todo_cursor_set(0)
+    session.list.cursor_set(0)
 
     ToDoDisplayEdit.new.run("ed", session)
 
@@ -834,7 +834,7 @@ describe ToDoEditReplace do
 
   it 'replaces when text to replacement is present' do
     f_io.actions_content = "L: task AA\nL: task BB\n"
-    session.list.todo_cursor_set(1)
+    session.list.cursor_set(1)
 
     ToDoEditReplace.new.run("er 2 bb", session)
     session.list.render
@@ -844,7 +844,7 @@ describe ToDoEditReplace do
 
   it 'replaces multiple tokens' do
     f_io.actions_content = "L: old task here\n"
-    session.list.todo_cursor_set(0)
+    session.list.cursor_set(0)
 
     ToDoEditReplace.new.run("er 2 new task there", session)
     session.list.render
@@ -854,7 +854,7 @@ describe ToDoEditReplace do
 
   it 'replaces tokens until replacements run out' do
     f_io.actions_content = "L: old old old task\n"
-    session.list.todo_cursor_set(0)
+    session.list.cursor_set(0)
 
     ToDoEditReplace.new.run("er 2 new new", session)
     session.list.render
@@ -864,7 +864,7 @@ describe ToDoEditReplace do
 
   it 'deletes token at position when no replacement provided' do
     f_io.actions_content = "L: this is a task\n"
-    session.list.todo_cursor_set(0)
+    session.list.cursor_set(0)
 
     ToDoEditReplace.new.run("er 2", session)
     session.list.render
@@ -895,7 +895,7 @@ describe ToDoZapToTop do
     ].join
 
     f_io.actions_content = actions.join
-    session.list.todo_cursor_set(2)
+    session.list.cursor_set(2)
     ToDoZapToTop.new.run("zz", session)
     session.list.render
 
@@ -919,7 +919,7 @@ describe ToDoZapToTop do
     ].join
 
     f_io.actions_content = actions.join
-    session.list.todo_cursor_set(0)
+    session.list.cursor_set(0)
     ToDoZapToTop.new.run("zz", session)
     session.list.render
 

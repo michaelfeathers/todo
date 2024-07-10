@@ -23,7 +23,7 @@ class Session
 
   def switch_lists(target_position = nil)
     toggle_active_list
-    @list.todo_cursor_set(target_position) if target_position
+    @list.cursor_set(target_position) if target_position
   end
 
   def toggle_active_list
@@ -88,7 +88,7 @@ class Session
     count.times do
       return if @background_tasks.empty?
 
-      @background_tasks.todo_cursor_set(rand(@background_tasks.count))
+      @background_tasks.cursor_set(rand(@background_tasks.count))
       task = @background_tasks.action_at_cursor
       @foreground_tasks.todo_add(task)
 

@@ -180,7 +180,7 @@ class ToDoCursorToStart < Command
   end
 
   def process(line, session)
-    session.list.todo_cursor_set(0)
+    session.list.cursor_set(0)
   end
 
   def description

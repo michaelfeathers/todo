@@ -49,7 +49,7 @@ class TaskList
     @io.write_actions(@actions)
   end
 
-  def todo_cursor_set line_no
+  def cursor_set line_no
     @cursor = line_no if (0...@actions.count).include?(line_no)
     adjust_page
   end
@@ -382,7 +382,7 @@ class TaskList
   def todo_iterative_find_init text
     @last_search_text = text
     found_position = @actions.index { |action| action =~ /#{Regexp.escape(text)}/i }
-    todo_cursor_set(found_position) if found_position
+    cursor_set(found_position) if found_position
   end
 
   def todo_iterative_find_continue
@@ -393,7 +393,7 @@ class TaskList
     found_position = @actions[start_index..-1].index { |action| action =~ /#{Regexp.escape(text)}/i }
     found_position += start_index if found_position
 
-    todo_cursor_set(found_position) if found_position
+    cursor_set(found_position) if found_position
   end
 
   def todo_zap_to_top

@@ -147,7 +147,7 @@ describe TaskList do
        before do
         io.actions_content = "L: task 1\nL: task 2\nL: task 3\n"
         io.today_content = Day.new(DateTime.new(2023, 6, 1))
-        task_list.todo_cursor_set(1)
+        task_list.cursor_set(1)
       end
 
       it 'appends the task at the cursor to the archive' do
@@ -171,7 +171,7 @@ describe TaskList do
       end
 
       it 'updates the cursor position to the previous task when at the last task' do
-        task_list.todo_cursor_set(2)
+        task_list.cursor_set(2)
         task_list.todo_save
         task_list.render
 
@@ -200,7 +200,7 @@ describe TaskList do
     context 'when the task at the cursor is empty' do
       before do
         io.actions_content = "L: task 1\n\nL: task 3\n"
-        task_list.todo_cursor_set(1)
+        task_list.cursor_set(1)
       end
 
       it 'does not append anything to the archive' do
@@ -222,7 +222,7 @@ describe TaskList do
       before do
         io.actions_content = "L: task 1\nL: task 2\nL: task 3\n"
         io.today_content = Day.new(DateTime.new(2023, 6, 1))
-        task_list.todo_cursor_set(1)
+        task_list.cursor_set(1)
       end
 
       it 'appends the task at the cursor to the archive' do
@@ -266,7 +266,7 @@ describe TaskList do
     context 'when the task at the cursor is empty' do
       before do
         io.actions_content = "L: task 1\n\nL: task 3\n"
-        task_list.todo_cursor_set(1)
+        task_list.cursor_set(1)
       end
 
       it 'does not append anything to the archive' do
@@ -288,7 +288,7 @@ describe TaskList do
     it 'moves the cursor up by one position' do
       io.actions_content = "L: task 1\nL: task 2\nL: task 3\n"
 
-      task_list.todo_cursor_set(2)
+      task_list.cursor_set(2)
 
       task_list.todo_up
       task_list.render
@@ -298,7 +298,7 @@ describe TaskList do
 
     it 'does not move the cursor if it is already at the first task' do
       io.actions_content = "L: task 1\nL: task 2\nL: task 3\n"
-      task_list.todo_cursor_set(0)
+      task_list.cursor_set(0)
 
       task_list.todo_up
       task_list.render
@@ -309,7 +309,7 @@ describe TaskList do
     it 'moves the task above the cursor down when in grab mode' do
       io.actions_content = "L: task 1\nL: task 2\nL: task 3\n"
 
-      task_list.todo_cursor_set(1)
+      task_list.cursor_set(1)
       task_list.todo_grab_toggle
 
       task_list.todo_up
@@ -322,7 +322,7 @@ describe TaskList do
     it 'does not move the task above the cursor down when not in grab mode' do
       io.actions_content = "L: task 1\nL: task 2\nL: task 3\n"
 
-      task_list.todo_cursor_set(1)
+      task_list.cursor_set(1)
 
       task_list.todo_up
       task_list.render
