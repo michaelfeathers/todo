@@ -3,22 +3,6 @@ require_relative 'command'
 require_relative 'session'
 require_relative 'appio'
 
-
-class ToDoCursorSet < Command
-  def matches? line
-    line.split.count == 2 && line.split[0] == "c"
-  end
-
-  def process line, session
-    session.list.todo_cursor_set(line.split[1].to_i)
-  end
-
-  def description
-    CommandDesc.new("c  n", "set cursor position to line n")
-  end
-end
-
-
 class ToDoTrendChart < Command
   def matches? line
     (1..2).include?(line.split.count) && line.split.first == "tc"

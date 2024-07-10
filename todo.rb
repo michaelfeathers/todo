@@ -5,6 +5,7 @@ require_relative 'lib/session'
 
 require_relative 'lib/commands'
 require_relative 'lib/commands/add'
+require_relative 'lib/commands/cursor_set'
 require_relative 'lib/commands/quit'
 
 require_relative 'lib/appio'
@@ -15,7 +16,7 @@ require_relative 'lib/todoupdater'
 
 class ToDo
   @@commands = [Add.new,
-                ToDoCursorSet.new,
+                CursorSet.new,
                 ToDoCursorToStart.new,
                 ToDoDisplayEdit.new,
                 ToDoDown.new,

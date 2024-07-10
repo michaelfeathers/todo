@@ -5,61 +5,6 @@ require 'fakeappio'
 
 RENDER_PAD = "\n\n"
 
-=begin
-describe ToDoAdd do
-  let(:f_io) { FakeAppIo.new }
-  let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.from_ios(f_io, b_io) }
-
-  describe '#run' do
-    it 'adds a new task to the beginning of the list' do
-      ToDoAdd.new.run('a New task', session)
-      expect(session.list.action_at_cursor).to eq('New task')
-    end
-
-    it 'sets the cursor to the newly added task' do
-      ToDoAdd.new.run('a New task', session)
-      ToDoAdd.new.run('a Another task', session)
-      expect(session.list.action_at_cursor).to eq('Another task')
-    end
-
-    it 'trims leading and trailing whitespace from the task text' do
-      ToDoAdd.new.run('a   Task with whitespace   ', session)
-      expect(session.list.action_at_cursor).to eq('Task with whitespace')
-    end
-
-    it 'does not add an empty task' do
-      ToDoAdd.new.run('a', session)
-      expect(session.list.action_at_cursor).to eq('')
-    end
-
-    it 'adds multiple tasks in the correct order' do
-      ToDoAdd.new.run('a Task 1', session)
-      ToDoAdd.new.run('a Task 2', session)
-      ToDoAdd.new.run('a Task 3', session)
-
-      expect(session.list.action_at_cursor).to eq('Task 3')
-      session.list.todo_down
-      expect(session.list.action_at_cursor).to eq('Task 2')
-      session.list.todo_down
-      expect(session.list.action_at_cursor).to eq('Task 1')
-    end
-  end
-
-  describe '#matches?' do
-    it 'matches a command starting with "a"' do
-      expect(ToDoAdd.new.matches?('a New task')).to be_truthy
-    end
-
-    it 'does not match a command not starting with "a"' do
-      expect(ToDoAdd.new.matches?('x New task')).to be_falsey
-    end
-  end
-end
-
-=end
-
-
 describe ToDoMoveTaskToOther do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
@@ -607,23 +552,6 @@ describe ToDoPrintArchive do
 
 end
 
-describe ToDoCursorSet do
-  let(:f_io) { FakeAppIo.new }
-  let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.from_ios(f_io, b_io) }
-
-
-  it 'pages when cursor set off page' do
-    pos = TaskList::PAGE_SIZE + 5
-    actions =  50.times.map {|n| "L: task #{n}\n" }
-    output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,n == pos ? "-" : " " ,n] }
-    f_io.actions_content = actions.join
-    ToDoCursorSet.new.run("c #{pos}", session)
-    session.list.render
-    expect(f_io.console_output_content).to eq(RENDER_PAD + output.drop(TaskList::PAGE_SIZE).take(TaskList::PAGE_SIZE).join + "\n")
-  end
-end
-
 describe ToDoDown do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
@@ -634,7 +562,7 @@ describe ToDoDown do
     actions =  50.times.map {|n| "L: task #{n}\n" }
     output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,n == (pos + 1) ? "-" : " " ,n] }
     f_io.actions_content = actions.join
-    ToDoCursorSet.new.run("c #{pos}", session)
+    CursorSet.new.run("c #{pos}", session)
     ToDoDown.new.run("d", session)
     session.list.render
     expect(f_io.console_output_content).to eq(RENDER_PAD + output.drop(TaskList::PAGE_SIZE).take(TaskList::PAGE_SIZE).join + "\n")
@@ -652,7 +580,7 @@ describe ToDoUp do
     output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,n == pos ? "-" : " " ,n] }
     f_io.actions_content = actions.join
     ToDoPageDown.new.run("dd", session)
-    ToDoCursorSet.new.run("c #{pos}", session)
+    CursorSet.new.run("c #{pos}", session)
     ToDoUp.new.run("d", session)
     session.list.render
     expect(f_io.console_output_content).to eq(RENDER_PAD + output.take(TaskList::PAGE_SIZE).join + "\n")
@@ -686,7 +614,7 @@ describe ToDoZapToPosition do
   it 'saturates when asked to zap outside the range low' do
     f_io.actions_content = [ "L: first\n", "L: second\n"].join
     output =  RENDER_PAD + [" 0   L: second\n", " 1 - L: first\n\n"].join
-    ToDoCursorSet.new.run("c 1", session)
+    CursorSet.new.run("c 1", session)
     ToDoZapToPosition.new.run("z -1", session)
     session.list.render
     expect(f_io.console_output_content).to eq(output)
@@ -719,7 +647,7 @@ describe ToDoReTag do
   it 'retags an L to an R' do
     f_io.actions_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
     output =  RENDER_PAD + [ " 0   L: first\n", " 1 - R: second\n",  " 2   L: third\n\n"].join
-    ToDoCursorSet.new.run("c 1", session)
+    CursorSet.new.run("c 1", session)
     ToDoReTag.new.run("rt r", session)
     session.list.render
     expect(f_io.console_output_content).to eq(output)
