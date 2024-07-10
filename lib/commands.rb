@@ -1,53 +1,7 @@
 require 'gruff'
+require_relative 'command'
 require_relative 'session'
 require_relative 'appio'
-
-CommandDesc = Struct.new(:name, :line)
-
-
-class CommandResult
-  attr_reader :matches
-
-  def initialize
-    @matches = []
-  end
-
-  def record_match command
-    @matches << command
-  end
-
-  def match_count
-    @matches.count
-  end
-end
-
-class Command
-
-  def run line, session, result = CommandResult.new
-    return unless matches? line
-    result.record_match(self)
-    process line, session
-  end
-
-  def name
-    description.name.split.first
-  end
-
-end
-
-class ToDoAdd < Command
-  def matches? line
-    line.split.take(1) == ["a"]
-  end
-
-  def process line, session
-    session.add(line.split.drop(1).join(' '))
-  end
-
-  def description
-    CommandDesc.new("a  text", "add text as a task")
-  end
-end
 
 class ToDoQuit < Command
   def matches? line

@@ -3,6 +3,7 @@ require 'bundler/setup'
 require 'fileutils'
 require_relative 'lib/session'
 require_relative 'lib/commands'
+require_relative 'lib/commands/add'
 require_relative 'lib/appio'
 require_relative 'lib/backgroundio'
 require_relative 'lib/headlessio.rb'
@@ -10,7 +11,7 @@ require_relative 'lib/todoupdater'
 
 
 class ToDo
-  @@commands = [ToDoAdd.new,
+  @@commands = [Add.new,
                 ToDoCursorSet.new,
                 ToDoCursorToStart.new,
                 ToDoDisplayEdit.new,

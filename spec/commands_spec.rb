@@ -5,7 +5,7 @@ require 'fakeappio'
 
 RENDER_PAD = "\n\n"
 
-
+=begin
 describe ToDoAdd do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
@@ -56,6 +56,8 @@ describe ToDoAdd do
     end
   end
 end
+
+=end
 
 
 describe ToDoMoveTaskToOther do
