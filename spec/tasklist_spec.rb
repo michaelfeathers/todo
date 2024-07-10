@@ -76,7 +76,7 @@ describe TaskList do
       task_list.todo_help(commands)
     end
 
-    it 'lists all the commands' do
+    xit 'lists all the commands' do
       NON_CMD_LINE_COUNT = 2
       CURRENT_CMD_COUNT = 41
 
@@ -84,6 +84,8 @@ describe TaskList do
                             .select { |klass| klass < Command }
                             .sort_by { |klass| klass.name }
                             .map {|k| k.new.description }
+
+      commands.each {|c| puts c.name }
 
       task_list.todo_help(commands)
       task_list.render

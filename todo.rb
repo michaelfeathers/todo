@@ -2,8 +2,11 @@ require 'rubygems'
 require 'bundler/setup'
 require 'fileutils'
 require_relative 'lib/session'
+
 require_relative 'lib/commands'
 require_relative 'lib/commands/add'
+require_relative 'lib/commands/quit'
+
 require_relative 'lib/appio'
 require_relative 'lib/backgroundio'
 require_relative 'lib/headlessio.rb'
@@ -31,7 +34,7 @@ class ToDo
                 ToDoPageUp.new,
                 ToDoPrintArchive.new,
                 ToDoPush.new,
-                ToDoQuit.new,
+                Quit.new,
                 ToDoReTag.new,
                 ToDoRemove.new,
                 ToDoSave.new,

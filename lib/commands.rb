@@ -3,20 +3,6 @@ require_relative 'command'
 require_relative 'session'
 require_relative 'appio'
 
-class ToDoQuit < Command
-  def matches? line
-    line.split == ["q"]
-  end
-
-  def process line, session
-    session.save
-    exit
-  end
-
-  def description
-    CommandDesc.new("q", "save and quit")
-  end
-end
 
 class ToDoCursorSet < Command
   def matches? line
