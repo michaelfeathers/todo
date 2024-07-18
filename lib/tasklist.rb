@@ -58,6 +58,10 @@ class TaskList
     word.size + 1
   end
 
+  def index_field index, size
+    index.to_s.ljust(size, ' ')
+  end
+
   def todo_display_edit
     line = action_at_cursor
     return if line.split.empty?
@@ -66,7 +70,7 @@ class TaskList
 
     action_line = words.join(' ')
     counts_line = words.map
-                       .with_index {|w,i| (i + 1).to_s.ljust(field_size(w), ' ') }
+                       .with_index {|w,i| index_field(i + 1, field_size(w))  }
                        .join
 
    @io.append_to_console "#{tag} #{action_line}\n   #{counts_line}\n\n"
