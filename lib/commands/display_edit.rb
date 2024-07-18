@@ -3,16 +3,37 @@ require_relative '../session'
 
 
 class DisplayEdit < Command
+
+  def description
+    CommandDesc.new("ed", "display the task at the cursor with numbered columns")
+  end
+
   def matches?(line)
     line.strip == "ed"
   end
 
   def process(line, session)
-    session.list.todo_display_edit
+    io = session.list.io
+    line = session.list.action_at_cursor
+    return if line.split.empty?
+
+    tag, *words = line.split
+
+    action_line = words.join(' ')
+    counts_line = words.map
+                       .with_index {|w,i| index_field(i + 1, field_size(w))  }
+                       .join
+
+   io.append_to_console "#{tag} #{action_line}\n   #{counts_line}\n\n"
+   io.get_from_console
   end
 
-  def description
-    CommandDesc.new("ed", "display the task at the cursor with numbered columns")
+  def field_size word
+    word.size + 1
+  end
+
+  def index_field index, size
+    index.to_s.ljust(size, ' ')
   end
 
 end
