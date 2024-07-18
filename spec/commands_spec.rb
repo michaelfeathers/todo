@@ -793,7 +793,7 @@ describe ToDoDisplayEdit do
 
     ToDoDisplayEdit.new.run("ed", session)
 
-    expected_output = "L: This is a test line \n" +
+    expected_output = "L: This is a test line\n" +
                       "   1    2  3 4    5    \n\n"
     expect(f_io.console_output_content).to eq(expected_output)
   end

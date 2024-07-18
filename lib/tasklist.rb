@@ -64,9 +64,7 @@ class TaskList
 
     tag, *words = line.split
 
-    action_line = words.map {|w| w.ljust(field_size(w), ' ') }
-                       .join
-
+    action_line = words.join(' ')
     counts_line = words.map
                        .with_index {|w,i| (i + 1).to_s.ljust(field_size(w), ' ') }
                        .join
