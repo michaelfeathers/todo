@@ -174,20 +174,6 @@ class ToDoShowUpdates < Command
   end
 end
 
-class ToDoCursorToStart < Command
-  def matches?(line)
-    line.split.count == 1 && line.split[0] == "cc"
-  end
-
-  def process(line, session)
-    session.list.cursor_set(0)
-  end
-
-  def description
-    CommandDesc.new("cc", "move cursor to the 0th task")
-  end
-end
-
 class ToDoIterativeFind < Command
   def matches?(line)
     line.split.count >= 1 && line.split[0] == "ff"
@@ -249,21 +235,6 @@ class ToDoEdit < Command
   def description
     CommandDesc.new("e  text", "edit task at cursor, replacing it with text")
   end
-end
-
-class ToDoDisplayEdit < Command
-  def matches?(line)
-    line.strip == "ed"
-  end
-
-  def process(line, session)
-    session.list.todo_display_edit
-  end
-
-  def description
-    CommandDesc.new("ed", "display the task at the cursor with numbered columns")
-  end
-
 end
 
 class ToDoEditReplace < Command
