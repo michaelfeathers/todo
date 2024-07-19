@@ -9,7 +9,7 @@ class DisplayEdit < Command
   end
 
   def matches?(line)
-    line.strip == "ed"
+    line.split == ["ed"]
   end
 
   def process(line, session)

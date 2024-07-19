@@ -9,7 +9,7 @@ class CursorSet < Command
   end
 
   def matches? line
-    line.split.count == 2 && line.split[0] == "c"
+    (line.split in ["c", *args]) && args.count == 1
   end
 
   def process line, session

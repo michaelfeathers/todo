@@ -5,7 +5,7 @@ require_relative 'appio'
 
 class ToDoTrendChart < Command
   def matches? line
-    (1..2).include?(line.split.count) && line.split.first == "tc"
+    (line.split in ["tc", *args]) && args.count <= 1
   end
 
   def process line, session
@@ -49,7 +49,7 @@ end
 
 class ToDoFind < Command
   def matches? line
-     (2..3).include?(line.split.count) && line.split[0] == "f"
+    (line.split in ["f", *args]) && args.count >= 1
   end
 
   def process line, session
@@ -64,7 +64,7 @@ end
 
 class ToDoGlobalFind < Command
   def matches? line
-    line.split.count == 2 && line.split[0] == "gf"
+    (line.split in ["gf", *args]) && args.count == 1
   end
 
   def process line, session
@@ -78,7 +78,7 @@ end
 
 class ToDoInsertBlank < Command
   def matches?(line)
-    line.strip == "i"
+    line.split == ["i"]
   end
 
   def process(line, session)
@@ -92,7 +92,7 @@ end
 
 class ToDoSaveActions < Command
   def matches?(line)
-    line.strip == "@"
+    line.split == ["@"]
   end
 
   def process(line, session)
@@ -106,7 +106,7 @@ end
 
 class ToDoPush < Command
   def matches? line
-    line.split.count == 2 && line.split.take(1) == ["p"]
+    (line.split in ["p", *args]) && args.count == 1
   end
 
   def process line, session
@@ -176,7 +176,7 @@ end
 
 class ToDoIterativeFind < Command
   def matches?(line)
-    line.split.count >= 1 && line.split[0] == "ff"
+    (line.split in ["ff", *args]) && args.count <= 1
   end
 
   def process(line, session)
@@ -196,7 +196,7 @@ end
 
 class ToDoToday < Command
   def matches? line
-    (1..2).include?(line.split.count) && line.split.first == "t"
+    (line.split in ["t", *args]) && args.count <= 1
   end
 
   def process line, session
@@ -225,7 +225,7 @@ end
 
 class ToDoEdit < Command
   def matches? line
-    line.split.take(1) == ["e"]
+    (line.split in ["e", *args]) && args.count >= 1
   end
 
   def process line, session
@@ -239,7 +239,7 @@ end
 
 class ToDoEditReplace < Command
   def matches? line
-    line.split.count >= 2 && line.split[0] == "er"
+    (line.split in ["er", *args]) && args.count >= 1
   end
 
   def process line, session
@@ -257,7 +257,7 @@ end
 
 class ToDoGrabToggle < Command
   def matches? line
-    line.split.take(1) == ["g"]
+    line.split == ["g"]
   end
 
   def process line, session
@@ -271,7 +271,7 @@ end
 
 class ToDoMoveToRandomPositionOnOtherList < Command
   def matches?(line)
-    line.strip == "_"
+    line.split == ["_"]
   end
 
   def process(line, session)
@@ -286,7 +286,7 @@ end
 
 class ToDoHelp < Command
   def matches? line
-    line.split.take(1) == ["h"]
+    line.split == ["h"]
   end
 
   def process line, session
@@ -300,7 +300,7 @@ end
 
 class ToDoMonthSummaries < Command
   def matches? line
-    (1..2).include?(line.split.count) && line.split.first == "m"
+    (line.split in ["m", *args]) && args.count <= 1
   end
 
   def process line, session
@@ -315,7 +315,7 @@ end
 
 class ToDoPageDown < Command
   def matches? line
-    line.split.take(1) == ["dd"]
+    line.split == ["dd"]
   end
 
   def process line, session
@@ -329,7 +329,7 @@ end
 
 class ToDoPageUp < Command
   def matches? line
-    line.split.take(1) == ["uu"]
+    line.split == ["uu"]
   end
 
   def process line, session
@@ -357,7 +357,7 @@ end
 
 class ToDoZapToPosition < Command
   def matches? line
-    line.split.count == 2 && line.split[0] == "z"
+    (line.split in ["z", *args]) && args.count == 1
   end
 
   def process line, session
@@ -371,7 +371,7 @@ end
 
 class ToDoTodayTargetFor < Command
   def matches? line
-    line.split.count == 2 && line.split[0] == "tf"
+    (line.split in ["tf", *args]) && args.count == 1
   end
 
   def process line, session
@@ -385,7 +385,7 @@ end
 
 class ToDoSurface < Command
   def matches? line
-    line.split.count >= 1 && line.split[0] == "su"
+    (line.split in ["su", *args]) && args.count <= 1
   end
 
   def process line, session
@@ -400,7 +400,7 @@ end
 
 class ToDoReTag < Command
   def matches? line
-    line.split.count == 2 && line.split[0] == "rt"
+    (line.split in ["rt", *args]) && args.count == 1
   end
 
   def process line, session
@@ -414,7 +414,7 @@ end
 
 class ToDoTagTallies < Command
   def matches? line
-    line.split.count == 1 && line.split[0] == "tt"
+    line.split == ["tt"]
   end
 
   def process line, session
@@ -428,8 +428,7 @@ end
 
 class ToDoSwitchLists < Command
   def matches? line
-    tokens = line.split
-    tokens.first == "w" && (tokens.count == 1 || (tokens.count == 2 && tokens[1] =~ /^\d+$/))
+    (line.split in ["w", *args]) && (args.count == 0 || (args.count == 1 && args[0] =~ /^\d+$/))
   end
 
   def process line, session
@@ -450,7 +449,7 @@ end
 
 class ToDoMoveTaskToOther < Command
   def matches? line
-    line.split.count == 1 && line.split[0] == "-"
+    line.split == ["-"]
   end
 
   def process line, session
@@ -464,7 +463,7 @@ end
 
 class ToDoShowCommandFrequencices  < Command
   def matches? line
-    line.split.count == 1 && line.split[0] == "sf"
+    line.split == ["sf"]
   end
 
   def process line, session
@@ -478,7 +477,7 @@ end
 
 class ToDoZapToTop < Command
   def matches?(line)
-    line.strip == "zz"
+    line.split == ["zz"]
   end
 
   def process(line, session)

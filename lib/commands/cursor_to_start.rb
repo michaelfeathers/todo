@@ -3,7 +3,7 @@ require_relative '../session'
 
 class CursorToStart < Command
   def matches?(line)
-    line.split.count == 1 && line.split[0] == "cc"
+    line.split == ["cc"]
   end
 
   def process(line, session)
@@ -13,4 +13,5 @@ class CursorToStart < Command
   def description
     CommandDesc.new("cc", "move cursor to the 0th task")
   end
+
 end

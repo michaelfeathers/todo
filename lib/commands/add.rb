@@ -10,7 +10,7 @@ class Add < Command
   end
 
   def matches? line
-    line.split.take(1) == ["a"]
+    (line.split in ["a", *args]) && args.count >= 0
   end
 
   def process line, session
