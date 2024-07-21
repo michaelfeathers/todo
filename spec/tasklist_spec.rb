@@ -2,6 +2,8 @@ require 'spec_helper'
 require 'tasklist'
 require 'fakeappio'
 
+require 'commands/add'
+
 empty_archive_expected = "
 
              Win        R7K       Life      Total   Adjusted
@@ -25,6 +27,11 @@ Dec            0          0          0          0          0
 
 "
 
+TEST_COLUMNS = [["Win",   ->(tasks) { tasks.W.count } ],
+                ["R7K",   ->(tasks) { tasks.R.count } ],
+                ["Life",  ->(tasks) { tasks.L.count } ],
+                ["Total", ->(tasks) { tasks.count } ],
+                ["Adjusted", ->(tasks) { tasks.adjusted_count } ]]
 
 
 describe TaskList do
@@ -351,9 +358,10 @@ describe TaskList do
     expect(task_list.find("b")).to eq([" 1 L: task B\n"])
   end
 
-  xit 'produces a summary for an empty archive' do
+  it 'produces a summary for an empty archive' do
     io.today_content = Day.from_text("2020-01-01")
-    task_list.todo_month_summaries
+    MonthsReport.new(io, nil, TEST_COLUMNS).run
+    # task_list.todo_month_summaries TEST_COLUMNS
     expect(io.console_output_content).to eq(empty_archive_expected)
   end
 

@@ -18,12 +18,13 @@ class MonthsReport
              #["R7K %", ->(tasks) { tasks.R.percent_of(tasks) } ]]
 
 
-  def initialize io, year
+  def initialize io, year, columns = COLUMNS
     @io = io
     @year = year
+    @columns = columns
     @tasks = nil
 
-    @format = "%-5s" + COLUMNS.size.times.map { " %10s" }.join + $/
+    @format = "%-5s" + @columns.size.times.map { " %10s" }.join + $/
   end
 
   def run
@@ -89,11 +90,11 @@ class MonthsReport
   end
 
   def body_row label, tasks
-    @format % [label].concat(COLUMNS.map { |c| c.second.call(tasks) })
+    @format % [label].concat(@columns.map { |c| c.second.call(tasks) })
   end
 
   def header_row
-    @format % [""].concat(COLUMNS.map { |c| c.first })
+    @format % [""].concat(@columns.map { |c| c.first })
   end
 
 end
