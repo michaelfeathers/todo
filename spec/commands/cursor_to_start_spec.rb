@@ -3,6 +3,7 @@ require 'session'
 require 'commands/cursor_to_start'
 require 'fakeappio'
 
+
 describe CursorToStart do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }

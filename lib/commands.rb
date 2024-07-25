@@ -3,6 +3,7 @@ require_relative 'command'
 require_relative 'session'
 require_relative 'appio'
 
+
 class ToDoTrendChart < Command
   def matches? line
     (line.split in ["tc", *args]) && args.count <= 1

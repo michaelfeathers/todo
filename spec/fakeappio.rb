@@ -1,6 +1,7 @@
 
 
 class FakeAppIo
+
   attr_accessor :archive_content, :console_output_content
   attr_accessor :console_input_content, :actions_content
   attr_accessor :update_content, :today_content

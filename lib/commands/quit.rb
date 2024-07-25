@@ -1,7 +1,11 @@
-
 require_relative '../command'
 
+
 class Quit < Command
+
+  def description
+    CommandDesc.new("q", "save and quit")
+  end
 
   def matches? line
     line.split == ["q"]
@@ -12,7 +16,4 @@ class Quit < Command
     exit
   end
 
-  def description
-    CommandDesc.new("q", "save and quit")
-  end
 end

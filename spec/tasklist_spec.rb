@@ -4,6 +4,7 @@ require 'fakeappio'
 
 require 'commands/add'
 
+
 empty_archive_expected = "
 
              Win        R7K       Life      Total   Adjusted
