@@ -12,7 +12,6 @@ class FakeAppIo
     @console_output_content = ""
     @log_content = ""
     @update_content = []
-    @today_day = nil
   end
 
   def read_archive
