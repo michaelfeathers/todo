@@ -55,8 +55,9 @@ class TaskList
   end
 
 
-  def todo_down
-    return unless @actions.count > 1 && @cursor < @actions.count - 1
+  def down
+    return if @actions.count == 0
+    return if @cursor >= @actions.count - 1
 
     @actions.swap_elements(@cursor, @cursor + 1) if @grab_mode
     @cursor += 1

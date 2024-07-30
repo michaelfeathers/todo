@@ -39,9 +39,9 @@ describe Add do
       Add.new.run('a Task 3', session)
 
       expect(session.list.action_at_cursor).to eq('Task 3')
-      session.list.todo_down
+      session.list.down
       expect(session.list.action_at_cursor).to eq('Task 2')
-      session.list.todo_down
+      session.list.down
       expect(session.list.action_at_cursor).to eq('Task 1')
     end
   end

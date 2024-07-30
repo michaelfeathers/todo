@@ -8,6 +8,7 @@ require_relative 'lib/commands/add'
 require_relative 'lib/commands/cursor_set'
 require_relative 'lib/commands/cursor_to_start'
 require_relative 'lib/commands/display_edit'
+require_relative 'lib/commands/down'
 require_relative 'lib/commands/quit'
 
 require_relative 'lib/appio'
@@ -21,7 +22,7 @@ class ToDo
                 CursorSet.new,
                 CursorToStart.new,
                 DisplayEdit.new,
-                ToDoDown.new,
+                Down.new,
                 ToDoEdit.new,
                 ToDoEditReplace.new,
                 ToDoFind.new,

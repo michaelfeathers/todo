@@ -510,22 +510,6 @@ describe ToDoPrintArchive do
 
 end
 
-describe ToDoDown do
-  let(:f_io) { FakeAppIo.new }
-  let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.from_ios(f_io, b_io) }
-
-  it 'pages when cursor set off page' do
-    pos = TaskList::PAGE_SIZE  - 1
-    actions =  50.times.map {|n| "L: task #{n}\n" }
-    output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,n == (pos + 1) ? "-" : " " ,n] }
-    f_io.actions_content = actions.join
-    CursorSet.new.run("c #{pos}", session)
-    ToDoDown.new.run("d", session)
-    session.list.render
-    expect(f_io.console_output_content).to eq(RENDER_PAD + output.drop(TaskList::PAGE_SIZE).take(TaskList::PAGE_SIZE).join + "\n")
-  end
-end
 
 describe ToDoUp do
   let(:f_io) { FakeAppIo.new }
@@ -734,7 +718,7 @@ describe ToDoInsertBlank do
     session.list.cursor_set(0)
 
     ToDoInsertBlank.new.run("i", session)
-    session.list.todo_down
+    session.list.down
 
     expect(session.list.action_at_cursor).to eq("L: task AA") # Cursor should now
   end
