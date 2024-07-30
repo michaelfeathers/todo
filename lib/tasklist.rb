@@ -217,8 +217,8 @@ class TaskList
   end
 
   def todo_zap_to_position line_no
-    line_no = [[0, line_no].max, @actions.count-1].min
-    @actions = @actions.insert(line_no, @actions.delete_at(@cursor))
+    clamped_line_no = line_no.clamp(0, @actions.count - 1)
+    @actions = @actions.insert(clamped_line_no, @actions.delete_at(@cursor))
   end
 
   def todo_retag new_tag
