@@ -381,14 +381,14 @@ describe TaskList do
 
   it 'adds a task on an empty todo list' do
     io.actions_content = ""
-    task_list.todo_add("this is a test")
+    task_list.add("this is a test")
     task_list.render
     expect(io.console_output_content).to eq("\n\n 0 - this is a test\n\n")
   end
 
   it 'adds a task on an non-empty todo list' do
     io.actions_content = "L: task A\n"
-    task_list.todo_add("L: this is a test")
+    task_list.add("L: this is a test")
     task_list.render
     expect(io.console_output_content).to eq("\n\n 0 - L: this is a test\n 1   L: task A\n\n")
   end
@@ -396,7 +396,7 @@ describe TaskList do
   it 'moves the cursor on an add' do
     io.actions_content = 50.times.map { "L: task\n" }.join
     task_list.todo_page_down
-    task_list.todo_add("L: new task")
+    task_list.add("L: new task")
     task_list.render
     expect(io.console_output_content[0..18]).to eq("\n\n 0 - L: new task\n")
   end

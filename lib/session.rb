@@ -35,7 +35,7 @@ class Session
     @list.remove_action_at_cursor
 
     switch_lists
-    @list.todo_add(task.split.join(" "))
+    @list.add(task.split.join(" "))
     switch_lists
   end
 
@@ -45,7 +45,7 @@ class Session
   end
 
   def add task_line
-    @foreground_tasks.todo_add task_line
+    @foreground_tasks.add task_line
   end
 
   def global_find(text)
@@ -90,7 +90,7 @@ class Session
 
       @background_tasks.cursor_set(rand(@background_tasks.count))
       task = @background_tasks.action_at_cursor
-      @foreground_tasks.todo_add(task)
+      @foreground_tasks.add(task)
 
       @background_tasks.remove_action_at_cursor
     end
@@ -104,7 +104,7 @@ class Session
     other_list = (@list == @foreground_tasks) ? @background_tasks : @foreground_tasks
     random_position = rand(other_list.count)
 
-    other_list.todo_add(task)
+    other_list.add(task)
     other_list.todo_zap_to_position(random_position)
   end
 

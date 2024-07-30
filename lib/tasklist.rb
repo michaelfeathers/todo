@@ -39,7 +39,7 @@ class TaskList
     @io.get_from_console
   end
 
-  def todo_add task_line
+  def add task_line
     @actions = [task_line + $/] + @actions
     @cursor = 0
     adjust_page
@@ -65,7 +65,7 @@ class TaskList
 
   def up
     return if @actions.count == 0
-    return if @cursor == 0
+    return if @cursor <= 0
 
     @actions.swap_elements(@cursor - 1, @cursor) if @grab_mode
     @cursor -= 1
