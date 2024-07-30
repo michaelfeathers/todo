@@ -54,7 +54,6 @@ class TaskList
     adjust_page
   end
 
-
   def down
     return if @actions.count == 0
     return if @cursor >= @actions.count - 1
@@ -64,8 +63,9 @@ class TaskList
     adjust_page
   end
 
-  def todo_up
-    return unless @actions.count > 1 && @cursor > 0
+  def up
+    return if @actions.count == 0
+    return if @cursor == 0
 
     @actions.swap_elements(@cursor - 1, @cursor) if @grab_mode
     @cursor -= 1

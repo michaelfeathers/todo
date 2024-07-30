@@ -10,6 +10,7 @@ require_relative 'lib/commands/cursor_to_start'
 require_relative 'lib/commands/display_edit'
 require_relative 'lib/commands/down'
 require_relative 'lib/commands/quit'
+require_relative 'lib/commands/up'
 
 require_relative 'lib/appio'
 require_relative 'lib/backgroundio'
@@ -53,7 +54,7 @@ class ToDo
                 ToDoToday.new,
                 ToDoTrend.new,
                 ToDoTrendChart.new,
-                ToDoUp.new,
+                Up.new,
                 ToDoZapToPosition.new,
                 ToDoZapToTop.new]
 

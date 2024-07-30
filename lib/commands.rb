@@ -19,35 +19,6 @@ class ToDoTrendChart < Command
   end
 end
 
-
-class ToDoDown < Command
-  def matches? line
-    line.split == ["d"]
-  end
-
-  def process line, session
-    session.list.todo_down
-  end
-
-  def description
-    CommandDesc.new("d", "move cursor down")
-  end
-end
-
-class ToDoUp < Command
-  def matches? line
-    line.split == ["u"]
-  end
-
-  def process line, session
-    session.list.todo_up
-  end
-
-  def description
-    CommandDesc.new("u", "move cursor up")
-  end
-end
-
 class ToDoFind < Command
   def matches? line
     (line.split in ["f", *args]) && args.count >= 1

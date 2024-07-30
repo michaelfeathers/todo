@@ -292,13 +292,13 @@ describe TaskList do
   end
 
 
-  describe '#todo_up' do
+  describe '#up' do
     it 'moves the cursor up by one position' do
       io.actions_content = "L: task 1\nL: task 2\nL: task 3\n"
 
       task_list.cursor_set(2)
 
-      task_list.todo_up
+      task_list.up
       task_list.render
 
       expect(io.console_output_content).to include(" 1 - L: task 2\n")
@@ -308,7 +308,7 @@ describe TaskList do
       io.actions_content = "L: task 1\nL: task 2\nL: task 3\n"
       task_list.cursor_set(0)
 
-      task_list.todo_up
+      task_list.up
       task_list.render
 
       expect(io.console_output_content).to include(" 0 - L: task 1\n")
@@ -320,7 +320,7 @@ describe TaskList do
       task_list.cursor_set(1)
       task_list.todo_grab_toggle
 
-      task_list.todo_up
+      task_list.up
       task_list.render
 
       expect(io.console_output_content.split("\n")[2]).to eq(" 0 * L: task 2")
@@ -332,7 +332,7 @@ describe TaskList do
 
       task_list.cursor_set(1)
 
-      task_list.todo_up
+      task_list.up
       task_list.render
 
       expect(io.console_output_content.split("\n")[2]).to eq(" 0 - L: task 1")
