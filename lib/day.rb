@@ -27,6 +27,10 @@ class Day
     @date === other.date
   end
 
+  def == other
+    @date == other.date
+  end
+
   def month
     @date.strftime("%b")
   end
