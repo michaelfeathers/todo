@@ -15,7 +15,6 @@ class Session
   def initialize foreground_tasks, background_tasks
     @foreground_tasks = foreground_tasks
     @background_tasks = background_tasks
-    @command_log = {}
 
     @list = @foreground_tasks
     load_command_log
@@ -52,9 +51,9 @@ class Session
     io = @list.io
     io.clear_console
 
-    tasks = { '' => @foreground_tasks, 'Background:' => @background_tasks }
+    tasklists = { '' => @foreground_tasks, 'Background:' => @background_tasks }
 
-    tasks.each do |label, task_list|
+    tasklists.each do |label, task_list|
       found = task_list.find(text)
       next if found.empty?
 
@@ -62,16 +61,17 @@ class Session
       io.append_to_console found.join + $/ + $/
     end
     io.get_from_console
+
   end
 
   def load_command_log
-    @command_log = @list.io.read_log
-                           .split($/)
-                           .map { |line| line.split(',') }
-                           .select { |items| items.size == 2 }
-                           .map { |k, v| [k, v.to_i] }
-                           .to_h
-                           .tap { |h| h.default = 0 }
+    @command_log ||= @list.io.read_log
+                          .split($/)
+                          .map { |line| line.split(',') }
+                          .select { |items| items.size == 2 }
+                          .map { |k, v| [k, v.to_i] }
+                          .to_h
+                          .tap { |h| h.default = 0 }
   end
 
   def log_command name
