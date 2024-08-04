@@ -84,16 +84,14 @@ describe TaskList do
       task_list.todo_help(commands)
     end
 
-    xit 'lists all the commands' do
+    it 'lists all the commands' do
       NON_CMD_LINE_COUNT = 2
-      CURRENT_CMD_COUNT = 41
+      CURRENT_CMD_COUNT = 40
 
       commands = ObjectSpace.each_object(Class)
                             .select { |klass| klass < Command }
                             .sort_by { |klass| klass.name }
                             .map {|k| k.new.description }
-
-      commands.each {|c| puts c.name }
 
       task_list.todo_help(commands)
       task_list.render
