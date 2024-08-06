@@ -34,7 +34,7 @@ class Session
     @list.remove_action_at_cursor
 
     switch_lists
-    @list.add(task.split.join(" "))
+    @list.add(task)
     switch_lists
   end
 
@@ -66,12 +66,12 @@ class Session
 
   def load_command_log
     @command_log ||= @list.io.read_log
-                          .split($/)
-                          .map { |line| line.split(',') }
-                          .select { |items| items.size == 2 }
-                          .map { |k, v| [k, v.to_i] }
-                          .to_h
-                          .tap { |h| h.default = 0 }
+                             .split($/)
+                             .map { |line| line.split(',') }
+                             .select { |items| items.size == 2 }
+                             .map { |k, v| [k, v.to_i] }
+                             .to_h
+                             .tap { |h| h.default = 0 }
   end
 
   def log_command name
