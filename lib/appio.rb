@@ -1,4 +1,3 @@
-
 ROOT_DIR     = "/Users/michaelfeathers/Projects/todo/lib/"
 TODO_FILE    = ROOT_DIR + "todo.txt"
 UPDATE_FILE  = ROOT_DIR + "updates.txt"

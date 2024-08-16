@@ -16,6 +16,7 @@ class CommandResult
   end
 end
 
+
 class Command
 
   def run line, session, result = CommandResult.new
