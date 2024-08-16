@@ -13,9 +13,9 @@ class MonthsReport
   COLUMNS = [["Win",   ->(tasks) { tasks.W.count } ],
              ["R7K",   ->(tasks) { tasks.R.count } ],
              ["Life",  ->(tasks) { tasks.L.count } ],
-             ["Total", ->(tasks) { tasks.count } ],
+             ["Total", ->(tasks) { tasks.count } ]]
              #["Adjusted", ->(tasks) { tasks.adjusted_count } ]]
-             ["R7K %", ->(tasks) { tasks.R.percent_of(tasks) } ]]
+             #["R7K %", ->(tasks) { tasks.R.percent_of(tasks) } ]]
 
 
   def initialize io, year, columns = COLUMNS
