@@ -65,13 +65,15 @@ class Session
   end
 
   def load_command_log
-    @command_log ||= @list.io.read_log
-                             .split($/)
-                             .map { |line| line.split(',') }
-                             .select { |items| items.size == 2 }
-                             .map { |k, v| [k, v.to_i] }
-                             .to_h
-                             .tap { |h| h.default = 0 }
+    content = @list.io.read_log
+    parsed_data = content.split($/)
+                         .map { |line| line.split(',') }
+                         .select { |items| items.size == 2 }
+                         .map { |k, v| [k, v.to_i] }
+                        .to_h
+    @command_log ||= parsed_data
+    @command_log.default = 0
+    @command_log
   end
 
   def log_command name
