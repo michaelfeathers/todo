@@ -338,10 +338,10 @@ class TaskList
 
   def todo_tag_tallies
     mask = "   %-10s%3d"
-    text = tag_tallies.map {|t, n| mask % [t, n] }.join($/)
+    tagged = tag_tallies.map {|t, n| mask % [t, n] }.join($/)
     untagged = mask % ["Untagged", untagged_tally]
 
-    @io.append_to_console $/ + $/ + "#{text}\n\n#{untagged}" + $/ + $/
+    @io.append_to_console $/ + $/ + "#{tagged}\n\n#{untagged}" + $/ + $/
     @io.get_from_console
   end
 
