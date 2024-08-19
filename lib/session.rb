@@ -70,7 +70,7 @@ class Session
                          .map { |line| line.split(',') }
                          .select { |items| items.size == 2 }
                          .map { |k, v| [k, v.to_i] }
-                        .to_h
+                         .to_h
     @command_log ||= parsed_data
     @command_log.default = 0
     @command_log
