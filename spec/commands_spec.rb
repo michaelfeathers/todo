@@ -741,6 +741,16 @@ describe ToDoEditReplace do
     expect(f_io.console_output_content).to eq("\n\n 0 - L: old new new task\n\n")
   end
 
+  it 'replaces tokens past the end of the original line' do
+    f_io.actions_content = "L: old old old\n"
+    session.list.cursor_set(0)
+
+    ToDoEditReplace.new.run("er 2 new new new", session)
+    session.list.render
+
+    expect(f_io.console_output_content).to eq("\n\n 0 - L: old new new new\n\n")
+  end
+
   it 'deletes token at position when no replacement provided' do
     f_io.actions_content = "L: this is a task\n"
     session.list.cursor_set(0)
