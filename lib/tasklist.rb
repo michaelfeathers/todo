@@ -143,7 +143,10 @@ class TaskList
   def todo_edit new_tokens
     return if @actions.empty?
 
-    update_action_at_cursor(replace_tokens(action_at_cursor.split, 1, new_tokens).join(' '))
+    tag = action_at_cursor.split.first
+    return unless tag
+
+    update_action_at_cursor([tag, *new_tokens].join(' '))
   end
 
   def todo_edit_replace position, new_tokens
