@@ -72,6 +72,20 @@ class TaskList
     adjust_page
   end
 
+  def edit_insert position, new_tokens
+    current_task = action_at_cursor
+    return if current_task.nil? || current_task.empty? || new_tokens.empty?
+
+    task_tokens = current_task.split
+    tag = task_tokens.shift if task_tokens.first =~ TAG_PATTERN
+
+    if position > 0 && position <= task_tokens.size + 1
+      task_tokens.insert(position - 1, *new_tokens)
+      new_task = [tag, task_tokens.join(' ')].compact.join(' ')
+      update_action_at_cursor(new_task)
+    end
+  end
+
   def todo_find text, limit = nil
     @io.clear_console
 
