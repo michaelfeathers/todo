@@ -8,8 +8,7 @@ class EditInsert < Command
   end
 
   def matches?(line)
-    tokens = line.split
-    tokens.size >= 3 && tokens[0] == "ei" && tokens[1].match?(/^\d+$/)
+  (line.split in ["ei", *args]) && args.count >= 2 && args[0].match?(/^\d+$/)
   end
 
   def process(line, session)

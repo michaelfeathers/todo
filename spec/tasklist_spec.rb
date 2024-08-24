@@ -434,14 +434,15 @@ describe TaskList do
 
   xit 'edits a task with no tag' do
     io.actions_content = "task\n"
-    task_list.todo_edit ["edited", "task"]
+    task_list.todo_edit "edited task"
+
     task_list.render
     expect(io.console_output_content).to eq("\n\n 0 - edited task\n\n")
   end
 
   it 'preserves a tag on editing' do
     io.actions_content = "L: task\n"
-    task_list.todo_edit ["edited", "task"]
+    task_list.todo_edit "edited task"
     task_list.render
     expect(io.console_output_content).to eq("\n\n 0 - L: edited task\n\n")
   end

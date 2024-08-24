@@ -154,8 +154,9 @@ class TaskList
     @io.get_from_console
   end
 
-  def todo_edit new_tokens
+  def todo_edit text
     return if @actions.empty?
+    new_tokens = text.split
 
     tag = action_at_cursor.split.first
     return unless tag

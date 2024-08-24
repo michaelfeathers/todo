@@ -194,14 +194,13 @@ class ToDoTrend < Command
   end
 end
 
-
 class ToDoEdit < Command
   def matches? line
     (line.split in ["e", *args]) && args.count >= 1
   end
 
   def process line, session
-    session.list.todo_edit(line.split.drop(1))
+    session.list.todo_edit(line.split.drop(1).join(" "))
   end
 
   def description
