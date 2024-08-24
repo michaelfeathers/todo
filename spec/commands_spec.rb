@@ -340,7 +340,7 @@ describe ToDoRemove do
   let(:b_io) { FakeAppIo.new }
   let(:session) { Session.from_ios(f_io, b_io) }
 
-  it 'removes an action' do
+  it 'removes an task' do
     f_io.tasks_content = "L: task AA\nL: task BB\n"
     f_io.console_input_content = "Y"
     ToDoRemove.new.run("r", session)
@@ -360,26 +360,26 @@ describe ToDoPageDown do
   let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'shows the first page of tasks' do
-    actions =  50.times.map {|n| "L: task #{n}\n" }
+    tasks =  50.times.map {|n| "L: task #{n}\n" }
     output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
-    f_io.tasks_content = actions.join
+    f_io.tasks_content = tasks.join
     session.list.render
     expect(f_io.console_output_content).to eq(RENDER_PAD + output.take(TaskList::PAGE_SIZE).join + "\n")
   end
 
   it 'shows the second page of tasks' do
-    actions =  50.times.map {|n| "L: task #{n}\n" }
+    tasks =  50.times.map {|n| "L: task #{n}\n" }
     output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
-    f_io.tasks_content = actions.join
+    f_io.tasks_content = tasks.join
     ToDoPageDown.new.run("dd", session)
     session.list.render
     expect(f_io.console_output_content).to eq(RENDER_PAD + output.drop(TaskList::PAGE_SIZE).take(TaskList::PAGE_SIZE).join + "\n")
   end
 
   it 'is noop when on the last page' do
-    actions =  50.times.map {|n| "L: task #{n}\n" }
+    tasks =  50.times.map {|n| "L: task #{n}\n" }
     output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
-    f_io.tasks_content = actions.join
+    f_io.tasks_content = tasks.join
     ToDoPageDown.new.run("dd", session)
     ToDoPageDown.new.run("dd", session)
     session.list.render
@@ -393,19 +393,19 @@ describe ToDoIterativeFind do
   let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'finds the token and moves the cursor to the line where it is first found' do
-    actions = [
+    tasks = [
       "L: task 0\n",
       "L: task 1\n",
       "L: task 2 with token\n",
       "L: task 3 with token\n",
       "L: task 4\n"
     ]
-    output = actions.map.with_index do |action, i|
+    output = tasks.map.with_index do |task, i|
       cursor = i == 2 ? '-' : ' '
-      "%2d %s %s" % [i, cursor, action]
+      "%2d %s %s" % [i, cursor, task]
     end.join
 
-    f_io.tasks_content = actions.join
+    f_io.tasks_content = tasks.join
     session.list.cursor_set(1)
     ToDoIterativeFind.new.run("ff token", session)
     session.list.render
@@ -414,19 +414,19 @@ describe ToDoIterativeFind do
   end
 
   it 'does not change the cursor position if the token is not found' do
-    actions = [
+    tasks = [
       "L: task 0\n",
       "L: task 1\n",
       "L: task 2\n",
       "L: task 3\n",
       "L: task 4\n"
     ]
-    output = actions.map.with_index do |action, i|
+    output = tasks.map.with_index do |task, i|
       cursor = i == 1 ? '-' : ' '
-      "%2d %s %s" % [i, cursor, action]
+      "%2d %s %s" % [i, cursor, task]
     end.join
 
-    f_io.tasks_content = actions.join
+    f_io.tasks_content = tasks.join
     session.list.cursor_set(1)
     ToDoIterativeFind.new.run("ff token", session)
     session.list.render
@@ -435,19 +435,19 @@ describe ToDoIterativeFind do
   end
 
   it 'finds the token from the next line after the cursor when no text is provided' do
-    actions = [
+    tasks = [
       "L: task 0\n",
       "L: task 1 with token\n",
       "L: task 2\n",
       "L: task 3 with token\n",
       "L: task 4\n"
     ]
-    output = actions.map.with_index do |action, i|
+    output = tasks.map.with_index do |task, i|
       cursor = i == 3 ? '-' : ' '
-      "%2d %s %s" % [i, cursor, action]
+      "%2d %s %s" % [i, cursor, task]
     end.join
 
-    f_io.tasks_content = actions.join
+    f_io.tasks_content = tasks.join
     session.list.cursor_set(1)
     ToDoIterativeFind.new.run("ff token", session)
     ToDoIterativeFind.new.run("ff", session)
@@ -466,18 +466,18 @@ describe ToDoPageUp do
 
 
   it 'shows the first page of tasks' do
-    actions =  50.times.map {|n| "L: task #{n}\n" }
+    tasks =  50.times.map {|n| "L: task #{n}\n" }
     output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
-    f_io.tasks_content = actions.join
+    f_io.tasks_content = tasks.join
     ToDoPageUp.new.run("uu", session)
     session.list.render
     expect(f_io.console_output_content).to eq(RENDER_PAD + output.take(TaskList::PAGE_SIZE).join + "\n")
   end
 
   it 'shows the first page of tasks after previously paging down' do
-    actions =  50.times.map {|n| "L: task #{n}\n" }
+    tasks =  50.times.map {|n| "L: task #{n}\n" }
     output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
-    f_io.tasks_content = actions.join
+    f_io.tasks_content = tasks.join
     ToDoPageDown.new.run("dd", session)
     ToDoPageUp.new.run("uu", session)
     session.list.render
@@ -701,7 +701,7 @@ describe ToDoInsertBlank do
     ToDoInsertBlank.new.run("i", session)
     session.list.down
 
-    expect(session.list.action_at_cursor).to eq("L: task AA") # Cursor should now
+    expect(session.list.task_at_cursor).to eq("L: task AA") # Cursor should now
   end
 end
 
@@ -768,7 +768,7 @@ describe ToDoZapToTop do
   let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'moves the task at the cursor to position 0' do
-    actions = [
+    tasks = [
       "L: task 0\n",
       "L: task 1\n",
       "L: task 2\n",
@@ -783,7 +783,7 @@ describe ToDoZapToTop do
       " 4   L: task 4\n"
     ].join
 
-    f_io.tasks_content = actions.join
+    f_io.tasks_content = tasks.join
     session.list.cursor_set(2)
     ToDoZapToTop.new.run("zz", session)
     session.list.render
@@ -792,7 +792,7 @@ describe ToDoZapToTop do
   end
 
   it 'does nothing when the cursor is already at position 0' do
-    actions = [
+    tasks = [
       "L: task 0\n",
       "L: task 1\n",
       "L: task 2\n",
@@ -807,7 +807,7 @@ describe ToDoZapToTop do
       " 4   L: task 4\n"
     ].join
 
-    f_io.tasks_content = actions.join
+    f_io.tasks_content = tasks.join
     session.list.cursor_set(0)
     ToDoZapToTop.new.run("zz", session)
     session.list.render
@@ -822,7 +822,7 @@ describe ToDoSaveActions do
   let(:b_io) { FakeAppIo.new }
   let(:session) { Session.from_ios(f_io, b_io) }
 
-  it 'saves the actions without quitting' do
+  it 'saves the tasks without quitting' do
     tasks_content = "L: task 1\nL: task 2\n"
     f_io.tasks_content = tasks_content
 

@@ -30,8 +30,8 @@ class Session
   end
 
   def move_task_to_other
-    task = @list.action_at_cursor
-    @list.remove_action_at_cursor
+    task = @list.task_at_cursor
+    @list.remove_task_at_cursor
 
     switch_lists
     @list.add(task)
@@ -91,17 +91,17 @@ class Session
       return if @background_tasks.empty?
 
       @background_tasks.cursor_set(rand(@background_tasks.count))
-      task = @background_tasks.action_at_cursor
+      task = @background_tasks.task_at_cursor
       @foreground_tasks.add(task)
 
-      @background_tasks.remove_action_at_cursor
+      @background_tasks.remove_task_at_cursor
     end
 
   end
 
   def move_task_to_random_position_on_other_list
-    task = @list.action_at_cursor
-    @list.remove_action_at_cursor
+    task = @list.task_at_cursor
+    @list.remove_task_at_cursor
 
     other_list = (@list == @foreground_tasks) ? @background_tasks : @foreground_tasks
     random_position = rand(other_list.count)

@@ -14,18 +14,18 @@ class DisplayEdit < Command
 
   def process(line, session)
     io      = session.list.io
-    line    = session.list.action_at_cursor
+    line    = session.list.task_at_cursor
 
     return if line.split.empty?
 
     tag, *words = line.split
 
-    action_line = words.join(' ')
+    task_line = words.join(' ')
     index_line  = words.map
                        .with_index {|w,i| index_field(i + 1, field_size(w))  }
                        .join
 
-   io.append_to_console "#{tag} #{action_line}\n   #{index_line}\n\n"
+   io.append_to_console "#{tag} #{task_line}\n   #{index_line}\n\n"
    io.get_from_console
   end
 

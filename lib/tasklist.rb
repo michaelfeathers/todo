@@ -14,7 +14,7 @@ class TaskList
 
   def initialize io, description = ""
     @io = io
-    @actions = io.read_actions.lines
+    @tasks = io.read_tasks.lines
 
     @last_search_text = nil
     @cursor = 0
@@ -25,7 +25,7 @@ class TaskList
   end
 
   def empty?
-    @actions.empty?
+    @tasks.empty?
   end
 
   def todo_help command_list
@@ -40,40 +40,40 @@ class TaskList
   end
 
   def add task_line
-    @actions = [task_line + $/] + @actions
+    @tasks = [task_line + $/] + @tasks
     @cursor = 0
     adjust_page
   end
 
   def save_all
-    @io.write_actions(@actions)
+    @io.write_tasks(@tasks)
   end
 
   def cursor_set line_no
-    @cursor = line_no if (0...@actions.count).include?(line_no)
+    @cursor = line_no if (0...@tasks.count).include?(line_no)
     adjust_page
   end
 
   def down
-    return if @actions.count == 0
-    return if @cursor >= @actions.count - 1
+    return if @tasks.count == 0
+    return if @cursor >= @tasks.count - 1
 
-    @actions.swap_elements(@cursor, @cursor + 1) if @grab_mode
+    @tasks.swap_elements(@cursor, @cursor + 1) if @grab_mode
     @cursor += 1
     adjust_page
   end
 
   def up
-    return if @actions.count == 0
+    return if @tasks.count == 0
     return if @cursor <= 0
 
-    @actions.swap_elements(@cursor - 1, @cursor) if @grab_mode
+    @tasks.swap_elements(@cursor - 1, @cursor) if @grab_mode
     @cursor -= 1
     adjust_page
   end
 
   def edit_insert position, new_tokens
-    current_task = action_at_cursor
+    current_task = task_at_cursor
     return if current_task.nil? || current_task.empty? || new_tokens.empty?
 
     task_tokens = current_task.split
@@ -82,7 +82,7 @@ class TaskList
     if position > 0 && position <= task_tokens.size + 1
       task_tokens.insert(position - 1, *new_tokens)
       new_task = [tag, task_tokens.join(' ')].compact.join(' ')
-      update_action_at_cursor(new_task)
+      update_task_at_cursor(new_task)
     end
   end
 
@@ -105,16 +105,16 @@ class TaskList
   end
 
   def todo_push days_text
-    return if @actions.count < 1
+    return if @tasks.count < 1
 
     updates = @io.read_updates.lines.to_a
     date_text = @io.today.with_more_days(days_text.to_i).to_s
 
-    updates << [date_text, @actions[@cursor]].join(' ')
+    updates << [date_text, @tasks[@cursor]].join(' ')
     updates = updates.sort_by {|line| DateTime.parse(line.split.first) }
 
     @io.write_updates(updates)
-    remove_action_at_cursor
+    remove_task_at_cursor
   end
 
   def todo_remove
@@ -123,18 +123,18 @@ class TaskList
 
     return unless response.split.first == "Y"
 
-    line = @actions[@cursor]
+    line = @tasks[@cursor]
     @io.append_to_junk(@io.today.to_s + " " + line) unless line.split.empty?
-    remove_action_at_cursor
-    @io.write_actions(@actions)
+    remove_task_at_cursor
+    @io.write_tasks(@tasks)
   end
 
   def todo_save
-    return if @actions.count < 1
-    return if action_at_cursor.strip.empty?
+    return if @tasks.count < 1
+    return if task_at_cursor.strip.empty?
 
-    @io.append_to_archive(@io.today.to_s + " " + @actions[@cursor])
-    remove_action_at_cursor
+    @io.append_to_archive(@io.today.to_s + " " + @tasks[@cursor])
+    remove_task_at_cursor
   end
 
   def todo_save_all
@@ -142,10 +142,10 @@ class TaskList
   end
 
   def todo_save_no_remove
-    return if @actions.count < 1
-    return if action_at_cursor.strip.empty?
+    return if @tasks.count < 1
+    return if task_at_cursor.strip.empty?
 
-    @io.append_to_archive(@io.today.to_s + " " + @actions[@cursor])
+    @io.append_to_archive(@io.today.to_s + " " + @tasks[@cursor])
   end
 
   def todo_show_updates
@@ -155,26 +155,26 @@ class TaskList
   end
 
   def todo_edit text
-    return if @actions.empty?
+    return if @tasks.empty?
     new_tokens = text.split
 
-    tag = action_at_cursor.split.first
+    tag = task_at_cursor.split.first
     return unless tag
 
-    update_action_at_cursor([tag, *new_tokens].join(' '))
+    update_task_at_cursor([tag, *new_tokens].join(' '))
   end
 
   def todo_edit_replace position, new_tokens
-    action = action_at_cursor
-    return if action.nil?
+    task = task_at_cursor
+    return if task.nil?
 
-    tokens = action.split
+    tokens = task.split
     if new_tokens.nil? || new_tokens.empty?
       tokens.delete_at(position)
     else
       tokens = replace_tokens(tokens, position, new_tokens)
     end
-    update_action_at_cursor(tokens.join(' '))
+    update_task_at_cursor(tokens.join(' '))
   end
 
   def replace_tokens tokens, position, new_tokens
@@ -226,7 +226,7 @@ class TaskList
   end
 
   def todo_page_down
-    return unless ((@page_no + 1) * PAGE_SIZE) < @actions.count
+    return unless ((@page_no + 1) * PAGE_SIZE) < @tasks.count
     @page_no = @page_no + 1
   end
 
@@ -236,19 +236,19 @@ class TaskList
   end
 
   def todo_zap_to_position line_no
-    clamped_line_no = line_no.clamp(0, @actions.count - 1)
-    @actions = @actions.insert(clamped_line_no, @actions.delete_at(@cursor))
+    clamped_line_no = line_no.clamp(0, @tasks.count - 1)
+    @tasks = @tasks.insert(clamped_line_no, @tasks.delete_at(@cursor))
   end
 
   def todo_retag new_tag
-    current_action = @actions[@cursor]
-    return unless current_action
+    current_task = @tasks[@cursor]
+    return unless current_task
 
-    tokens = current_action.split
+    tokens = current_task.split
     tag_text = "#{new_tag.upcase}:"
 
     tokens.first =~ TAG_PATTERN ? tokens[0] = tag_text : tokens.unshift(tag_text)
-    @actions[@cursor] = tokens.join(" ") + $/
+    @tasks[@cursor] = tokens.join(" ") + $/
   end
 
   def todo_today_target_for month_target
@@ -298,7 +298,7 @@ class TaskList
     @io.clear_console
     @io.append_to_console @description
 
-    lines = @actions.zip((0..))
+    lines = @tasks.zip((0..))
                     .map {|e, i| "%2d %s %s" % [i, cursor_char(i), e] }
                     .drop(@page_no * PAGE_SIZE).take(PAGE_SIZE)
                     .join
@@ -316,19 +316,19 @@ class TaskList
   end
 
   def find text
-    @actions.each_with_index
+    @tasks.each_with_index
             .map {|e, i| "%2d %s" % [i, e] }
             .grep(/#{Regexp.escape text}/i)
   end
 
-  def remove_action_at_cursor
-    @actions.delete_at(@cursor)
-    @cursor = [@cursor, @actions.count - 1].min
+  def remove_task_at_cursor
+    @tasks.delete_at(@cursor)
+    @cursor = [@cursor, @tasks.count - 1].min
   end
 
-  def action_at_cursor
-    return "" if @actions.empty?
-    @actions[@cursor].chomp
+  def task_at_cursor
+    return "" if @tasks.empty?
+    @tasks[@cursor].chomp
   end
 
   def day_frequencies year = nil
@@ -341,14 +341,14 @@ class TaskList
 
 
   def tag_tallies
-    @actions.select {|l| l.strip.length > 0 }
+    @tasks.select {|l| l.strip.length > 0 }
             .map {|l| l.split.first }
             .select {|t| t =~ TAG_PATTERN }
             .freq
   end
 
   def untagged_tally
-    @actions.select {|l| l.strip.length > 0 }
+    @tasks.select {|l| l.strip.length > 0 }
             .map {|l| l.split.first }
             .reject {|t| t =~ TAG_PATTERN }
             .count
@@ -379,13 +379,13 @@ class TaskList
   end
 
   def todo_insert_blank
-    @actions.insert(@cursor, $/)
+    @tasks.insert(@cursor, $/)
     adjust_page
   end
 
   def todo_iterative_find_init text
     @last_search_text = text
-    found_position = @actions.index { |action| action =~ /#{Regexp.escape(text)}/i }
+    found_position = @tasks.index { |task| task =~ /#{Regexp.escape(text)}/i }
     cursor_set(found_position) if found_position
   end
 
@@ -393,8 +393,8 @@ class TaskList
     text = @last_search_text
     return unless text
 
-    start_index = [@cursor + 1, @actions.count - 1].min
-    found_position = @actions[start_index..-1].index { |action| action =~ /#{Regexp.escape(text)}/i }
+    start_index = [@cursor + 1, @tasks.count - 1].min
+    found_position = @tasks[start_index..-1].index { |task| task =~ /#{Regexp.escape(text)}/i }
     found_position += start_index if found_position
 
     cursor_set(found_position) if found_position
@@ -404,12 +404,12 @@ class TaskList
     todo_zap_to_position(0)
   end
 
-  def update_action_at_cursor action_text
-    @actions[@cursor] = action_text + $/
+  def update_task_at_cursor task_text
+    @tasks[@cursor] = task_text + $/
   end
 
   def count
-    @actions.count
+    @tasks.count
   end
 
 end

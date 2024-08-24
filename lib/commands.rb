@@ -72,7 +72,7 @@ class ToDoSaveActions < Command
   end
 
   def description
-    CommandDesc.new("@", "save the actions without quitting")
+    CommandDesc.new("@", "save the tasks without quitting")
   end
 end
 

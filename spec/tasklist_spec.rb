@@ -162,7 +162,7 @@ describe TaskList do
         expect(io.archive_content).to eq("2023-06-01 L: task 2\n")
       end
 
-      it 'removes the task at the cursor from the actions' do
+      it 'removes the task at the cursor from the tasks' do
         task_list.todo_save
         task_list.render
 
@@ -196,7 +196,7 @@ describe TaskList do
         expect(io.archive_content).to eq("")
       end
 
-      it 'does not modify the actions' do
+      it 'does not modify the tasks' do
         task_list.todo_save
 
         expect(io.tasks_content).to eq("")
@@ -215,7 +215,7 @@ describe TaskList do
         expect(io.archive_content).to eq("")
       end
 
-      it 'does not remove the empty task from the actions' do
+      it 'does not remove the empty task from the tasks' do
         task_list.todo_save
 
         expect(io.tasks_content).to eq("L: task 1\n\nL: task 3\n")
@@ -237,7 +237,7 @@ describe TaskList do
         expect(io.archive_content).to eq("2023-06-01 L: task 2\n")
       end
 
-      it 'does not remove the task at the cursor from the actions' do
+      it 'does not remove the task at the cursor from the tasks' do
         task_list.todo_save_no_remove
 
         expect(io.tasks_content).to eq("L: task 1\nL: task 2\nL: task 3\n")
@@ -262,7 +262,7 @@ describe TaskList do
         expect(io.archive_content).to eq("")
       end
 
-      it 'does not modify the actions' do
+      it 'does not modify the tasks' do
         task_list.todo_save_no_remove
 
         expect(io.tasks_content).to eq("")
@@ -281,7 +281,7 @@ describe TaskList do
         expect(io.archive_content).to eq("")
       end
 
-      it 'does not modify the actions' do
+      it 'does not modify the tasks' do
         task_list.todo_save_no_remove
 
         expect(io.tasks_content).to eq("L: task 1\n\nL: task 3\n")
@@ -338,13 +338,13 @@ describe TaskList do
     end
   end
 
-  it 'returns action at cursor when not empty' do
+  it 'returns task at cursor when not empty' do
     io.tasks_content = "L: task AA\nL: task BB\n"
-    expect(task_list.action_at_cursor).to eq("L: task AA")
+    expect(task_list.task_at_cursor).to eq("L: task AA")
   end
 
-  it 'returns empty string for action at cursor when empty' do
-    expect(task_list.action_at_cursor).to eq("")
+  it 'returns empty string for task at cursor when empty' do
+    expect(task_list.task_at_cursor).to eq("")
   end
 
   it 'finds simple text' do
