@@ -292,16 +292,20 @@ class TaskList
     @io.get_from_console
   end
 
+  def window
+    @tasks.zip((0..))
+          .map {|e, i| [i, cursor_char(i), e] }
+          .drop(@page_no * PAGE_SIZE).take(PAGE_SIZE)
+  end
+
   def render
     return if @io.suppress_render_list
 
     @io.clear_console
     @io.append_to_console @description
 
-    lines = @tasks.zip((0..))
-                    .map {|e, i| "%2d %s %s" % [i, cursor_char(i), e] }
-                    .drop(@page_no * PAGE_SIZE).take(PAGE_SIZE)
-                    .join
+    lines = window.map {|line_no, cursor, line| "%2d %s %s" % [line_no, cursor, line] }
+                  .join
 
     @io.append_to_console lines + $/
   end
@@ -317,8 +321,8 @@ class TaskList
 
   def find text
     @tasks.each_with_index
-            .map {|e, i| "%2d %s" % [i, e] }
-            .grep(/#{Regexp.escape text}/i)
+          .map {|e, i| "%2d %s" % [i, e] }
+          .grep(/#{Regexp.escape text}/i)
   end
 
   def remove_task_at_cursor
