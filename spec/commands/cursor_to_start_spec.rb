@@ -10,17 +10,17 @@ describe CursorToStart do
   let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'moves the cursor to the 0th task when not already there' do
-    actions = [
+    tasks = [
       "L: task 0\n",
       "L: task 1\n",
       "L: task 2\n"
     ]
-    output = actions.map.with_index do |action, i|
+    output = tasks.map.with_index do |task, i|
       cursor = i.zero? ? '-' : ' '
-      "%2d %s %s" % [i, cursor, action]
+      "%2d %s %s" % [i, cursor, task]
     end.join
 
-    f_io.tasks_content = actions.join
+    f_io.tasks_content = tasks.join
     session.list.cursor_set(2)
     CursorToStart.new.run("cc", session)
     session.list.render
@@ -29,17 +29,17 @@ describe CursorToStart do
   end
 
   it 'does nothing when cursor is already at 0th task' do
-    actions = [
+    tasks = [
       "L: task 0\n",
       "L: task 1\n",
       "L: task 2\n"
     ]
-    output = actions.map.with_index do |action, i|
+    output = tasks.map.with_index do |task, i|
       cursor = i.zero? ? '-' : ' '
-      "%2d %s %s" % [i, cursor, action]
+      "%2d %s %s" % [i, cursor, task]
     end.join
 
-    f_io.tasks_content = actions.join
+    f_io.tasks_content = tasks.join
     session.list.render
     CursorToStart.new.run("cc", session)
 
