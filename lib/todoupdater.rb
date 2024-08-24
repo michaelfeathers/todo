@@ -8,14 +8,14 @@ class ToDoUpdater
   end
 
   def run
-    actions = @io.read_actions.lines
+    tasks = @io.read_tasks.lines
     updates = @io.read_updates.lines
 
     due_updates = due(updates)
     non_due_updates = non_due(updates)
 
-    new_actions = due_updates + actions
-    @io.write_actions(new_actions)
+    new_tasks = due_updates + tasks
+    @io.write_tasks(new_tasks)
 
     sorted_non_due = non_due_updates.sort_by do |line|
       Day.from_text(line.split.first).date
