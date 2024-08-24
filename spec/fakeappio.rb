@@ -36,9 +36,13 @@ class FakeAppIo
   def append_to_junk text
   end
 
+  def read_tasks; read_actions; end
+
   def read_actions
     @actions_content
   end
+
+  def write_tasks tasks; write_actions(tasks); end
 
   def write_actions actions
     @actions_content = actions.join

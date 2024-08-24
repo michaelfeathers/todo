@@ -35,9 +35,13 @@ class AppIo
     File.open(JUNK_FILE, 'a') { |f| f.write(line); }
   end
 
+  def read_tasks; read_actions; end
+
   def read_actions
     File.read(TODO_FILE)
   end
+
+  def write_tasks tasks; write_actions(tasks); end
 
   def write_actions actions
     File.open(TODO_FILE, 'w') { |f| f.write(actions.join) }
