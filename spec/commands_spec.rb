@@ -13,49 +13,49 @@ describe ToDoMoveTaskToOther do
 
   describe '#run' do
     it 'moves the task at the cursor from the foreground list to the background list' do
-      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+      f_io.tasks_content = "Task 1\nTask 2\nTask 3\n"
       session.list.cursor_set(1)
 
       ToDoMoveTaskToOther.new.run('-', session)
       session.save
 
-      expect(f_io.actions_content).to eq("Task 1\nTask 3\n")
-      expect(b_io.actions_content).to eq("Task 2\n")
+      expect(f_io.tasks_content).to eq("Task 1\nTask 3\n")
+      expect(b_io.tasks_content).to eq("Task 2\n")
     end
 
     it 'moves the task at the cursor from the background list to the foreground list' do
-      b_io.actions_content = "Task A\nTask B\nTask C\n"
+      b_io.tasks_content = "Task A\nTask B\nTask C\n"
       session.switch_lists
       session.list.cursor_set(1)
 
       ToDoMoveTaskToOther.new.run('-', session)
       session.save
 
-      expect(f_io.actions_content).to eq("Task B\n")
-      expect(b_io.actions_content).to eq("Task A\nTask C\n")
+      expect(f_io.tasks_content).to eq("Task B\n")
+      expect(b_io.tasks_content).to eq("Task A\nTask C\n")
     end
 
     it 'does not modify the lists if the foreground list is empty' do
-      f_io.actions_content = ""
-      b_io.actions_content = "Task A\nTask B\nTask C\n"
+      f_io.tasks_content = ""
+      b_io.tasks_content = "Task A\nTask B\nTask C\n"
 
       ToDoMoveTaskToOther.new.run('-', session)
       session.save
 
-      expect(f_io.actions_content).to eq("")
-      expect(b_io.actions_content).to eq("\nTask A\nTask B\nTask C\n")
+      expect(f_io.tasks_content).to eq("")
+      expect(b_io.tasks_content).to eq("\nTask A\nTask B\nTask C\n")
     end
 
     it 'does not modify the lists if the background list is empty' do
-      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
-      b_io.actions_content = ""
+      f_io.tasks_content = "Task 1\nTask 2\nTask 3\n"
+      b_io.tasks_content = ""
       session.switch_lists
 
       ToDoMoveTaskToOther.new.run('-', session)
       session.save
 
-      expect(f_io.actions_content).to eq("\nTask 1\nTask 2\nTask 3\n")
-      expect(b_io.actions_content).to eq("")
+      expect(f_io.tasks_content).to eq("\nTask 1\nTask 2\nTask 3\n")
+      expect(b_io.tasks_content).to eq("")
     end
   end
 
@@ -77,8 +77,8 @@ describe ToDoMoveToRandomPositionOnOtherList do
 
   describe '#run' do
     it 'moves the task at the cursor from the foreground list to a random position on the background list' do
-      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
-      b_io.actions_content = "Task A\nTask B\nTask C\n"
+      f_io.tasks_content = "Task 1\nTask 2\nTask 3\n"
+      b_io.tasks_content = "Task A\nTask B\nTask C\n"
       session.list.cursor_set(1)
 
       expect_any_instance_of(Session).to receive(:move_task_to_random_position_on_other_list)
@@ -87,8 +87,8 @@ describe ToDoMoveToRandomPositionOnOtherList do
     end
 
     it 'moves the task at the cursor from the background list to a random position on the foreground list' do
-      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
-      b_io.actions_content = "Task A\nTask B\nTask C\n"
+      f_io.tasks_content = "Task 1\nTask 2\nTask 3\n"
+      b_io.tasks_content = "Task A\nTask B\nTask C\n"
       session.switch_lists
       session.list.cursor_set(1)
 
@@ -98,8 +98,8 @@ describe ToDoMoveToRandomPositionOnOtherList do
     end
 
     it 'does not modify the lists if the foreground list is empty' do
-      f_io.actions_content = ""
-      b_io.actions_content = "Task A\nTask B\nTask C\n"
+      f_io.tasks_content = ""
+      b_io.tasks_content = "Task A\nTask B\nTask C\n"
 
       expect_any_instance_of(Session).not_to receive(:move_task_to_random_position_on_other_list)
 
@@ -107,8 +107,8 @@ describe ToDoMoveToRandomPositionOnOtherList do
     end
 
     it 'does not modify the lists if the background list is empty' do
-      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
-      b_io.actions_content = ""
+      f_io.tasks_content = "Task 1\nTask 2\nTask 3\n"
+      b_io.tasks_content = ""
       session.switch_lists
 
       expect_any_instance_of(Session).not_to receive(:move_task_to_random_position_on_other_list)
@@ -136,7 +136,7 @@ describe ToDoTagTallies do
 
   describe '#run' do
     it 'displays tag tallies and untagged count' do
-      f_io.actions_content = "L: task 1\nR: task 2\nR: task 3\nW: task 4\nL: task 5\ntask 6\ntask 7\n"
+      f_io.tasks_content = "L: task 1\nR: task 2\nR: task 3\nW: task 4\nL: task 5\ntask 6\ntask 7\n"
 
       ToDoTagTallies.new.run('tt', session)
 
@@ -147,7 +147,7 @@ describe ToDoTagTallies do
     end
 
     it 'returns to the prompt after displaying tag tallies' do
-      f_io.actions_content = "L: task 1\nR: task 2\nR: task 3\nW: task 4\nL: task 5\ntask 6\ntask 7\n"
+      f_io.tasks_content = "L: task 1\nR: task 2\nR: task 3\nW: task 4\nL: task 5\ntask 6\ntask 7\n"
 
       expect(f_io).to receive(:get_from_console)
 
@@ -155,7 +155,7 @@ describe ToDoTagTallies do
     end
 
     it 'displays only untagged count when no tags are present' do
-      f_io.actions_content = "task 1\ntask 2\ntask 3\n"
+      f_io.tasks_content = "task 1\ntask 2\ntask 3\n"
 
       ToDoTagTallies.new.run('tt', session)
 
@@ -166,7 +166,7 @@ describe ToDoTagTallies do
     end
 
     it 'displays tag tallies correctly when only one tag is present' do
-      f_io.actions_content = "L: task 1\nL: task 2\nL: task 3\n"
+      f_io.tasks_content = "L: task 1\nL: task 2\nL: task 3\n"
 
       ToDoTagTallies.new.run('tt', session)
 
@@ -175,7 +175,7 @@ describe ToDoTagTallies do
     end
 
     it 'does not count empty lines as untagged tasks' do
-      f_io.actions_content = "L: task 1\n\nR: task 2\n\n\n"
+      f_io.tasks_content = "L: task 1\n\nR: task 2\n\n\n"
 
       ToDoTagTallies.new.run('tt', session)
 
@@ -203,7 +203,7 @@ describe ToDoFind do
 
   describe '#run' do
     it 'finds tasks containing the specified text in the current list' do
-      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+      f_io.tasks_content = "Task 1\nTask 2\nTask 3\n"
 
       ToDoFind.new.run('f 2', session)
 
@@ -211,7 +211,7 @@ describe ToDoFind do
     end
 
     it 'finds tasks case-insensitively' do
-      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+      f_io.tasks_content = "Task 1\nTask 2\nTask 3\n"
 
       ToDoFind.new.run('f task', session)
 
@@ -221,7 +221,7 @@ describe ToDoFind do
     end
 
     it 'limits the search results to the specified count' do
-      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+      f_io.tasks_content = "Task 1\nTask 2\nTask 3\n"
 
       ToDoFind.new.run('f Task 2', session)
 
@@ -229,7 +229,7 @@ describe ToDoFind do
     end
 
     it 'does not find tasks if the specified text is not present' do
-      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+      f_io.tasks_content = "Task 1\nTask 2\nTask 3\n"
 
       ToDoFind.new.run('f X', session)
 
@@ -237,7 +237,7 @@ describe ToDoFind do
     end
 
     it 'returns to the prompt after displaying the search results' do
-      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
+      f_io.tasks_content = "Task 1\nTask 2\nTask 3\n"
 
       expect(f_io).to receive(:get_from_console)
 
@@ -272,8 +272,8 @@ describe ToDoGlobalFind do
 
   describe '#run' do
     it 'finds tasks containing the specified text in the foreground list' do
-      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
-      b_io.actions_content = "Task A\nTask B\nTask C\n"
+      f_io.tasks_content = "Task 1\nTask 2\nTask 3\n"
+      b_io.tasks_content = "Task A\nTask B\nTask C\n"
 
       ToDoGlobalFind.new.run('gf 2', session)
 
@@ -281,8 +281,8 @@ describe ToDoGlobalFind do
     end
 
     it 'finds tasks containing the specified text in the background list' do
-      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
-      b_io.actions_content = "Task A\nTask B\nTask C\n"
+      f_io.tasks_content = "Task 1\nTask 2\nTask 3\n"
+      b_io.tasks_content = "Task A\nTask B\nTask C\n"
 
       ToDoGlobalFind.new.run('gf B', session)
 
@@ -291,8 +291,8 @@ describe ToDoGlobalFind do
     end
 
     it 'finds tasks containing the specified text in both lists' do
-      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
-      b_io.actions_content = "Task 2\nTask B\nTask C\n"
+      f_io.tasks_content = "Task 1\nTask 2\nTask 3\n"
+      b_io.tasks_content = "Task 2\nTask B\nTask C\n"
 
       ToDoGlobalFind.new.run('gf 2', session)
 
@@ -302,8 +302,8 @@ describe ToDoGlobalFind do
     end
 
     it 'does not find tasks if the specified text is not present in either list' do
-      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
-      b_io.actions_content = "Task A\nTask B\nTask C\n"
+      f_io.tasks_content = "Task 1\nTask 2\nTask 3\n"
+      b_io.tasks_content = "Task A\nTask B\nTask C\n"
 
       ToDoGlobalFind.new.run('gf X', session)
 
@@ -311,8 +311,8 @@ describe ToDoGlobalFind do
     end
 
     it 'returns to the prompt after displaying the search results' do
-      f_io.actions_content = "Task 1\nTask 2\nTask 3\n"
-      b_io.actions_content = "Task A\nTask B\nTask C\n"
+      f_io.tasks_content = "Task 1\nTask 2\nTask 3\n"
+      b_io.tasks_content = "Task A\nTask B\nTask C\n"
 
       expect(f_io).to receive(:get_from_console)
 
@@ -341,10 +341,10 @@ describe ToDoRemove do
   let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'removes an action' do
-    f_io.actions_content = "L: task AA\nL: task BB\n"
+    f_io.tasks_content = "L: task AA\nL: task BB\n"
     f_io.console_input_content = "Y"
     ToDoRemove.new.run("r", session)
-    expect(f_io.actions_content).to eq("L: task BB\n")
+    expect(f_io.tasks_content).to eq("L: task BB\n")
   end
 end
 
@@ -362,7 +362,7 @@ describe ToDoPageDown do
   it 'shows the first page of tasks' do
     actions =  50.times.map {|n| "L: task #{n}\n" }
     output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
-    f_io.actions_content = actions.join
+    f_io.tasks_content = actions.join
     session.list.render
     expect(f_io.console_output_content).to eq(RENDER_PAD + output.take(TaskList::PAGE_SIZE).join + "\n")
   end
@@ -370,7 +370,7 @@ describe ToDoPageDown do
   it 'shows the second page of tasks' do
     actions =  50.times.map {|n| "L: task #{n}\n" }
     output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
-    f_io.actions_content = actions.join
+    f_io.tasks_content = actions.join
     ToDoPageDown.new.run("dd", session)
     session.list.render
     expect(f_io.console_output_content).to eq(RENDER_PAD + output.drop(TaskList::PAGE_SIZE).take(TaskList::PAGE_SIZE).join + "\n")
@@ -379,7 +379,7 @@ describe ToDoPageDown do
   it 'is noop when on the last page' do
     actions =  50.times.map {|n| "L: task #{n}\n" }
     output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
-    f_io.actions_content = actions.join
+    f_io.tasks_content = actions.join
     ToDoPageDown.new.run("dd", session)
     ToDoPageDown.new.run("dd", session)
     session.list.render
@@ -405,7 +405,7 @@ describe ToDoIterativeFind do
       "%2d %s %s" % [i, cursor, action]
     end.join
 
-    f_io.actions_content = actions.join
+    f_io.tasks_content = actions.join
     session.list.cursor_set(1)
     ToDoIterativeFind.new.run("ff token", session)
     session.list.render
@@ -426,7 +426,7 @@ describe ToDoIterativeFind do
       "%2d %s %s" % [i, cursor, action]
     end.join
 
-    f_io.actions_content = actions.join
+    f_io.tasks_content = actions.join
     session.list.cursor_set(1)
     ToDoIterativeFind.new.run("ff token", session)
     session.list.render
@@ -447,7 +447,7 @@ describe ToDoIterativeFind do
       "%2d %s %s" % [i, cursor, action]
     end.join
 
-    f_io.actions_content = actions.join
+    f_io.tasks_content = actions.join
     session.list.cursor_set(1)
     ToDoIterativeFind.new.run("ff token", session)
     ToDoIterativeFind.new.run("ff", session)
@@ -468,7 +468,7 @@ describe ToDoPageUp do
   it 'shows the first page of tasks' do
     actions =  50.times.map {|n| "L: task #{n}\n" }
     output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
-    f_io.actions_content = actions.join
+    f_io.tasks_content = actions.join
     ToDoPageUp.new.run("uu", session)
     session.list.render
     expect(f_io.console_output_content).to eq(RENDER_PAD + output.take(TaskList::PAGE_SIZE).join + "\n")
@@ -477,7 +477,7 @@ describe ToDoPageUp do
   it 'shows the first page of tasks after previously paging down' do
     actions =  50.times.map {|n| "L: task #{n}\n" }
     output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
-    f_io.actions_content = actions.join
+    f_io.tasks_content = actions.join
     ToDoPageDown.new.run("dd", session)
     ToDoPageUp.new.run("uu", session)
     session.list.render
@@ -517,7 +517,7 @@ describe ToDoZapToPosition do
   let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'zaps the item at zero to one' do
-    f_io.actions_content = [ "L: first\n", "L: second\n"].join
+    f_io.tasks_content = [ "L: first\n", "L: second\n"].join
     output = RENDER_PAD + [" 0 - L: second\n", " 1   L: first\n\n"].join
     ToDoZapToPosition.new.run("z 1", session)
     session.list.render
@@ -526,7 +526,7 @@ describe ToDoZapToPosition do
   end
 
   it 'saturates when asked to zap outside the range high' do
-    f_io.actions_content = [ "L: first\n", "L: second\n"].join
+    f_io.tasks_content = [ "L: first\n", "L: second\n"].join
     output = RENDER_PAD + [" 0 - L: second\n", " 1   L: first\n\n"].join
     ToDoZapToPosition.new.run("z 2", session)
     session.list.render
@@ -535,7 +535,7 @@ describe ToDoZapToPosition do
   end
 
   it 'saturates when asked to zap outside the range low' do
-    f_io.actions_content = [ "L: first\n", "L: second\n"].join
+    f_io.tasks_content = [ "L: first\n", "L: second\n"].join
     output =  RENDER_PAD + [" 0   L: second\n", " 1 - L: first\n\n"].join
     CursorSet.new.run("c 1", session)
     ToDoZapToPosition.new.run("z -1", session)
@@ -545,7 +545,7 @@ describe ToDoZapToPosition do
   end
 
   it 'noops when asked to zap to the same position' do
-    f_io.actions_content = [ "L: first\n", "L: second\n"].join
+    f_io.tasks_content = [ "L: first\n", "L: second\n"].join
     output =  RENDER_PAD + [" 0 - L: first\n", " 1   L: second\n\n"].join
     ToDoZapToPosition.new.run("z 0", session)
     session.list.render
@@ -553,7 +553,7 @@ describe ToDoZapToPosition do
   end
 
   it 'has insertion rather than swap aemantics' do
-    f_io.actions_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
+    f_io.tasks_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
     output =  RENDER_PAD + [" 0 - L: second\n", " 1   L: third\n 2   L: first\n\n"].join
     ToDoZapToPosition.new.run("z 2", session)
     session.list.render
@@ -568,7 +568,7 @@ describe ToDoReTag do
   let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'retags an L to an R' do
-    f_io.actions_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
+    f_io.tasks_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
     output =  RENDER_PAD + [ " 0   L: first\n", " 1 - R: second\n",  " 2   L: third\n\n"].join
     CursorSet.new.run("c 1", session)
     ToDoReTag.new.run("rt r", session)
@@ -577,7 +577,7 @@ describe ToDoReTag do
   end
 
   it'does nothing when regtagging in an empty task list' do
-    f_io.actions_content = ""
+    f_io.tasks_content = ""
     output =  RENDER_PAD + "\n"
     ToDoReTag.new.run("rt r", session)
     session.list.render
@@ -585,7 +585,7 @@ describe ToDoReTag do
    end
 
    it'adds a tag to a task with no tag' do
-     f_io.actions_content = ["first\n"].join
+     f_io.tasks_content = ["first\n"].join
      output =  RENDER_PAD + " 0 - L: first\n\n"
      ToDoReTag.new.run("rt l", session)
      session.list.render
@@ -593,7 +593,7 @@ describe ToDoReTag do
    end
 
    it'does nothing when no new tag is supplied' do
-     f_io.actions_content = ["R: first\n"].join
+     f_io.tasks_content = ["R: first\n"].join
      output =  RENDER_PAD + " 0 - R: first\n\n"
      ToDoReTag.new.run("rt", session)
      session.list.render
@@ -632,7 +632,7 @@ describe ToDoSwitchLists do
   let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'switches away foreground' do
-     f_io.actions_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
+     f_io.tasks_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
      output = RENDER_PAD + " 0 - L: first\n 1   L: second\n 2   L: third\n\n"
      session.list.render
      expect(session.list.io.console_output_content).to eq(output)
@@ -643,8 +643,8 @@ describe ToDoSwitchLists do
   end
 
   it 'switches foreground and background' do
-     f_io.actions_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
-     b_io.actions_content = [ "R: first\n", "R: second\n",  "R: third\n"].join
+     f_io.tasks_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
+     b_io.tasks_content = [ "R: first\n", "R: second\n",  "R: third\n"].join
      output_before = RENDER_PAD + [" 0 - L: first\n", " 1   L: second\n",  " 2   L: third\n\n"].join
      output_after  = "BACKGROUND" + RENDER_PAD + [" 0 - R: first\n 1   R: second\n 2   R: third\n\n"].join
 
@@ -657,8 +657,8 @@ describe ToDoSwitchLists do
   end
 
   it 'switches to the background list and moves the cursor to the specified position' do
-    f_io.actions_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
-    b_io.actions_content = [ "R: first\n", "R: second\n",  "R: third\n"].join
+    f_io.tasks_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
+    b_io.tasks_content = [ "R: first\n", "R: second\n",  "R: third\n"].join
     output_after  = "BACKGROUND" + RENDER_PAD + [" 0   R: first\n", " 1 - R: second\n", " 2   R: third\n\n"].join
 
     ToDoSwitchLists.new.run("w 1", session)
@@ -667,8 +667,8 @@ describe ToDoSwitchLists do
   end
 
   it 'does not change the cursor position if no position is specified' do
-    f_io.actions_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
-    b_io.actions_content = [ "R: first\n", "R: second\n",  "R: third\n"].join
+    f_io.tasks_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
+    b_io.tasks_content = [ "R: first\n", "R: second\n",  "R: third\n"].join
     output_after  = "BACKGROUND" + RENDER_PAD + [" 0 - R: first\n", " 1   R: second\n", " 2   R: third\n\n"].join
 
     ToDoSwitchLists.new.run("w", session)
@@ -685,7 +685,7 @@ describe ToDoInsertBlank do
   let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'inserts a blank line at the current cursor position' do
-    f_io.actions_content = "L: task AA\nL: task BB\n"
+    f_io.tasks_content = "L: task AA\nL: task BB\n"
     session.list.cursor_set(0)
 
     ToDoInsertBlank.new.run("i", session)
@@ -695,7 +695,7 @@ describe ToDoInsertBlank do
   end
 
   it 'inserts a blank line and maintains the cursor position on the same task' do
-    f_io.actions_content = "L: task AA\nL: task BB\n"
+    f_io.tasks_content = "L: task AA\nL: task BB\n"
     session.list.cursor_set(0)
 
     ToDoInsertBlank.new.run("i", session)
@@ -712,7 +712,7 @@ describe ToDoEditReplace do
   let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'replaces when text to replacement is present' do
-    f_io.actions_content = "L: task AA\nL: task BB\n"
+    f_io.tasks_content = "L: task AA\nL: task BB\n"
     session.list.cursor_set(1)
 
     ToDoEditReplace.new.run("er 2 bb", session)
@@ -722,7 +722,7 @@ describe ToDoEditReplace do
   end
 
   it 'replaces multiple tokens' do
-    f_io.actions_content = "L: old task here\n"
+    f_io.tasks_content = "L: old task here\n"
     session.list.cursor_set(0)
 
     ToDoEditReplace.new.run("er 2 new task there", session)
@@ -732,7 +732,7 @@ describe ToDoEditReplace do
   end
 
   it 'replaces tokens until replacements run out' do
-    f_io.actions_content = "L: old old old task\n"
+    f_io.tasks_content = "L: old old old task\n"
     session.list.cursor_set(0)
 
     ToDoEditReplace.new.run("er 2 new new", session)
@@ -742,7 +742,7 @@ describe ToDoEditReplace do
   end
 
   it 'replaces tokens past the end of the original line' do
-    f_io.actions_content = "L: old old old\n"
+    f_io.tasks_content = "L: old old old\n"
     session.list.cursor_set(0)
 
     ToDoEditReplace.new.run("er 2 new new new", session)
@@ -752,7 +752,7 @@ describe ToDoEditReplace do
   end
 
   it 'deletes token at position when no replacement provided' do
-    f_io.actions_content = "L: this is a task\n"
+    f_io.tasks_content = "L: this is a task\n"
     session.list.cursor_set(0)
 
     ToDoEditReplace.new.run("er 2", session)
@@ -783,7 +783,7 @@ describe ToDoZapToTop do
       " 4   L: task 4\n"
     ].join
 
-    f_io.actions_content = actions.join
+    f_io.tasks_content = actions.join
     session.list.cursor_set(2)
     ToDoZapToTop.new.run("zz", session)
     session.list.render
@@ -807,7 +807,7 @@ describe ToDoZapToTop do
       " 4   L: task 4\n"
     ].join
 
-    f_io.actions_content = actions.join
+    f_io.tasks_content = actions.join
     session.list.cursor_set(0)
     ToDoZapToTop.new.run("zz", session)
     session.list.render
@@ -823,11 +823,11 @@ describe ToDoSaveActions do
   let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'saves the actions without quitting' do
-    actions_content = "L: task 1\nL: task 2\n"
-    f_io.actions_content = actions_content
+    tasks_content = "L: task 1\nL: task 2\n"
+    f_io.tasks_content = tasks_content
 
     ToDoSaveActions.new.run("@", session)
 
-    expect(f_io.actions_content).to eq(actions_content)
+    expect(f_io.tasks_content).to eq(tasks_content)
   end
 end

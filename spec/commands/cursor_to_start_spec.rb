@@ -20,7 +20,7 @@ describe CursorToStart do
       "%2d %s %s" % [i, cursor, action]
     end.join
 
-    f_io.actions_content = actions.join
+    f_io.tasks_content = actions.join
     session.list.cursor_set(2)
     CursorToStart.new.run("cc", session)
     session.list.render
@@ -39,7 +39,7 @@ describe CursorToStart do
       "%2d %s %s" % [i, cursor, action]
     end.join
 
-    f_io.actions_content = actions.join
+    f_io.tasks_content = actions.join
     session.list.render
     CursorToStart.new.run("cc", session)
 

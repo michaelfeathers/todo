@@ -10,7 +10,7 @@ describe EditInsert do
 
   describe '#run' do
     it 'inserts tokens before the specified position in the current task' do
-      f_io.actions_content = "L: task one two three\n"
+      f_io.tasks_content = "L: task one two three\n"
       session.list.cursor_set(0)
 
       EditInsert.new.run("ei 2 new inserted", session)
@@ -20,7 +20,7 @@ describe EditInsert do
     end
 
     it 'handles insertion at the beginning of the task' do
-      f_io.actions_content = "R: existing task\n"
+      f_io.tasks_content = "R: existing task\n"
       session.list.cursor_set(0)
 
       EditInsert.new.run("ei 1 prefix", session)
@@ -30,7 +30,7 @@ describe EditInsert do
     end
 
     it 'handles insertion at the end of the task' do
-      f_io.actions_content = "W: end insertion\n"
+      f_io.tasks_content = "W: end insertion\n"
       session.list.cursor_set(0)
 
       EditInsert.new.run("ei 3 appended text", session)
@@ -40,7 +40,7 @@ describe EditInsert do
     end
 
     it 'does not modify the task if the position is out of bounds' do
-      f_io.actions_content = "L: unchanged task\n"
+      f_io.tasks_content = "L: unchanged task\n"
       session.list.cursor_set(0)
 
       EditInsert.new.run("ei 10 out of bounds", session)
@@ -50,7 +50,7 @@ describe EditInsert do
     end
 
     it 'handles insertion with multiple tokens' do
-      f_io.actions_content = "R: before after\n"
+      f_io.tasks_content = "R: before after\n"
       session.list.cursor_set(0)
 
       EditInsert.new.run("ei 2 multiple new tokens here", session)
@@ -60,7 +60,7 @@ describe EditInsert do
     end
 
     it 'does nothing when no tokens are provided' do
-      f_io.actions_content = "W: no change\n"
+      f_io.tasks_content = "W: no change\n"
       session.list.cursor_set(0)
 
       EditInsert.new.run("ei 2", session)
@@ -70,7 +70,7 @@ describe EditInsert do
     end
 
     it 'preserves the task tag when inserting' do
-      f_io.actions_content = "L: preserve tag\n"
+      f_io.tasks_content = "L: preserve tag\n"
       session.list.cursor_set(0)
 
       EditInsert.new.run("ei 1 inserted", session)

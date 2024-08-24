@@ -10,7 +10,7 @@ describe DisplayEdit do
   let(:session) { Session.from_ios(f_io, b_io) }
 
   it 'displays the line at the cursor with numbered columns' do
-    f_io.actions_content = "L: This is a test line\n"
+    f_io.tasks_content = "L: This is a test line\n"
     session.list.cursor_set(0)
 
     DisplayEdit.new.run("ed", session)
@@ -21,7 +21,7 @@ describe DisplayEdit do
   end
 
   it 'returns to the prompt after displaying the numbered line' do
-    f_io.actions_content = "W: Yet another test\n"
+    f_io.tasks_content = "W: Yet another test\n"
     session.list.cursor_set(0)
 
     expect(f_io).to receive(:get_from_console)
@@ -30,7 +30,7 @@ describe DisplayEdit do
   end
 
   it 'displays an empty line if the cursor is on an empty line' do
-    f_io.actions_content = "\n"
+    f_io.tasks_content = "\n"
     session.list.cursor_set(0)
 
     DisplayEdit.new.run("ed", session)

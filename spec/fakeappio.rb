@@ -3,12 +3,12 @@
 class FakeAppIo
 
   attr_accessor :archive_content, :console_output_content
-  attr_accessor :console_input_content, :actions_content
+  attr_accessor :console_input_content, :tasks_content
   attr_accessor :update_content, :today_content
   attr_accessor :log_content
 
   def initialize
-    @archive_content = @actions_content = ""
+    @archive_content = @tasks_content = ""
     @console_output_content = ""
     @log_content = ""
     @update_content = []
@@ -39,13 +39,13 @@ class FakeAppIo
   def read_tasks; read_actions; end
 
   def read_actions
-    @actions_content
+    @tasks_content
   end
 
   def write_tasks tasks; write_actions(tasks); end
 
   def write_actions actions
-    @actions_content = actions.join
+    @tasks_content = actions.join
   end
 
   def read_updates

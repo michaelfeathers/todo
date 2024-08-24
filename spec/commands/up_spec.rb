@@ -11,9 +11,9 @@ describe Up do
 
   it 'pages when cursor set off page' do
     pos = TaskList::PAGE_SIZE - 1
-    actions =  50.times.map {|n| "L: task #{n}\n" }
-    output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,n == pos ? "-" : " " ,n] }
-    f_io.actions_content = actions.join
+    tasks  =  50.times.map {|n| "L: task #{n}\n" }
+    output =  50.times.map {|n| "%2d %s L: task %d\n" % [n,n == pos ? "-" : " " ,n] }
+    f_io.tasks_content = tasks.join
     ToDoPageDown.new.run("dd", session)
     CursorSet.new.run("c #{pos}", session)
     Up.new.run("d", session)

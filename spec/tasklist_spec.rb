@@ -151,7 +151,7 @@ describe TaskList do
    describe '#todo_save' do
      context 'when there are tasks in the list' do
        before do
-        io.actions_content = "L: task 1\nL: task 2\nL: task 3\n"
+        io.tasks_content = "L: task 1\nL: task 2\nL: task 3\n"
         io.today_content = Day.new(DateTime.new(2023, 6, 1))
         task_list.cursor_set(1)
       end
@@ -187,7 +187,7 @@ describe TaskList do
 
     context 'when the list is empty' do
       before do
-        io.actions_content = ""
+        io.tasks_content = ""
       end
 
       it 'does not append anything to the archive' do
@@ -199,13 +199,13 @@ describe TaskList do
       it 'does not modify the actions' do
         task_list.todo_save
 
-        expect(io.actions_content).to eq("")
+        expect(io.tasks_content).to eq("")
       end
     end
 
     context 'when the task at the cursor is empty' do
       before do
-        io.actions_content = "L: task 1\n\nL: task 3\n"
+        io.tasks_content = "L: task 1\n\nL: task 3\n"
         task_list.cursor_set(1)
       end
 
@@ -218,7 +218,7 @@ describe TaskList do
       it 'does not remove the empty task from the actions' do
         task_list.todo_save
 
-        expect(io.actions_content).to eq("L: task 1\n\nL: task 3\n")
+        expect(io.tasks_content).to eq("L: task 1\n\nL: task 3\n")
       end
     end
   end
@@ -226,7 +226,7 @@ describe TaskList do
     describe '#todo_save_no_remove' do
     context 'when there are tasks in the list' do
       before do
-        io.actions_content = "L: task 1\nL: task 2\nL: task 3\n"
+        io.tasks_content = "L: task 1\nL: task 2\nL: task 3\n"
         io.today_content = Day.new(DateTime.new(2023, 6, 1))
         task_list.cursor_set(1)
       end
@@ -240,7 +240,7 @@ describe TaskList do
       it 'does not remove the task at the cursor from the actions' do
         task_list.todo_save_no_remove
 
-        expect(io.actions_content).to eq("L: task 1\nL: task 2\nL: task 3\n")
+        expect(io.tasks_content).to eq("L: task 1\nL: task 2\nL: task 3\n")
       end
 
       it 'does not modify the cursor position' do
@@ -253,7 +253,7 @@ describe TaskList do
 
     context 'when the list is empty' do
       before do
-        io.actions_content = ""
+        io.tasks_content = ""
       end
 
       it 'does not append anything to the archive' do
@@ -265,13 +265,13 @@ describe TaskList do
       it 'does not modify the actions' do
         task_list.todo_save_no_remove
 
-        expect(io.actions_content).to eq("")
+        expect(io.tasks_content).to eq("")
       end
     end
 
     context 'when the task at the cursor is empty' do
       before do
-        io.actions_content = "L: task 1\n\nL: task 3\n"
+        io.tasks_content = "L: task 1\n\nL: task 3\n"
         task_list.cursor_set(1)
       end
 
@@ -284,7 +284,7 @@ describe TaskList do
       it 'does not modify the actions' do
         task_list.todo_save_no_remove
 
-        expect(io.actions_content).to eq("L: task 1\n\nL: task 3\n")
+        expect(io.tasks_content).to eq("L: task 1\n\nL: task 3\n")
       end
     end
   end
@@ -292,7 +292,7 @@ describe TaskList do
 
   describe '#up' do
     it 'moves the cursor up by one position' do
-      io.actions_content = "L: task 1\nL: task 2\nL: task 3\n"
+      io.tasks_content = "L: task 1\nL: task 2\nL: task 3\n"
 
       task_list.cursor_set(2)
 
@@ -303,7 +303,7 @@ describe TaskList do
     end
 
     it 'does not move the cursor if it is already at the first task' do
-      io.actions_content = "L: task 1\nL: task 2\nL: task 3\n"
+      io.tasks_content = "L: task 1\nL: task 2\nL: task 3\n"
       task_list.cursor_set(0)
 
       task_list.up
@@ -313,7 +313,7 @@ describe TaskList do
     end
 
     it 'moves the task above the cursor down when in grab mode' do
-      io.actions_content = "L: task 1\nL: task 2\nL: task 3\n"
+      io.tasks_content = "L: task 1\nL: task 2\nL: task 3\n"
 
       task_list.cursor_set(1)
       task_list.todo_grab_toggle
@@ -326,7 +326,7 @@ describe TaskList do
     end
 
     it 'does not move the task above the cursor down when not in grab mode' do
-      io.actions_content = "L: task 1\nL: task 2\nL: task 3\n"
+      io.tasks_content = "L: task 1\nL: task 2\nL: task 3\n"
 
       task_list.cursor_set(1)
 
@@ -339,7 +339,7 @@ describe TaskList do
   end
 
   it 'returns action at cursor when not empty' do
-    io.actions_content = "L: task AA\nL: task BB\n"
+    io.tasks_content = "L: task AA\nL: task BB\n"
     expect(task_list.action_at_cursor).to eq("L: task AA")
   end
 
@@ -348,12 +348,12 @@ describe TaskList do
   end
 
   it 'finds simple text' do
-    io.actions_content = "L: task AA\nL: task BB\n"
+    io.tasks_content = "L: task AA\nL: task BB\n"
     expect(task_list.find("AA")).to eq([" 0 L: task AA\n"])
   end
 
   it 'ignores case when it finds' do
-    io.actions_content = "L: task A\nL: task B\n"
+    io.tasks_content = "L: task A\nL: task B\n"
     expect(task_list.find("b")).to eq([" 1 L: task B\n"])
   end
 
@@ -378,21 +378,21 @@ describe TaskList do
   end
 
   it 'adds a task on an empty todo list' do
-    io.actions_content = ""
+    io.tasks_content = ""
     task_list.add("this is a test")
     task_list.render
     expect(io.console_output_content).to eq("\n\n 0 - this is a test\n\n")
   end
 
   it 'adds a task on an non-empty todo list' do
-    io.actions_content = "L: task A\n"
+    io.tasks_content = "L: task A\n"
     task_list.add("L: this is a test")
     task_list.render
     expect(io.console_output_content).to eq("\n\n 0 - L: this is a test\n 1   L: task A\n\n")
   end
 
   it 'moves the cursor on an add' do
-    io.actions_content = 50.times.map { "L: task\n" }.join
+    io.tasks_content = 50.times.map { "L: task\n" }.join
     task_list.todo_page_down
     task_list.add("L: new task")
     task_list.render
@@ -400,21 +400,21 @@ describe TaskList do
   end
 
   it 'does not write to archive when saving an empty todo list' do
-    io.actions_content = ""
+    io.tasks_content = ""
     task_list.todo_save
     task_list.render
     expect(io.archive_content).to eq("")
   end
 
   it 'does not write to archive when save_no_remove on an empty todo list' do
-    io.actions_content = ""
+    io.tasks_content = ""
     task_list.todo_save_no_remove
     task_list.render
     expect(io.archive_content).to eq("")
   end
 
   it 'pushes task at cursor to next day' do
-    io.actions_content = "L: task A\n"
+    io.tasks_content = "L: task A\n"
     io.update_content = ""
     io.today_content = Day.from_text("2022-12-21")
     task_list.todo_push "1"
@@ -433,7 +433,7 @@ describe TaskList do
   end
 
   xit 'edits a task with no tag' do
-    io.actions_content = "task\n"
+    io.tasks_content = "task\n"
     task_list.todo_edit "edited task"
 
     task_list.render
@@ -441,24 +441,24 @@ describe TaskList do
   end
 
   it 'preserves a tag on editing' do
-    io.actions_content = "L: task\n"
+    io.tasks_content = "L: task\n"
     task_list.todo_edit "edited task"
     task_list.render
     expect(io.console_output_content).to eq("\n\n 0 - L: edited task\n\n")
   end
 
   it 'can return 1 tag tally' do
-    io.actions_content = "L: task\n"
+    io.tasks_content = "L: task\n"
     expect(task_list.tag_tallies).to eq ([["L:", 1]])
   end
 
   it 'can return 2 tag tallies' do
-    io.actions_content = "L: task\nR: task\nR: task\n"
+    io.tasks_content = "L: task\nR: task\nR: task\n"
     expect(task_list.tag_tallies).to eq ([["L:",1],["R:", 2]])
   end
 
   it 'can return 2 tag tallies' do
-    io.actions_content = "L: task\nR: task\nutaski\nR: task\nutask\n"
+    io.tasks_content = "L: task\nR: task\nutaski\nR: task\nutask\n"
     expect(task_list.untagged_tally).to eq (2)
   end
 
