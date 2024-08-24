@@ -14,7 +14,7 @@ describe EditInsert do
       session.list.cursor_set(0)
 
       EditInsert.new.run("ei 2 new inserted", session)
-      session.list.render
+      session.render
 
       expect(f_io.console_output_content).to eq("\n\n 0 - L: task new inserted one two three\n\n")
     end
@@ -24,7 +24,7 @@ describe EditInsert do
       session.list.cursor_set(0)
 
       EditInsert.new.run("ei 1 prefix", session)
-      session.list.render
+      session.render
 
       expect(f_io.console_output_content).to eq("\n\n 0 - R: prefix existing task\n\n")
     end
@@ -34,7 +34,7 @@ describe EditInsert do
       session.list.cursor_set(0)
 
       EditInsert.new.run("ei 3 appended text", session)
-      session.list.render
+      session.render
 
       expect(f_io.console_output_content).to eq("\n\n 0 - W: end insertion appended text\n\n")
     end
@@ -44,7 +44,7 @@ describe EditInsert do
       session.list.cursor_set(0)
 
       EditInsert.new.run("ei 10 out of bounds", session)
-      session.list.render
+      session.render
 
       expect(f_io.console_output_content).to eq("\n\n 0 - L: unchanged task\n\n")
     end
@@ -54,7 +54,7 @@ describe EditInsert do
       session.list.cursor_set(0)
 
       EditInsert.new.run("ei 2 multiple new tokens here", session)
-      session.list.render
+      session.render
 
       expect(f_io.console_output_content).to eq("\n\n 0 - R: before multiple new tokens here after\n\n")
     end
@@ -64,7 +64,7 @@ describe EditInsert do
       session.list.cursor_set(0)
 
       EditInsert.new.run("ei 2", session)
-      session.list.render
+      session.render
 
       expect(f_io.console_output_content).to eq("\n\n 0 - W: no change\n\n")
     end
@@ -74,7 +74,7 @@ describe EditInsert do
       session.list.cursor_set(0)
 
       EditInsert.new.run("ei 1 inserted", session)
-      session.list.render
+      session.render
 
       expect(f_io.console_output_content).to eq("\n\n 0 - L: inserted preserve tag\n\n")
     end

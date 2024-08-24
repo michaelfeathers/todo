@@ -363,7 +363,7 @@ describe ToDoPageDown do
     tasks =  50.times.map {|n| "L: task #{n}\n" }
     output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
     f_io.tasks_content = tasks.join
-    session.list.render
+    session.render
     expect(f_io.console_output_content).to eq(RENDER_PAD + output.take(TaskList::PAGE_SIZE).join + "\n")
   end
 
@@ -372,7 +372,7 @@ describe ToDoPageDown do
     output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
     f_io.tasks_content = tasks.join
     ToDoPageDown.new.run("dd", session)
-    session.list.render
+    session.render
     expect(f_io.console_output_content).to eq(RENDER_PAD + output.drop(TaskList::PAGE_SIZE).take(TaskList::PAGE_SIZE).join + "\n")
   end
 
@@ -382,7 +382,7 @@ describe ToDoPageDown do
     f_io.tasks_content = tasks.join
     ToDoPageDown.new.run("dd", session)
     ToDoPageDown.new.run("dd", session)
-    session.list.render
+    session.render
     expect(f_io.console_output_content).to eq(RENDER_PAD + output.drop(TaskList::PAGE_SIZE).take(TaskList::PAGE_SIZE).join + "\n")
   end
 end
@@ -408,7 +408,7 @@ describe ToDoIterativeFind do
     f_io.tasks_content = tasks.join
     session.list.cursor_set(1)
     ToDoIterativeFind.new.run("ff token", session)
-    session.list.render
+    session.render
 
     expect(f_io.console_output_content).to eq(RENDER_PAD + output + "\n")
   end
@@ -429,7 +429,7 @@ describe ToDoIterativeFind do
     f_io.tasks_content = tasks.join
     session.list.cursor_set(1)
     ToDoIterativeFind.new.run("ff token", session)
-    session.list.render
+    session.render
 
     expect(f_io.console_output_content).to eq(RENDER_PAD + output + "\n")
   end
@@ -451,7 +451,7 @@ describe ToDoIterativeFind do
     session.list.cursor_set(1)
     ToDoIterativeFind.new.run("ff token", session)
     ToDoIterativeFind.new.run("ff", session)
-    session.list.render
+    session.render
 
     expect(f_io.console_output_content).to eq(RENDER_PAD + output + "\n")
   end
@@ -470,7 +470,7 @@ describe ToDoPageUp do
     output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
     f_io.tasks_content = tasks.join
     ToDoPageUp.new.run("uu", session)
-    session.list.render
+    session.render
     expect(f_io.console_output_content).to eq(RENDER_PAD + output.take(TaskList::PAGE_SIZE).join + "\n")
   end
 
@@ -480,7 +480,7 @@ describe ToDoPageUp do
     f_io.tasks_content = tasks.join
     ToDoPageDown.new.run("dd", session)
     ToDoPageUp.new.run("uu", session)
-    session.list.render
+    session.render
     expect(f_io.console_output_content).to eq(RENDER_PAD + output.take(TaskList::PAGE_SIZE).join + "\n")
   end
 
@@ -520,7 +520,7 @@ describe ToDoZapToPosition do
     f_io.tasks_content = [ "L: first\n", "L: second\n"].join
     output = RENDER_PAD + [" 0 - L: second\n", " 1   L: first\n\n"].join
     ToDoZapToPosition.new.run("z 1", session)
-    session.list.render
+    session.render
     expect(f_io.console_output_content).to eq(output)
 
   end
@@ -529,7 +529,7 @@ describe ToDoZapToPosition do
     f_io.tasks_content = [ "L: first\n", "L: second\n"].join
     output = RENDER_PAD + [" 0 - L: second\n", " 1   L: first\n\n"].join
     ToDoZapToPosition.new.run("z 2", session)
-    session.list.render
+    session.render
     expect(f_io.console_output_content).to eq(output)
 
   end
@@ -539,7 +539,7 @@ describe ToDoZapToPosition do
     output =  RENDER_PAD + [" 0   L: second\n", " 1 - L: first\n\n"].join
     CursorSet.new.run("c 1", session)
     ToDoZapToPosition.new.run("z -1", session)
-    session.list.render
+    session.render
     expect(f_io.console_output_content).to eq(output)
 
   end
@@ -548,7 +548,7 @@ describe ToDoZapToPosition do
     f_io.tasks_content = [ "L: first\n", "L: second\n"].join
     output =  RENDER_PAD + [" 0 - L: first\n", " 1   L: second\n\n"].join
     ToDoZapToPosition.new.run("z 0", session)
-    session.list.render
+    session.render
     expect(f_io.console_output_content).to eq(output)
   end
 
@@ -556,7 +556,7 @@ describe ToDoZapToPosition do
     f_io.tasks_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
     output =  RENDER_PAD + [" 0 - L: second\n", " 1   L: third\n 2   L: first\n\n"].join
     ToDoZapToPosition.new.run("z 2", session)
-    session.list.render
+    session.render
     expect(f_io.console_output_content).to eq(output)
   end
 
@@ -572,7 +572,7 @@ describe ToDoReTag do
     output =  RENDER_PAD + [ " 0   L: first\n", " 1 - R: second\n",  " 2   L: third\n\n"].join
     CursorSet.new.run("c 1", session)
     ToDoReTag.new.run("rt r", session)
-    session.list.render
+    session.render
     expect(f_io.console_output_content).to eq(output)
   end
 
@@ -580,7 +580,7 @@ describe ToDoReTag do
     f_io.tasks_content = ""
     output =  RENDER_PAD + "\n"
     ToDoReTag.new.run("rt r", session)
-    session.list.render
+    session.render
     expect(f_io.console_output_content).to eq(output)
    end
 
@@ -588,7 +588,7 @@ describe ToDoReTag do
      f_io.tasks_content = ["first\n"].join
      output =  RENDER_PAD + " 0 - L: first\n\n"
      ToDoReTag.new.run("rt l", session)
-     session.list.render
+     session.render
      expect(f_io.console_output_content).to eq(output)
    end
 
@@ -596,7 +596,7 @@ describe ToDoReTag do
      f_io.tasks_content = ["R: first\n"].join
      output =  RENDER_PAD + " 0 - R: first\n\n"
      ToDoReTag.new.run("rt", session)
-     session.list.render
+     session.render
      expect(f_io.console_output_content).to eq(output)
    end
 
@@ -634,11 +634,11 @@ describe ToDoSwitchLists do
   it 'switches away foreground' do
      f_io.tasks_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
      output = RENDER_PAD + " 0 - L: first\n 1   L: second\n 2   L: third\n\n"
-     session.list.render
+     session.render
      expect(session.list.io.console_output_content).to eq(output)
 
      ToDoSwitchLists.new.run("w", session)
-     session.list.render
+     session.render
      expect(session.list.io.console_output_content).to eq("BACKGROUND" + RENDER_PAD + "\n")
   end
 
@@ -648,11 +648,11 @@ describe ToDoSwitchLists do
      output_before = RENDER_PAD + [" 0 - L: first\n", " 1   L: second\n",  " 2   L: third\n\n"].join
      output_after  = "BACKGROUND" + RENDER_PAD + [" 0 - R: first\n 1   R: second\n 2   R: third\n\n"].join
 
-     session.list.render
+     session.render
      expect(session.list.io.console_output_content).to eq(output_before)
 
      ToDoSwitchLists.new.run("w", session)
-     session.list.render
+     session.render
      expect(session.list.io.console_output_content).to eq(output_after)
   end
 
@@ -662,7 +662,7 @@ describe ToDoSwitchLists do
     output_after  = "BACKGROUND" + RENDER_PAD + [" 0   R: first\n", " 1 - R: second\n", " 2   R: third\n\n"].join
 
     ToDoSwitchLists.new.run("w 1", session)
-    session.list.render
+    session.render
     expect(session.list.io.console_output_content).to eq(output_after)
   end
 
@@ -672,7 +672,7 @@ describe ToDoSwitchLists do
     output_after  = "BACKGROUND" + RENDER_PAD + [" 0 - R: first\n", " 1   R: second\n", " 2   R: third\n\n"].join
 
     ToDoSwitchLists.new.run("w", session)
-    session.list.render
+    session.render
     expect(session.list.io.console_output_content).to eq(output_after)
   end
 
@@ -689,7 +689,7 @@ describe ToDoInsertBlank do
     session.list.cursor_set(0)
 
     ToDoInsertBlank.new.run("i", session)
-    session.list.render
+    session.render
 
     expect(f_io.console_output_content).to eq("\n\n 0 - \n 1   L: task AA\n 2   L: task BB\n\n")
   end
@@ -716,7 +716,7 @@ describe ToDoEditReplace do
     session.list.cursor_set(1)
 
     ToDoEditReplace.new.run("er 2 bb", session)
-    session.list.render
+    session.render
 
     expect(f_io.console_output_content).to eq("\n\n 0   L: task AA\n 1 - L: task bb\n\n")
   end
@@ -726,7 +726,7 @@ describe ToDoEditReplace do
     session.list.cursor_set(0)
 
     ToDoEditReplace.new.run("er 2 new task there", session)
-    session.list.render
+    session.render
 
     expect(f_io.console_output_content).to eq("\n\n 0 - L: old new task there\n\n")
   end
@@ -736,7 +736,7 @@ describe ToDoEditReplace do
     session.list.cursor_set(0)
 
     ToDoEditReplace.new.run("er 2 new new", session)
-    session.list.render
+    session.render
 
     expect(f_io.console_output_content).to eq("\n\n 0 - L: old new new task\n\n")
   end
@@ -746,7 +746,7 @@ describe ToDoEditReplace do
     session.list.cursor_set(0)
 
     ToDoEditReplace.new.run("er 2 new new new", session)
-    session.list.render
+    session.render
 
     expect(f_io.console_output_content).to eq("\n\n 0 - L: old new new new\n\n")
   end
@@ -756,7 +756,7 @@ describe ToDoEditReplace do
     session.list.cursor_set(0)
 
     ToDoEditReplace.new.run("er 2", session)
-    session.list.render
+    session.render
 
     expect(f_io.console_output_content).to eq("\n\n 0 - L: this a task\n\n")
   end
@@ -786,7 +786,7 @@ describe ToDoZapToTop do
     f_io.tasks_content = tasks.join
     session.list.cursor_set(2)
     ToDoZapToTop.new.run("zz", session)
-    session.list.render
+    session.render
 
     expect(f_io.console_output_content).to eq(RENDER_PAD + output + "\n")
   end
@@ -810,7 +810,7 @@ describe ToDoZapToTop do
     f_io.tasks_content = tasks.join
     session.list.cursor_set(0)
     ToDoZapToTop.new.run("zz", session)
-    session.list.render
+    session.render
 
     expect(f_io.console_output_content).to eq(RENDER_PAD + output + "\n")
   end
