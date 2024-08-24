@@ -5,16 +5,12 @@ BACKGROUND_FILE = ROOT_DIR + "background_todo.txt"
 
 class BackgroundIo < AppIo
 
-  def read_tasks; read_actions; end
-
-  def read_actions
+  def read_tasks
     File.read(BACKGROUND_FILE)
   end
 
-  def write_tasks tasks; write_actions(tasks); end
-
-  def write_actions actions
-    File.open(BACKGROUND_FILE, 'w') { |f| f.write(actions.join) }
+  def write_tasks tasks
+    File.open(BACKGROUND_FILE, 'w') { |f| f.write(tasks.join) }
   end
 
 end

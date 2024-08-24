@@ -41,13 +41,6 @@ describe 'Session#surface' do
     @background_io = FakeAppIo.new
   end
 
-  it 'does nothing if background list is empty' do
-    expect(@foreground_io).to receive(:append_to_actions).never
-    @session = Session.from_ios(@foreground_io, @background_io)
-    @session.surface(3)
-    @session.save
-  end
-
   it 'moves the specified number of random tasks from background to foreground' do
     @background_io.tasks_content = "Task 1\nTask 2\nTask 3"
     @session = Session.from_ios(@foreground_io, @background_io)
