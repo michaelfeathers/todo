@@ -292,14 +292,20 @@ describe TaskList do
 
   describe '#up' do
     it 'moves the cursor up by one position' do
-      io.tasks_content = "L: task 1\nL: task 2\nL: task 3\n"
+      # io.tasks_content = "L: task 1\nL: task 2\nL: task 3\n"
+      task_list.add("L: T 3");
+      task_list.add("L: T 2");
+      task_list.add("L: T 1");
 
       task_list.cursor_set(2)
 
       task_list.up
       task_list.render
 
-      expect(io.console_output_content).to include(" 1 - L: task 2\n")
+      expect(task_list.window).to eq([[0, " ", "L: T 1\n"],
+                                      [1, "-", "L: T 2\n"],
+                                      [2, " ", "L: T 3\n"]])
+
     end
 
     it 'does not move the cursor if it is already at the first task' do

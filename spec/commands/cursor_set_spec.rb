@@ -17,6 +17,7 @@ describe CursorSet do
     f_io.tasks_content = tasks.join
     CursorSet.new.run("c #{pos}", session)
     session.render
+
     expect(f_io.console_output_content).to eq(RENDER_PAD + output.drop(TaskList::PAGE_SIZE).take(TaskList::PAGE_SIZE).join + "\n")
   end
 end
