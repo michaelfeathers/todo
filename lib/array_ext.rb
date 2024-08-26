@@ -6,12 +6,12 @@ class Array
     self
   end
 
-  def freq_by &block
-    group_by(&block).map {|k,v| [k, v.count] }.sort_by(&:first)
+  def freq_by(&block)
+    map(&block).tally.sort_by(&:first)
   end
 
   def freq
-    freq_by {|e| e }
+    tally.sort_by(&:first)
   end
 
   def second
