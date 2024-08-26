@@ -304,7 +304,7 @@ class TaskList
     @io.clear_console
     @io.append_to_console @description
 
-    lines = window.map {|line_no, cursor, line| "%2d %s %s" % [line_no, cursor, line] }
+    lines = window.map {|num, cursor, line| "%2d %s %s" % [num, cursor, line] }
                   .join
 
     @io.append_to_console lines + $/
@@ -343,12 +343,11 @@ class TaskList
        .freq
   end
 
-
   def tag_tallies
     @tasks.select {|l| l.strip.length > 0 }
-            .map {|l| l.split.first }
-            .select {|t| t =~ TAG_PATTERN }
-            .freq
+          .map {|l| l.split.first }
+          .select {|t| t =~ TAG_PATTERN }
+          .freq
   end
 
   def untagged_tally
