@@ -194,20 +194,6 @@ class ToDoTrend < Command
   end
 end
 
-class ToDoEdit < Command
-  def matches? line
-    (line.split in ["e", *args]) && args.count >= 1
-  end
-
-  def process line, session
-    session.list.todo_edit(line.split.drop(1).join(" "))
-  end
-
-  def description
-    CommandDesc.new("e  text", "edit task at cursor, replacing it with text")
-  end
-end
-
 class ToDoEditReplace < Command
   def matches? line
     (line.split in ["er", *args]) && args.count >= 1
