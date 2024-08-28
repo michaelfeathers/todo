@@ -89,7 +89,9 @@ class TaskList
   def todo_find text, limit = nil
     @io.clear_console
 
-    found = find(text)
+    found = @tasks.each_with_index
+                  .map {|e, i| "%2d %s" % [i, e] }
+                  .grep(/#{Regexp.escape text}/i)
     found_to_report = limit ? found.take(limit) : found
 
     report = "#{found_to_report.join}#{$/}#{found_to_report.count}#{$/}#{$/}#{$/}"
