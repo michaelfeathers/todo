@@ -154,7 +154,7 @@ class TaskList
     @io.get_from_console
   end
 
-  def todo_edit text
+  def edit text
     return if @tasks.empty?
     new_tokens = text.split
 
@@ -164,7 +164,7 @@ class TaskList
     update_task_at_cursor([tag, *new_tokens].join(' '))
   end
 
-  def todo_edit_replace position, new_tokens
+  def edit_replace position, new_tokens
     task = task_at_cursor
     return if task.nil?
 

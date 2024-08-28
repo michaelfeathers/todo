@@ -18,7 +18,7 @@ class EditReplace < Command
     position = tokens[1].to_i
     new_tokens = tokens.drop(2)
 
-    session.list.todo_edit_replace(position, new_tokens)
+    session.list.edit_replace(position, new_tokens)
   end
 
 end

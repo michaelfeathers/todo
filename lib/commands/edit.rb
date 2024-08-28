@@ -13,7 +13,7 @@ class Edit < Command
   end
 
   def process line, session
-    session.list.todo_edit(line.split.drop(1).join(" "))
+    session.list.edit(line.split.drop(1).join(" "))
   end
 
 end

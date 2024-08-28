@@ -86,7 +86,7 @@ describe TaskList do
 
     it 'lists all the commands' do
       NON_CMD_LINE_COUNT = 2
-      CURRENT_CMD_COUNT = 42
+      CURRENT_CMD_COUNT = 41
 
       commands = ObjectSpace.each_object(Class)
                             .select { |klass| klass < Command }
@@ -440,7 +440,7 @@ describe TaskList do
 
   xit 'edits a task with no tag' do
     io.tasks_content = "task\n"
-    task_list.todo_edit "edited task"
+    task_list.edit "edited task"
 
     task_list.render
     expect(io.console_output_content).to eq("\n\n 0 - edited task\n\n")
@@ -448,7 +448,7 @@ describe TaskList do
 
   it 'preserves a tag on editing' do
     io.tasks_content = "L: task\n"
-    task_list.todo_edit "edited task"
+    task_list.edit "edited task"
     task_list.render
     expect(io.console_output_content).to eq("\n\n 0 - L: edited task\n\n")
   end
