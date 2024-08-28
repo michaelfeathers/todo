@@ -11,6 +11,7 @@ require_relative 'lib/commands/display_edit'
 require_relative 'lib/commands/down'
 require_relative 'lib/commands/edit'
 require_relative 'lib/commands/edit_insert'
+require_relative 'lib/commands/edit_replace'
 require_relative 'lib/commands/quit'
 require_relative 'lib/commands/up'
 
@@ -28,7 +29,7 @@ class ToDo
                 Down.new,
                 Edit.new,
                 EditInsert.new,
-                ToDoEditReplace.new,
+                EditReplace.new,
                 ToDoFind.new,
                 ToDoGlobalFind.new,
                 ToDoGrabToggle.new,
