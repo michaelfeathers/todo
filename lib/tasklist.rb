@@ -297,7 +297,8 @@ class TaskList
   def window
     @tasks.zip((0..))
           .map {|e, i| [i, cursor_char(i), e] }
-          .drop(@page_no * PAGE_SIZE).take(PAGE_SIZE)
+          .drop(@page_no * PAGE_SIZE)
+          .take(PAGE_SIZE)
   end
 
   def render
