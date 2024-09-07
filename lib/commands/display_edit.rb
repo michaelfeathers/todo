@@ -13,20 +13,23 @@ class DisplayEdit < Command
   end
 
   def process(line, session)
-    io      = session.list.io
-    line    = session.list.task_at_cursor
+    session.on_list do |list|
+      line = list.task_at_cursor
+      return if line.split.empty?
 
-    return if line.split.empty?
+      session.message_and_wait(form_message(line))
+    end
+  end
 
-    tag, *words = line.split
+  def form_message text
+    tag, *words = text.split
 
-    task_line = words.join(' ')
+    task_line   = words.join(' ')
     index_line  = words.map
                        .with_index {|w,i| index_field(i + 1, field_size(w))  }
                        .join
 
-   io.append_to_console "#{tag} #{task_line}\n   #{index_line}\n\n"
-   io.get_from_console
+   "#{tag} #{task_line}\n   #{index_line}\n\n"
   end
 
   def field_size word

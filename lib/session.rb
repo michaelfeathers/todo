@@ -20,6 +20,11 @@ class Session
     load_command_log
   end
 
+  def on_list
+    yield @list
+  end
+
+
   def switch_lists(target_position = nil)
     toggle_active_list
     @list.cursor_set(target_position) if target_position

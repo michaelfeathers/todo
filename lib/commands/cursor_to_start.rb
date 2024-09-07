@@ -13,7 +13,9 @@ class CursorToStart < Command
   end
 
   def process(line, session)
-    session.list.cursor_set(0)
+    session.on_list do |list|
+      list.cursor_set(0)
+    end
   end
 
 end

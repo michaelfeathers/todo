@@ -13,7 +13,7 @@ class Down < Command
   end
 
   def process line, session
-    session.list.down
+    session.on_list {|list| list.down }
   end
 
 end

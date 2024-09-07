@@ -13,7 +13,7 @@ class Edit < Command
   end
 
   def process line, session
-    session.list.edit(line.split.drop(1).join(" "))
+    session.on_list {|list| list.edit(line.split.drop(1).join(" ")) }
   end
 
 end

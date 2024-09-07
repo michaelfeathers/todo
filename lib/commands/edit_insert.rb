@@ -17,7 +17,7 @@ class EditInsert < Command
     position = tokens[1].to_i
     insert_tokens = tokens[2..-1]
 
-    session.list.edit_insert(position, insert_tokens)
+    session.on_list {|list| list.edit_insert(position, insert_tokens) }
   end
 
 end
