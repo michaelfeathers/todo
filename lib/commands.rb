@@ -11,7 +11,7 @@ class ToDoTrendChart < Command
 
   def process line, session
     opt_year = line.split[1] if line.split.count == 2
-    session.list.todo_trend_chart opt_year
+    session.on_list {|list| list.todo_trend_chart(opt_year) }
   end
 
   def description
@@ -26,7 +26,7 @@ class ToDoFind < Command
 
   def process line, session
     limit = line.split.count == 3 ? line.split[2].to_i : nil
-    session.list.todo_find(line.split[1], limit)
+    session.on_list {|list| list.todo_find(line.split[1], limit) }
   end
 
   def description
@@ -54,7 +54,7 @@ class ToDoInsertBlank < Command
   end
 
   def process(line, session)
-    session.list.todo_insert_blank
+    session.on_list {|list| list.todo_insert_blank }
   end
 
   def description
@@ -68,7 +68,7 @@ class ToDoSaveActions < Command
   end
 
   def process(line, session)
-    session.list.todo_save_all
+    session.on_list {|list| list.save_all }
   end
 
   def description
@@ -82,7 +82,7 @@ class ToDoPush < Command
   end
 
   def process line, session
-    session.list.todo_push line.split[1]
+    session.on_list {|list| list.todo_push(line.split[1]) }
   end
 
   def description
@@ -96,7 +96,7 @@ class ToDoRemove < Command
   end
 
   def process line, session
-    session.list.todo_remove
+    session.on_list {|list| list.todo_remove }
   end
 
   def description
@@ -110,7 +110,7 @@ class ToDoSave < Command
   end
 
   def process line, session
-    session.list.todo_save
+    session.on_list {|list| list.todo_save }
   end
 
   def description
@@ -124,7 +124,7 @@ class ToDoSaveNoRemove < Command
   end
 
   def process line, session
-    session.list.todo_save_no_remove
+    session.on_list {|list| list.todo_save_no_remove }
   end
 
   def description
@@ -138,7 +138,7 @@ class ToDoShowUpdates < Command
   end
 
   def process line, session
-    session.list.todo_show_updates
+    session.on_list {|list| list.todo_show_updates }
   end
 
   def description
@@ -152,12 +152,14 @@ class ToDoIterativeFind < Command
   end
 
   def process(line, session)
-    tokens = line.split
-    if tokens.count > 1
-      text = tokens[1]
-      session.list.todo_iterative_find_init(text)
-    else
-      session.list.todo_iterative_find_continue
+    session.on_list do |list|
+      tokens = line.split
+      if tokens.count > 1
+        text = tokens[1]
+        list.todo_iterative_find_init(text)
+      else
+        list.todo_iterative_find_continue
+      end
     end
   end
 
@@ -172,7 +174,7 @@ class ToDoToday < Command
   end
 
   def process line, session
-    session.list.todo_today(line.split.count == 1 ? 0 : line.split[1])
+    session.on_list {|list| list.todo_today(line.split.count == 1 ? 0 : line.split[1]) }
   end
 
   def description
@@ -186,7 +188,7 @@ class ToDoTrend < Command
   end
 
   def process line, session
-    session.list.todo_trend
+    session.on_list {|list| list.todo_trend }
   end
 
   def description
@@ -200,7 +202,7 @@ class ToDoGrabToggle < Command
   end
 
   def process line, session
-    session.list.todo_grab_toggle
+    session.on_list {|list| list.todo_grab_toggle }
   end
 
   def description
@@ -229,7 +231,9 @@ class ToDoHelp < Command
   end
 
   def process line, session
-    session.list.todo_help(ToDo.registered_commands.map { |c| [c.description.name, c.description.line] })
+    session.on_list do |list|
+      list.todo_help(ToDo.registered_commands.map { |c| [c.description.name, c.description.line] })
+    end
   end
 
   def description
@@ -243,8 +247,10 @@ class ToDoMonthSummaries < Command
   end
 
   def process line, session
-    session.list.todo_month_summaries if line.split.count == 1
-    session.list.todo_month_summaries(line.split[1].to_i) if line.split.count == 2
+    session.on_list do |list|
+      list.todo_month_summaries if line.split.count == 1
+      list.todo_month_summaries(line.split[1].to_i) if line.split.count == 2
+    end
   end
 
   def description
@@ -258,7 +264,7 @@ class ToDoPageDown < Command
   end
 
   def process line, session
-    session.list.todo_page_down
+    session.on_list {|list| list.todo_page_down }
   end
 
   def description
@@ -272,7 +278,7 @@ class ToDoPageUp < Command
   end
 
   def process line, session
-    session.list.todo_page_up
+    session.on_list {|list| list.todo_page_up }
   end
 
   def description
@@ -286,7 +292,7 @@ class ToDoPrintArchive < Command
   end
 
   def process line, session
-    session.list.todo_print_archive
+    session.on_list {|list| list.todo_print_archive }
   end
 
   def description
@@ -300,7 +306,7 @@ class ToDoZapToPosition < Command
   end
 
   def process line, session
-    session.list.todo_zap_to_position(line.split[1].to_i)
+    session.on_list {|list| list.todo_zap_to_position(line.split[1].to_i) }
   end
 
   def description
@@ -314,7 +320,7 @@ class ToDoTodayTargetFor < Command
   end
 
   def process line, session
-    session.list.todo_today_target_for(line.split[1].to_i)
+    session.on_list {|list| list.todo_today_target_for(line.split[1].to_i) }
   end
 
   def description
@@ -343,7 +349,7 @@ class ToDoReTag < Command
   end
 
   def process line, session
-    session.list.todo_retag(line.split[1])
+    session.on_list {|list| list.todo_retag(line.split[1]) }
   end
 
   def description
@@ -357,7 +363,7 @@ class ToDoTagTallies < Command
   end
 
   def process line, session
-    session.list.todo_tag_tallies
+    session.on_list {|list| list.todo_tag_tallies }
   end
 
   def description
@@ -406,7 +412,7 @@ class ToDoShowCommandFrequencices  < Command
   end
 
   def process line, session
-    session.list.todo_show_command_frequencies
+    session.on_list {|list| list.todo_show_command_frequencies }
   end
 
   def description
@@ -420,7 +426,7 @@ class ToDoZapToTop < Command
   end
 
   def process(line, session)
-    session.list.todo_zap_to_top
+    session.on_list {|list| list.todo_zap_to_top }
   end
 
   def description
