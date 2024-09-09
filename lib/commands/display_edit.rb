@@ -14,10 +14,10 @@ class DisplayEdit < Command
 
   def process(line, session)
     session.on_list do |list|
-      line = list.task_at_cursor
-      return if line.split.empty?
+      task_line = list.task_at_cursor
+      return if task_line.split.empty?
 
-      session.message_and_wait(form_message(line))
+      session.message_and_wait(form_message(task_line))
     end
   end
 
