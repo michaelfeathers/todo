@@ -14,6 +14,7 @@ require_relative 'lib/commands/edit_insert'
 require_relative 'lib/commands/edit_replace'
 require_relative 'lib/commands/find'
 require_relative 'lib/commands/global_find'
+require_relative 'lib/commands/grab_toggle'
 require_relative 'lib/commands/quit'
 require_relative 'lib/commands/up'
 
@@ -34,7 +35,7 @@ class ToDo
                 EditReplace.new,
                 Find.new,
                 GlobalFind.new,
-                ToDoGrabToggle.new,
+                GrabToggle.new,
                 ToDoHelp.new,
                 ToDoInsertBlank.new,
                 ToDoIterativeFind.new,
