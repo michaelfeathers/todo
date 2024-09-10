@@ -196,22 +196,6 @@ class ToDoMoveToRandomPositionOnOtherList < Command
   end
 end
 
-class ToDoHelp < Command
-  def matches? line
-    line.split == ["h"]
-  end
-
-  def process line, session
-    session.on_list do |list|
-      list.todo_help(ToDo.registered_commands.map { |c| [c.description.name, c.description.line] })
-    end
-  end
-
-  def description
-    CommandDesc.new("h", "show help message")
-  end
-end
-
 class ToDoMonthSummaries < Command
   def matches? line
     (line.split in ["m", *args]) && args.count <= 1

@@ -15,6 +15,7 @@ require_relative 'lib/commands/edit_replace'
 require_relative 'lib/commands/find'
 require_relative 'lib/commands/global_find'
 require_relative 'lib/commands/grab_toggle'
+require_relative 'lib/commands/help'
 require_relative 'lib/commands/quit'
 require_relative 'lib/commands/up'
 
@@ -36,7 +37,7 @@ class ToDo
                 Find.new,
                 GlobalFind.new,
                 GrabToggle.new,
-                ToDoHelp.new,
+                Help.new,
                 ToDoInsertBlank.new,
                 ToDoIterativeFind.new,
                 ToDoMonthSummaries.new,
