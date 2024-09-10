@@ -1,4 +1,4 @@
-ROOT_DIR     = "/Users/michaelfeathers/Projects/todo/lib/"
+ROOT_DIR     = "/Users/michaelfeathers/Projects/todo/lib/data/"
 TODO_FILE    = ROOT_DIR + "todo.txt"
 UPDATE_FILE  = ROOT_DIR + "updates.txt"
 ARCHIVE_FILE = ROOT_DIR + "archive.txt"
