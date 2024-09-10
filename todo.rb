@@ -13,6 +13,7 @@ require_relative 'lib/commands/edit'
 require_relative 'lib/commands/edit_insert'
 require_relative 'lib/commands/edit_replace'
 require_relative 'lib/commands/find'
+require_relative 'lib/commands/global_find'
 require_relative 'lib/commands/quit'
 require_relative 'lib/commands/up'
 
@@ -32,7 +33,7 @@ class ToDo
                 EditInsert.new,
                 EditReplace.new,
                 Find.new,
-                ToDoGlobalFind.new,
+                GlobalFind.new,
                 ToDoGrabToggle.new,
                 ToDoHelp.new,
                 ToDoInsertBlank.new,
