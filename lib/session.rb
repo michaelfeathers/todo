@@ -115,10 +115,6 @@ class Session
     other_list.todo_zap_to_position(random_position)
   end
 
-  def get_line
-    @list.io.get_from_console.chomp
-  end
-
   def message_and_wait text
     @list.io.append_to_console text
     @list.io.get_from_console
