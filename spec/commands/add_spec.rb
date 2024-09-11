@@ -3,8 +3,6 @@ require 'session'
 require 'commands/add'
 require 'fakeappio'
 
-RENDER_PAD = "\n\n"
-
 
 describe Add do
   let(:f_io) { FakeAppIo.new }
