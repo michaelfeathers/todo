@@ -28,17 +28,6 @@ class TaskList
     @tasks.empty?
   end
 
-  def todo_help command_list
-    max_length = command_list.map {|cmd| cmd[0].length }.max
-
-    output = command_list.sort_by(&:first)
-                         .map {|name, desc| "%-#{max_length + 5}s- %s" % [name, desc] }
-                         .join($/)
-
-    @io.append_to_console $/ + "#{output}" + $/ + $/
-    @io.get_from_console
-  end
-
   def add task_line
     @tasks = [task_line + $/] + @tasks
     @cursor = 0
