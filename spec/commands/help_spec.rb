@@ -69,7 +69,7 @@ describe Help do
 
   it 'lists all the commands' do
     NON_CMD_LINE_COUNT = 2
-    CURRENT_CMD_COUNT = 40
+    CURRENT_CMD_COUNT = 41
 
     commands = ObjectSpace.each_object(Class)
                           .select { |klass| klass < Command }
