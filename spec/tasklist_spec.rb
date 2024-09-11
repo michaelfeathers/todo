@@ -3,6 +3,7 @@ require 'tasklist'
 require 'fakeappio'
 
 require 'commands/add'
+require 'commands/Help'
 
 
 empty_archive_expected = "
@@ -35,9 +36,19 @@ TEST_COLUMNS = [["Win",   ->(tasks) { tasks.W.count } ],
                 ["Adjusted", ->(tasks) { tasks.adjusted_count } ]]
 
 
+class TestingHelp < Help
+  attr_accessor :descs
+
+  def command_descs
+    @descs
+  end
+end
+
 describe TaskList do
   let(:io) { FakeAppIo.new }
   let(:task_list) { TaskList.new(io) }
+  let(:session) { Session.from_ios(io, io) }
+  let(:help_command) { TestingHelp.new }
 
    describe '#todo_help' do
     it 'displays help information for each command' do
@@ -47,7 +58,9 @@ describe TaskList do
         ["cmd3", "description 3"]
       ]
 
-      task_list.todo_help(commands)
+      help_command = TestingHelp.new
+      help_command.descs = commands
+      help_command.run("h", session)
 
       expect(io.console_output_content).to include("cmd1     - description 1")
       expect(io.console_output_content).to include("cmd2     - description 2")
@@ -68,7 +81,9 @@ describe TaskList do
 
       expected_output = "\n" + sorted_commands.map { |cmd| format % cmd }.join("\n") + "\n\n"
 
-      task_list.todo_help(sorted_commands)
+      help_command = TestingHelp.new
+      help_command.descs = sorted_commands
+      help_command.run("h", session)
 
       expect(io.console_output_content).to eq(expected_output)
     end
@@ -81,20 +96,23 @@ describe TaskList do
 
       expect(io).to receive(:get_from_console)
 
-      task_list.todo_help(commands)
+      help_command = TestingHelp.new
+      help_command.descs = commands
+      help_command.run("h", session)
     end
 
     it 'lists all the commands' do
       NON_CMD_LINE_COUNT = 2
-      CURRENT_CMD_COUNT = 41
+      CURRENT_CMD_COUNT = 40
 
       commands = ObjectSpace.each_object(Class)
                             .select { |klass| klass < Command }
                             .sort_by { |klass| klass.name }
                             .map {|k| k.new.description }
 
-      task_list.todo_help(commands)
-      task_list.render
+      help = TestingHelp.new
+      help.descs = commands
+      help.run("h", session)
 
       expect(io.console_output_content.lines.count - NON_CMD_LINE_COUNT).to eq(CURRENT_CMD_COUNT)
     end

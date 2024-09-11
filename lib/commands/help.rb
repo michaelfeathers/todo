@@ -10,8 +10,12 @@ class Help < Command
 
   def process line, session
     session.on_list do |list|
-      list.todo_help(ToDo.registered_commands.map { |c| [c.description.name, c.description.line] })
+      list.todo_help(command_descs)
     end
+  end
+
+  def command_descs
+    ToDo.registered_commands.map {|c| [*c.description] }
   end
 
   def description
