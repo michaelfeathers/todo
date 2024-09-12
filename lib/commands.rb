@@ -19,20 +19,6 @@ class ToDoTrendChart < Command
   end
 end
 
-class ToDoInsertBlank < Command
-  def matches?(line)
-    line.split == ["i"]
-  end
-
-  def process(line, session)
-    session.on_list {|list| list.todo_insert_blank }
-  end
-
-  def description
-    CommandDesc.new("i", "insert a blank line at the cursor")
-  end
-end
-
 class ToDoSaveActions < Command
   def matches?(line)
     line.split == ["@"]
@@ -315,12 +301,10 @@ class ToDoSwitchLists < Command
   end
 
   def process line, session
+    target_position = nil
     tokens = line.split
-    if tokens.count == 2
-      target_position = tokens[1].to_i
-    else
-      target_position = nil
-    end
+
+    target_position = tokens[1].to_i if tokens.count == 2
 
     session.switch_lists(target_position)
   end
