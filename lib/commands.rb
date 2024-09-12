@@ -330,20 +330,6 @@ class ToDoSwitchLists < Command
   end
 end
 
-class ToDoMoveTaskToOther < Command
-  def matches? line
-    line.split == ["-"]
-  end
-
-  def process line, session
-    session.move_task_to_other
-  end
-
-  def description
-    CommandDesc.new("-", "move task to other list")
-  end
-end
-
 class ToDoShowCommandFrequencices  < Command
   def matches? line
     line.split == ["sf"]
