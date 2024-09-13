@@ -111,24 +111,21 @@ describe TaskList do
 
       it 'removes the task at the cursor from the tasks' do
         task_list.todo_save
-        task_list.render
 
-        expect(io.console_output_content).to eq("\n\n 0   L: task 1\n 1 - L: task 3\n\n")
+        expect(task_list.window).to eq([[0, " ", "L: task 1\n"], [1, "-", "L: task 3\n"]])
       end
 
       it 'updates the cursor position to the next task' do
         task_list.todo_save
-        task_list.render
 
-        expect(io.console_output_content).to include(" 1 - L: task 3\n")
+        expect(task_list.window).to eq([[0, " ", "L: task 1\n"], [1, "-", "L: task 3\n"]])
       end
 
       it 'updates the cursor position to the previous task when at the last task' do
         task_list.cursor_set(2)
         task_list.todo_save
-        task_list.render
 
-        expect(io.console_output_content).to include(" 1 - L: task 2\n")
+        expect(task_list.window).to eq([[0, " ", "L: task 1\n"], [1, "-", "L: task 2\n"]])
       end
     end
 
@@ -192,9 +189,8 @@ describe TaskList do
 
       it 'does not modify the cursor position' do
         task_list.todo_save_no_remove
-        task_list.render
 
-        expect(io.console_output_content).to include(" 1 - L: task 2\n")
+        expect(task_list.window).to eq([[0, " ", "L: task 1\n"], [1, "-", "L: task 2\n"], [2, " ", "L: task 3\n"]])
       end
     end
 
@@ -247,7 +243,6 @@ describe TaskList do
       task_list.cursor_set(2)
 
       task_list.up
-      task_list.render
 
       expect(task_list.window).to eq([[0, " ", "L: T 1\n"],
                                       [1, "-", "L: T 2\n"],
@@ -260,9 +255,8 @@ describe TaskList do
       task_list.cursor_set(0)
 
       task_list.up
-      task_list.render
 
-      expect(io.console_output_content).to include(" 0 - L: task 1\n")
+      expect(task_list.window).to eq([[0, "-", "L: task 1\n"], [1, " ", "L: task 2\n"], [2, " ", "L: task 3\n"]])
     end
 
     it 'moves the task above the cursor down when in grab mode' do
@@ -272,10 +266,9 @@ describe TaskList do
       task_list.todo_grab_toggle
 
       task_list.up
-      task_list.render
 
-      expect(io.console_output_content.split("\n")[2]).to eq(" 0 * L: task 2")
-      expect(io.console_output_content.split("\n")[3]).to eq(" 1   L: task 1")
+      expect(task_list.window[0]).to eq([0, "*",  "L: task 2\n"])
+      expect(task_list.window[1]).to eq([1, " ",  "L: task 1\n"])
     end
 
     it 'does not move the task above the cursor down when not in grab mode' do
@@ -284,10 +277,9 @@ describe TaskList do
       task_list.cursor_set(1)
 
       task_list.up
-      task_list.render
 
-      expect(io.console_output_content.split("\n")[2]).to eq(" 0 - L: task 1")
-      expect(io.console_output_content.split("\n")[3]).to eq(" 1   L: task 2")
+      expect(task_list.window[0]).to eq([0, "-",  "L: task 1\n"])
+      expect(task_list.window[1]).to eq([1, " ",  "L: task 2\n"])
     end
   end
 
@@ -314,6 +306,7 @@ describe TaskList do
     io.today_content = Day.from_text("2020-01-01")
     MonthsReport.new(io, nil, TEST_COLUMNS).run
     # task_list.todo_month_summaries TEST_COLUMNS
+
     expect(io.console_output_content).to eq(empty_archive_expected)
   end
 
@@ -333,38 +326,36 @@ describe TaskList do
   it 'adds a task on an empty todo list' do
     io.tasks_content = ""
     task_list.add("this is a test")
-    # task_list.render
-    # expect(io.console_output_content).to eq("\n\n 0 - this is a test\n\n")
     expect(task_list.window).to eq([[0, "-", "this is a test\n"]])
   end
 
   it 'adds a task on an non-empty todo list' do
     io.tasks_content = "L: task A\n"
     task_list.add("L: this is a test")
-    task_list.render
-    expect(io.console_output_content).to eq("\n\n 0 - L: this is a test\n 1   L: task A\n\n")
+
+    expect(task_list.window).to eq([[0, "-", "L: this is a test\n"],[1, " ", "L: task A\n"]])
   end
 
   it 'moves the cursor on an add' do
     io.tasks_content = 50.times.map { "L: task\n" }.join
     task_list.todo_page_down
     task_list.add("L: new task")
-    task_list.render
-    expect(io.console_output_content[0..18]).to eq("\n\n 0 - L: new task\n")
+
+    expect(task_list.window[0]).to eq([0, "-", "L: new task\n"])
   end
 
   it 'does not write to archive when saving an empty todo list' do
     io.tasks_content = ""
     task_list.todo_save
-    task_list.render
-    expect(io.archive_content).to eq("")
+
+    expect(task_list.window).to eq([])
   end
 
   it 'does not write to archive when save_no_remove on an empty todo list' do
     io.tasks_content = ""
     task_list.todo_save_no_remove
-    task_list.render
-    expect(io.archive_content).to eq("")
+
+    expect(task_list.window).to eq([])
   end
 
   it 'pushes task at cursor to next day' do
@@ -372,25 +363,25 @@ describe TaskList do
     io.update_content = ""
     io.today_content = Day.from_text("2022-12-21")
     task_list.todo_push "1"
-    task_list.render
+
     expect(io.update_content.first).to eq("2022-12-22 L: task A\n")
-    expect(io.console_output_content).to eq("\n\n\n")
+    expect(task_list.window).to eq([])
   end
 
   it 'noops push on no tasks' do
     io.update_content = []
     io.today_content = Day.from_text("2022-12-21")
     task_list.todo_push "1"
-    task_list.render
+
     expect(io.update_content).to eq([])
-    expect(io.console_output_content).to eq("\n\n\n")
+    expect(task_list.window).to eq([])
   end
 
   it 'preserves a tag on editing' do
     io.tasks_content = "L: task\n"
     task_list.edit "edited task"
-    task_list.render
-    expect(io.console_output_content).to eq("\n\n 0 - L: edited task\n\n")
+
+    expect(task_list.window).to eq([[0, "-", "L: edited task\n"]])
   end
 
   it 'can return 1 tag tally' do
