@@ -333,8 +333,9 @@ describe TaskList do
   it 'adds a task on an empty todo list' do
     io.tasks_content = ""
     task_list.add("this is a test")
-    task_list.render
-    expect(io.console_output_content).to eq("\n\n 0 - this is a test\n\n")
+    # task_list.render
+    # expect(io.console_output_content).to eq("\n\n 0 - this is a test\n\n")
+    expect(task_list.window).to eq([[0, "-", "this is a test\n"]])
   end
 
   it 'adds a task on an non-empty todo list' do
