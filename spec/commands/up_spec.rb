@@ -19,7 +19,7 @@ describe Up do
     CursorSet.new.run("c #{pos}", session)
 
     Up.new.run("d", session)
-    session.list.render
+    session.render
 
     expect(f_io.console_output_content).to eq(RENDER_PAD + output.take(TaskList::PAGE_SIZE).join + "\n")
   end

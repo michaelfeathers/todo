@@ -288,18 +288,6 @@ class TaskList
           .take(PAGE_SIZE)
   end
 
-  def render
-    return if @io.suppress_render_list
-
-    @io.clear_console
-    @io.append_to_console @description
-
-    lines = window.map {|num, cursor, line| "%2d %s %s" % [num, cursor, line] }
-                  .join
-
-    @io.append_to_console lines + $/
-  end
-
   def adjust_page
     @page_no = @cursor / PAGE_SIZE
   end

@@ -137,9 +137,4 @@ class Session
     io.append_to_console lines + $/
   end
 
-  # def render
-  #  @list.render
-  # end
-
-
 end
