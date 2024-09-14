@@ -125,16 +125,15 @@ class Session
   end
 
   def render
-    io = @list.io
-    return if io.suppress_render_list
+    return if @list.io.suppress_render_list
 
-    io.clear_console
-    io.append_to_console @list.description
+    @list.io.clear_console
+    @list.io.append_to_console @list.description
 
     lines = @list.window.map {|num, cursor, line| "%2d %s %s" % [num, cursor, line] }
                         .join
 
-    io.append_to_console lines + $/
+    @list.io.append_to_console lines + $/
   end
 
 end
