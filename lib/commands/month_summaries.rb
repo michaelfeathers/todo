@@ -10,8 +10,13 @@ class MonthSummaries < Command
 
   def process line, session
     session.on_list do |list|
-      list.todo_month_summaries                     if line.split.count == 1
-      list.todo_month_summaries(line.split[1].to_i) if line.split.count == 2
+      tokens = line.split
+      case tokens.count
+      when 1
+        list.todo_month_summaries
+      when 2
+        list.todo_month_summaries(tokens[1].to_i)
+      end
     end
   end
 
