@@ -18,6 +18,10 @@ class FakeAppIo
     @archive_content
   end
 
+  def write_archive archive_entries
+    @archive_content = archive_entries.join
+  end
+
   def read_log
     @log_content
   end

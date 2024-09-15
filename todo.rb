@@ -20,6 +20,7 @@ require_relative 'lib/commands/insert_blank'
 require_relative 'lib/commands/iterative_find'
 require_relative 'lib/commands/month_summaries'
 require_relative 'lib/commands/move_task_to_other'
+require_relative 'lib/commands/save_to_yesterday'
 require_relative 'lib/commands/quit'
 require_relative 'lib/commands/up'
 
@@ -57,6 +58,7 @@ class ToDo
                 ToDoSave.new,
                 ToDoSaveActions.new,
                 ToDoSaveNoRemove.new,
+                SaveToYesterday.new,
                 ToDoShowCommandFrequencices.new,
                 ToDoShowUpdates.new,
                 ToDoSurface.new,

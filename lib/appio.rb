@@ -11,6 +11,10 @@ class AppIo
     File.read(ARCHIVE_FILE)
   end
 
+  def write_archive archive_entries
+    File.open(ARCHIVE_FILE, 'w') { |f| f.write(archive_entries.join) }
+  end
+
   def append_to_archive line
     File.open(ARCHIVE_FILE, 'a') { |f| f.write(line); }
   end
