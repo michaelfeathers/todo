@@ -15,10 +15,11 @@ class SaveToYesterday < Command
        return if task.strip.empty?
 
        yesterday = list.io.today.with_fewer_days(1)
-       entries = list.io.read_archive
-                        .lines
-                        .append("#{yesterday} #{task}\n")
-                        .sort_by {|line| line.split.first }
+       entries   = list.io.read_archive
+                          .lines
+                          .append("#{yesterday} #{task}\n")
+                          .sort_by {|line| line.split.first }
+
        list.io.write_archive(entries)
        list.remove_task_at_cursor
      end
