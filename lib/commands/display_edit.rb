@@ -17,11 +17,11 @@ class DisplayEdit < Command
       task_line = list.task_at_cursor
       return if task_line.split.empty?
 
-      session.message_and_wait(form_message(task_line))
+      session.message_and_wait(message(task_line))
     end
   end
 
-  def form_message text
+  def message text
     tag, *words = text.split
 
     task_line   = words.join(' ')

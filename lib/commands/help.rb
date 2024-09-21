@@ -15,11 +15,7 @@ class Help < Command
                           .map {|name, desc| "%-#{max_length + 5}s- %s" % [name, desc] }
                           .join($/)
 
-    session.on_list do |list|
-      list.io.append_to_console $/ + "#{output}" + $/ + $/
-      list.io.get_from_console
-    end
-
+    session.message_and_wait $/ + "#{output}" + $/ + $/
   end
 
   def command_descs
