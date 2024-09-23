@@ -42,8 +42,10 @@ class TaskSelection
   end
 
   def adjusted_count
-    win_multiplier = 5
-    count + (win_multiplier - 1) * @descs.select {|d| d.task_type == "W"}.count
+    points_for_wins       = 5 * self.W.count
+    points_for_all_others = count - self.W.count
+
+    points_for_wins + points_for_all_others
   end
 
   def count
