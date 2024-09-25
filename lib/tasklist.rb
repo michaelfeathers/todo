@@ -313,12 +313,13 @@ class TaskList
     @tasks[@cursor].chomp
   end
 
-  def day_frequencies year = nil
-    @io.read_archive
-       .lines
-       .map {|line| line.split.first }
-       .select {|d| !year || Day.from_text(d).year ==  year }
-       .freq
+  def todo_tag_tallies
+    mask = "   %-10s%3d"
+    tagged = tag_tallies.map {|t, n| mask % [t, n] }.join($/)
+    untagged = mask % ["Untagged", untagged_tally]
+
+    @io.append_to_console $/ + $/ + "#{tagged}\n\n#{untagged}" + $/ + $/
+    @io.get_from_console
   end
 
   def tag_tallies
@@ -333,15 +334,6 @@ class TaskList
             .map {|l| l.split.first }
             .reject {|t| t =~ TAG_PATTERN }
             .count
-  end
-
-  def todo_tag_tallies
-    mask = "   %-10s%3d"
-    tagged = tag_tallies.map {|t, n| mask % [t, n] }.join($/)
-    untagged = mask % ["Untagged", untagged_tally]
-
-    @io.append_to_console $/ + $/ + "#{tagged}\n\n#{untagged}" + $/ + $/
-    @io.get_from_console
   end
 
   def todo_show_command_frequencies
@@ -385,12 +377,22 @@ class TaskList
     todo_zap_to_position(0)
   end
 
-  def update_task_at_cursor task_text
-    @tasks[@cursor] = task_text + $/
+  def count
+      @tasks.count
   end
 
-  def count
-    @tasks.count
+  private
+
+  def day_frequencies year = nil
+    @io.read_archive
+       .lines
+       .map {|line| line.split.first }
+       .select {|d| !year || Day.from_text(d).year ==  year }
+       .freq
+  end
+
+  def update_task_at_cursor task_text
+    @tasks[@cursor] = task_text + $/
   end
 
 end
