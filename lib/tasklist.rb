@@ -378,7 +378,7 @@ class TaskList
   end
 
   def count
-      @tasks.count
+    @tasks.count
   end
 
   private
