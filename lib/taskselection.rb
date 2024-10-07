@@ -8,18 +8,6 @@ class TaskSelection
     @descs = descs
   end
 
-  def L
-    TaskSelection.new(@descs.select{|d| d.task_type == "L" })
-  end
-
-  def R
-    TaskSelection.new(@descs.select{|d| d.task_type == "R" })
-  end
-
-  def W
-    TaskSelection.new(@descs.select{|d| d.task_type == "W" })
-  end
-
   def year year
     TaskSelection.new(@descs.select {|d| d.date.year.to_i == year })
   end
@@ -47,8 +35,19 @@ class TaskSelection
 
     points_for_wins + points_for_all_others
   end
-
   def count
     @descs.count
+  end
+
+  def method_missing(method_name, *args, &block)
+    if method_name.to_s.match?(/^[A-Z]$/) && args.empty? && !block_given?
+      TaskSelection.new(@descs.select { |d| d.task_type == method_name.to_s })
+    else
+      super
+    end
+  end
+
+  def respond_to_missing?(method_name, include_private = false)
+    method_name.to_s.match?(/^[A-Z]$/) || super
   end
 end
