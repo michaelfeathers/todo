@@ -3,8 +3,10 @@ require_relative 'taskdesc'
 require_relative 'appio'
 
 
-def month_name_of month_no
-  DateTime.parse("2023-#{month_no}-01").strftime("%b")
+MONTH_NAMES = %w[Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec].freeze
+
+def month_name_of(month_no)
+  MONTH_NAMES[month_no - 1] || ''
 end
 
 
