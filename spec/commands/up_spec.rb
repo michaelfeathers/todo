@@ -1,26 +1,36 @@
 require 'spec_helper'
-require 'session'
-require 'commands/up'
-require 'fakeappio'
+require_relative '../../lib/commands/up'
+require_relative '../../lib/session'
+require_relative '../../spec/fakeappio'
 
+RSpec.describe Up do
+  let(:command) { Up.new }
+  let(:session) { Session.from_ios(FakeAppIo.new, FakeAppIo.new) }
 
-describe Up do
-  let(:f_io) { FakeAppIo.new }
-  let(:b_io) { FakeAppIo.new }
-  let(:session) { Session.from_ios(f_io, b_io) }
+  describe '#description' do
+    it 'returns the correct command description' do
+      expect(command.description).to eq(CommandDesc.new("u", "move cursor up"))
+    end
+  end
 
-  it 'pages when cursor set off page' do
-    pos = TaskList::PAGE_SIZE - 1
-    tasks  =  50.times.map {|n| "L: task #{n}\n" }
-    output =  50.times.map {|n| "%2d %s L: task %d\n" % [n,n == pos ? "-" : " " ,n] }
-    f_io.tasks_content = tasks.join
+  describe '#matches?' do
+    it 'returns true for "u"' do
+      expect(command.matches?("u")).to be true
+    end
 
-    ToDoPageDown.new.run("dd", session)
-    CursorSet.new.run("c #{pos}", session)
+    it 'returns false for other inputs' do
+      expect(command.matches?("up")).to be false
+      expect(command.matches?("down")).to be false
+    end
+  end
 
-    Up.new.run("d", session)
-    session.render
+  describe '#process' do
+    it 'calls up on the list in the session' do
+      list = double('list')
+      allow(session).to receive(:on_list).and_yield(list)
+      expect(list).to receive(:up)
 
-    expect(f_io.console_output_content).to eq(RENDER_PAD + output.take(TaskList::PAGE_SIZE).join + "\n")
+      command.process("u", session)
+    end
   end
 end

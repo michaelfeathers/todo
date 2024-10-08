@@ -13,7 +13,7 @@ class Up < Command
   end
 
   def process line, session
-    sesson.on_list {|list| list.up }
+    session.on_list {|list| list.up }
   end
 
 end
