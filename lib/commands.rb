@@ -108,15 +108,10 @@ class ToDoIterativeFind < Command
     (line.split in ["ff", *args]) && args.count <= 1
   end
 
-  def process(line, session)
+  def process line, session
     session.on_list do |list|
-      tokens = line.split
-      if tokens.count > 1
-        text = tokens[1]
-        list.todo_iterative_find_init(text)
-      else
-        list.todo_iterative_find_continue
-      end
+      text = line.split[1]
+      text ? list.todo_iterative_find_init(text) : list.todo_iterative_find_continue
     end
   end
 
