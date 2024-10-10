@@ -2,6 +2,7 @@
 require_relative '../command'
 require_relative '../session'
 
+
 class EditInsert < Command
 
   def description
