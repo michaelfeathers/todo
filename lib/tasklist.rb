@@ -323,17 +323,11 @@ class TaskList
   end
 
   def tag_tallies
-    @tasks.select {|l| l.strip.length > 0 }
-          .map {|l| l.split.first }
-          .select {|t| t =~ TAG_PATTERN }
-          .freq
+    filter_tasks(:select).freq
   end
 
   def untagged_tally
-    @tasks.select {|l| l.strip.length > 0 }
-            .map {|l| l.split.first }
-            .reject {|t| t =~ TAG_PATTERN }
-            .count
+    filter_tasks(:reject).count
   end
 
   def todo_show_command_frequencies
@@ -393,6 +387,12 @@ class TaskList
 
   def update_task_at_cursor task_text
     @tasks[@cursor] = task_text + $/
+  end
+
+  def filter_tasks method
+    @tasks.select { |l| l.strip.length > 0 }
+          .map { |l| l.split.first }
+          .send(method) { |t| t =~ TAG_PATTERN }
   end
 
 end
