@@ -12,13 +12,11 @@ class DisplayEdit < Command
     line.split == ["ed"]
   end
 
-  def process(line, session)
-    session.on_list do |list|
-      task_line = list.task_at_cursor
-      return if task_line.split.empty?
+  def process line, session
+    task_line = session.on_list {|list| list.task_at_cursor }
+    return if task_line.split.empty?
 
-      session.message_and_wait(message(task_line))
-    end
+    session.message_and_wait(message(task_line))
   end
 
   def message text
@@ -29,7 +27,7 @@ class DisplayEdit < Command
                        .with_index {|w,i| index_field(i + 1, field_size(w))  }
                        .join
 
-   "#{tag} #{task_line}\n   #{index_line}\n\n"
+    "#{tag} #{task_line}\n   #{index_line}\n\n"
   end
 
   def field_size word
