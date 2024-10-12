@@ -23,7 +23,7 @@ describe CursorToStart do
     f_io.tasks_content = tasks.join
     session.list.cursor_set(2)
     CursorToStart.new.run("cc", session)
-    session.render
+    session.render_naked
 
     expect(f_io.console_output_content).to eq(RENDER_PAD + output + "\n")
   end
@@ -40,7 +40,7 @@ describe CursorToStart do
     end.join
 
     f_io.tasks_content = tasks.join
-    session.render
+    session.render_naked
     CursorToStart.new.run("cc", session)
 
     expect(f_io.console_output_content).to eq(RENDER_PAD + output + "\n")

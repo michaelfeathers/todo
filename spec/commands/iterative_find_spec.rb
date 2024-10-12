@@ -25,7 +25,7 @@ describe IterativeFind do
     f_io.tasks_content = tasks.join
     session.on_list {|list| list.cursor_set(1) }
     IterativeFind.new.run("ff token", session)
-    session.render
+    session.render_naked
 
     expect(f_io.console_output_content).to eq(RENDER_PAD + output + "\n")
   end
@@ -46,7 +46,7 @@ describe IterativeFind do
     f_io.tasks_content = tasks.join
     session.on_list {|list| list.cursor_set(1) }
     IterativeFind.new.run("ff token", session)
-    session.render
+    session.render_naked
 
     expect(f_io.console_output_content).to eq(RENDER_PAD + output + "\n")
   end
@@ -68,7 +68,7 @@ describe IterativeFind do
     session.on_list {|list| list.cursor_set(1) }
     IterativeFind.new.run("ff token", session)
     IterativeFind.new.run("ff", session)
-    session.render
+    session.render_naked
 
     expect(f_io.console_output_content).to eq(RENDER_PAD + output + "\n")
   end

@@ -124,13 +124,33 @@ class Session
     @list.io.get_from_console
   end
 
+  def before cursor
+    cursor == ' ' ? "" : "\e[41m"
+  end
+
+  def after cursor
+    cursor == ' ' ? "" : "\e[0m"
+  end
+
   def render
     return if @list.io.suppress_render_list
 
     @list.io.clear_console
     @list.io.append_to_console @list.description
 
-    lines = @list.window.map {|num, cursor, line| "%2d %s %s" % [num, cursor, line] }
+    lines = @list.window.map {|num, cursor, line| "%2d %s %s%s%s" % [num, cursor, before(cursor), line, after(cursor)] }
+                        .join
+
+    @list.io.append_to_console lines + $/
+  end
+
+  def render_naked
+    return if @list.io.suppress_render_list
+
+    @list.io.clear_console
+    @list.io.append_to_console @list.description
+
+    lines = @list.window.map {|num, cursor, line| "%2d %s %s%s%s" % [num, cursor, "", line, ""] }
                         .join
 
     @list.io.append_to_console lines + $/

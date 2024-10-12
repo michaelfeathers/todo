@@ -14,7 +14,7 @@ describe Edit do
       session.list.cursor_set(0)
 
       Edit.new.run("e new task", session)
-      session.render
+      session.render_naked
 
       expect(f_io.console_output_content).to include(" 0 - L: new task\n")
     end
@@ -24,7 +24,7 @@ describe Edit do
       session.list.cursor_set(0)
 
       Edit.new.run("e updated work task", session)
-      session.render
+      session.render_naked
 
       expect(f_io.console_output_content).to include(" 0 - W: updated work task\n")
     end
@@ -33,7 +33,7 @@ describe Edit do
       f_io.tasks_content = ""
 
       Edit.new.run("e new task", session)
-      session.render
+      session.render_naked
 
       expect(f_io.console_output_content).to eq("\n\n\n")
     end
@@ -43,7 +43,7 @@ describe Edit do
       session.list.cursor_set(1)
 
       Edit.new.run("e new task", session)
-      session.render
+      session.render_naked
 
       expect(f_io.console_output_content).to include(" 1 - \n")
     end
@@ -53,7 +53,7 @@ describe Edit do
       session.list.cursor_set(0)
 
       Edit.new.run("e new multiple word task", session)
-      session.render
+      session.render_naked
 
       expect(f_io.console_output_content).to include(" 0 - L: new multiple word task\n")
     end

@@ -14,7 +14,7 @@ describe InsertBlank do
     session.list.cursor_set(0)
 
     InsertBlank.new.run("i", session)
-    session.render
+    session.render_naked
 
     expect(f_io.console_output_content).to eq("\n\n 0 - \n 1   L: task AA\n 2   L: task BB\n\n")
   end

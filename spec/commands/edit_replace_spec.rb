@@ -14,7 +14,7 @@ describe EditReplace do
     session.list.cursor_set(1)
 
     EditReplace.new.run("er 2 bb", session)
-    session.render
+    session.render_naked
 
     expect(f_io.console_output_content).to eq("\n\n 0   L: task AA\n 1 - L: task bb\n\n")
   end
@@ -24,7 +24,7 @@ describe EditReplace do
     session.list.cursor_set(0)
 
     EditReplace.new.run("er 2 new task there", session)
-    session.render
+    session.render_naked
 
     expect(f_io.console_output_content).to eq("\n\n 0 - L: old new task there\n\n")
   end
@@ -34,7 +34,7 @@ describe EditReplace do
     session.list.cursor_set(0)
 
     EditReplace.new.run("er 2 new new", session)
-    session.render
+    session.render_naked
 
     expect(f_io.console_output_content).to eq("\n\n 0 - L: old new new task\n\n")
   end
@@ -44,7 +44,7 @@ describe EditReplace do
     session.list.cursor_set(0)
 
     EditReplace.new.run("er 2 new new new", session)
-    session.render
+    session.render_naked
 
     expect(f_io.console_output_content).to eq("\n\n 0 - L: old new new new\n\n")
   end
@@ -54,7 +54,7 @@ describe EditReplace do
     session.list.cursor_set(0)
 
     EditReplace.new.run("er 2", session)
-    session.render
+    session.render_naked
 
     expect(f_io.console_output_content).to eq("\n\n 0 - L: this a task\n\n")
   end
