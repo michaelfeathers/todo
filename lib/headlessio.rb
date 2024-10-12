@@ -7,12 +7,7 @@ class HeadlessIo < AppIo
   end
 
   def get_from_console
-    if not @done
-      @done = true
-      return ARGV.join(' ') + $/
-    else
-      return "q" + $/
-    end
+    @done ? "q\n" : (@done = true; ARGV.join(' ') + "\n")
   end
 
   def clear_console
