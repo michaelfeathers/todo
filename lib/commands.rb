@@ -109,8 +109,8 @@ class ToDoIterativeFind < Command
   end
 
   def process line, session
+    text = line.split[1]
     session.on_list do |list|
-      text = line.split[1]
       text ? list.todo_iterative_find_init(text) : list.todo_iterative_find_continue
     end
   end
