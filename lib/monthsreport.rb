@@ -91,12 +91,12 @@ class MonthsReport
     TaskSelection.new(read_task_descs).date(@io.today)
   end
 
-  def body_row label, tasks
-    @format % [label].concat(@columns.map { |c| c.second.call(tasks) })
+  def body_row(label, tasks)
+    @format % ([label] + @columns.map { |_, calculator| calculator.call(tasks) })
   end
 
   def header_row
-    @format % [""].concat(@columns.map { |c| c.first })
+    @format % ([""] + @columns.map(&:first))
   end
 
 end

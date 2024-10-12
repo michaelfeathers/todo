@@ -108,23 +108,13 @@ end
 
 
 def run
-  if File.exist?(LOCK_FILE)
-    puts "Another instance of todo is already running."
-    exit
-  end
+  return puts "Another instance of todo is already running." if File.exist?(LOCK_FILE)
 
-  begin
-    FileUtils.touch(LOCK_FILE)
-
-    if ARGV.length == 0
-      ToDo.new(AppIo.new, BackgroundIo.new).run
-    else
-      ToDo.new(HeadlessIo.new, HeadlessIo.new).run
-  end
-
-  ensure
-    FileUtils.rm(LOCK_FILE) if File.exist?(LOCK_FILE)
-  end
+  FileUtils.touch(LOCK_FILE)
+  io_class = ARGV.empty? ? [AppIo, BackgroundIo] : [HeadlessIo, HeadlessIo]
+  ToDo.new(*io_class.map(&:new)).run
+ensure
+  FileUtils.rm(LOCK_FILE) if File.exist?(LOCK_FILE)
 end
 
 run

@@ -68,10 +68,9 @@ class TaskList
     task_tokens = current_task.split
     tag = task_tokens.shift if task_tokens.first =~ TAG_PATTERN
 
-    if position > 0 && position <= task_tokens.size + 1
+    if position.between?(1, task_tokens.size + 1)
       task_tokens.insert(position - 1, *new_tokens)
-      new_task = [tag, task_tokens.join(' ')].compact.join(' ')
-      update_task_at_cursor(new_task)
+      update_task_at_cursor([tag, task_tokens.join(' ')].compact.join(' '))
     end
   end
 
@@ -113,7 +112,7 @@ class TaskList
     return unless response.split.first == "Y"
 
     line = @tasks[@cursor]
-    @io.append_to_junk(@io.today.to_s + " " + line) unless line.split.empty?
+    @io.append_to_junk("#{@io.today} #{line}") unless line.strip.empty?
     remove_task_at_cursor
     @io.write_tasks(@tasks)
   end
@@ -158,19 +157,10 @@ class TaskList
     return if task.nil?
 
     tokens = task.split
-    if new_tokens.nil? || new_tokens.empty?
-      tokens.delete_at(position)
-    else
-      tokens = replace_tokens(tokens, position, new_tokens)
-    end
+    tokens[position, new_tokens.length] = new_tokens unless new_tokens.empty?
+    tokens.delete_at(position) if new_tokens.empty?
+
     update_task_at_cursor(tokens.join(' '))
-  end
-
-  def replace_tokens tokens, position, new_tokens
-    pre  = tokens.take(position)
-    post = tokens.drop(pre.count + new_tokens.count)
-
-    pre + new_tokens + post
   end
 
   def todo_grab_toggle
