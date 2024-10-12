@@ -138,7 +138,7 @@ class Session
     @list.io.clear_console
     @list.io.append_to_console @list.description
 
-    lines = @list.window.map {|num, cursor, line| "%2d %s %s%s%s" % [num, cursor, before(cursor), line, after(cursor)] }
+    lines = @list.window.map {|num, cursor, line| "%2d %s%s %s%s" % [num, before(cursor), cursor, line, after(cursor)] }
                         .join
 
     @list.io.append_to_console lines + $/
