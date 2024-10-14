@@ -39,7 +39,7 @@ class TaskList
   end
 
   def cursor_set line_no
-    @cursor = line_no if (0...@tasks.count).include?(line_no)
+    @cursor = line_no.clamp(0, @tasks.count - 1)
     adjust_page
   end
 
