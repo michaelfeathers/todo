@@ -231,7 +231,7 @@ class TaskList
   end
 
   def todo_today_target_for month_target
-    today = Date.today
+    today = @io.today.date
     dates = @io.read_archive
                .lines
                .map {|l| DateTime.parse(l.split[0]) }
