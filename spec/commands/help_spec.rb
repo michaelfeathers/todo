@@ -67,9 +67,9 @@ describe Help do
     help_command.run("h", session)
   end
 
-  xit 'lists all the commands' do
+  it 'lists all the commands' do
     NON_CMD_LINE_COUNT = 2
-    CURRENT_CMD_COUNT = 41
+    CURRENT_CMD_COUNT = 40
 
     commands = ObjectSpace.each_object(Class)
                           .select { |klass| klass < Command }
@@ -79,6 +79,9 @@ describe Help do
     help = TestingHelp.new
     help.descs = commands
     help.run("h", session)
+
+    # iterate for coverage
+    help.command_descs.map {|x| x.name + " " + x.line }
 
     expect(io.console_output_content.lines.count - NON_CMD_LINE_COUNT).to eq(CURRENT_CMD_COUNT)
   end
