@@ -6,15 +6,8 @@ class Array
     self
   end
 
-  def freq_by(&block)
-    map(&block).tally.sort_by(&:first)
-  end
-
   def freq
     tally.sort_by(&:first)
   end
 
-  def second
-    self[1]
-  end
 end
