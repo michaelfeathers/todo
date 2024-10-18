@@ -1,5 +1,6 @@
 require_relative 'appio'
 require_relative 'tasklist'
+require_relative 'consolerenderer'
 
 
 class Session
@@ -130,17 +131,13 @@ class Session
   def after cursor
     cursor == ' ' ? "" : "\e[0m"
   end
-
-  def render
+ 
+  def render target = nil
     return if @list.io.suppress_render_list
 
-    @list.io.clear_console
-    @list.io.append_to_console @list.description
-
-    lines = @list.window.map {|num, cursor, line| "%2d %s%s %s%s" % [num, before(cursor), cursor, line, after(cursor)] }
-                        .join
-
-    @list.io.append_to_console lines + $/
+    renderer = target ? target : ConsoleRenderer.new 
+    renderer.render(@list)
+    
   end
 
   def render_naked
