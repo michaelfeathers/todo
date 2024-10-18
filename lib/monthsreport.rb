@@ -12,9 +12,10 @@ end
 
 class MonthsReport
 
-  COLUMNS = [["Win",   ->(tasks) { tasks.W.count } ],
+  COLUMNS = [ # ["Win",   ->(tasks) { tasks.W.count } ],
              ["R7K",   ->(tasks) { tasks.R.count } ],
              ["Life",  ->(tasks) { tasks.L.count } ],
+             ["Move",  ->(tasks) { tasks.M.count } ],
              ["Total", ->(tasks) { tasks.count } ]]
              #["Adjusted", ->(tasks) { tasks.adjusted_count } ]]
              #["R7K %", ->(tasks) { tasks.R.percent_of(tasks) } ]]
