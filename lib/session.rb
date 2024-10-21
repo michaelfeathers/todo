@@ -124,6 +124,10 @@ class Session
     @list.io.get_from_console
   end
 
+  def render?
+    not @list.io.suppress_render_list
+  end
+
   def before cursor
     cursor == ' ' ? "" : "\e[41m"
   end
@@ -132,16 +136,13 @@ class Session
     cursor == ' ' ? "" : "\e[0m"
   end
  
-  def render target = nil
-    return if @list.io.suppress_render_list
-
-    renderer = target ? target : ConsoleRenderer.new 
-    renderer.render(@list)
-    
+  def render target = ConsoleRenderer.new
+    return unless render? 
+    target.render(@list)
   end
 
   def render_naked
-    return if @list.io.suppress_render_list
+    return unless render? 
 
     @list.io.clear_console
     @list.io.append_to_console @list.description

@@ -8,3 +8,10 @@ class TestRenderer
   end
 
 end
+
+def rendering_of session
+  target = TestRenderer.new
+  session.render(target)
+
+  target.rendered_data
+end
