@@ -2,11 +2,14 @@ require 'spec_helper'
 require 'session'
 require 'commands/edit'
 require 'fakeappio'
+require 'testrenderer'
+
 
 describe Edit do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
   let(:session) { Session.from_ios(f_io, b_io) }
+  let(:o) { rendering_of(session) }
 
   describe '#run' do
     it 'edits the task at the cursor' do
@@ -14,9 +17,8 @@ describe Edit do
       session.list.cursor_set(0)
 
       Edit.new.run("e new task", session)
-      session.render_naked
 
-      expect(f_io.console_output_content).to include(" 0 - L: new task\n")
+      expect(o).to eq([[0, "-", "L: new task\n"], [1, " ", "R: another task\n"]])
     end
 
     it 'preserves the tag when editing' do
@@ -24,28 +26,25 @@ describe Edit do
       session.list.cursor_set(0)
 
       Edit.new.run("e updated work task", session)
-      session.render_naked
 
-      expect(f_io.console_output_content).to include(" 0 - W: updated work task\n")
+      expect(o).to eq([[0, "-", "W: updated work task\n"],[1, " ", "R: another task\n"]])
     end
 
     it 'does nothing when the task list is empty' do
       f_io.tasks_content = ""
 
       Edit.new.run("e new task", session)
-      session.render_naked
 
-      expect(f_io.console_output_content).to eq("\n\n\n")
+      expect(o).to eq([])
     end
 
     it 'does nothing when editing an empty line' do
-      f_io.tasks_content = "L: task 1\n\nR: task 2\n"
-      session.list.cursor_set(1)
+      f_io.tasks_content = "\n"
+      session.list.cursor_set(0)
 
       Edit.new.run("e new task", session)
-      session.render_naked
 
-      expect(f_io.console_output_content).to include(" 1 - \n")
+      expect(o).to eq([[0, "-", "\n"]]) 
     end
 
     it 'handles multiple words in the edit command' do
@@ -53,9 +52,8 @@ describe Edit do
       session.list.cursor_set(0)
 
       Edit.new.run("e new multiple word task", session)
-      session.render_naked
 
-      expect(f_io.console_output_content).to include(" 0 - L: new multiple word task\n")
+      expect(o).to eq([[0, "-", "L: new multiple word task\n"]])
     end
   end
 

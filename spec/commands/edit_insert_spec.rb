@@ -2,11 +2,13 @@ require 'spec_helper'
 require 'session'
 require 'commands/edit_insert'
 require 'fakeappio'
+require 'testrenderer'
 
 describe EditInsert do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
   let(:session) { Session.from_ios(f_io, b_io) }
+  let(:o) { rendering_of (session)}
 
   describe '#run' do
     it 'inserts tokens before the specified position in the current task' do
@@ -14,9 +16,8 @@ describe EditInsert do
       session.list.cursor_set(0)
 
       EditInsert.new.run("ei 2 new inserted", session)
-      session.render_naked
 
-      expect(f_io.console_output_content).to eq("\n\n 0 - L: task new inserted one two three\n\n")
+      expect(o).to eq([[0, "-", "L: task new inserted one two three\n"]])
     end
 
     it 'handles insertion at the beginning of the task' do
