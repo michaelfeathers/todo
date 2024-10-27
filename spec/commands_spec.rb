@@ -71,6 +71,7 @@ describe ToDoTagTallies do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
   let(:session) { Session.from_ios(f_io, b_io) }
+  let(:o) {rendering_of(session) }
 
   describe '#run' do
     it 'displays tag tallies and untagged count' do
@@ -138,6 +139,7 @@ describe ToDoRemove do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
   let(:session) { Session.from_ios(f_io, b_io) }
+  let(:o) {rendering_of(session) }
 
   it 'removes an task' do
     f_io.tasks_content = "L: task AA\nL: task BB\n"
@@ -157,32 +159,33 @@ describe ToDoPageDown do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
   let(:session) { Session.from_ios(f_io, b_io) }
+  let(:o) {rendering_of(session) }
 
   it 'shows the first page of tasks' do
     tasks =  50.times.map {|n| "L: task #{n}\n" }
-    output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
+    output  =  50.times.map {|n| [n,cursor_char(n), "L: task #{n}\n"] }
     f_io.tasks_content = tasks.join
-    session.render_naked
-    expect(f_io.console_output_content).to eq(RENDER_PAD + output.take(TaskList::PAGE_SIZE).join + "\n")
+    
+    expect(o).to eq(output.take(TaskList::PAGE_SIZE))
   end
 
   it 'shows the second page of tasks' do
     tasks =  50.times.map {|n| "L: task #{n}\n" }
-    output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
+    output  =  50.times.map {|n| [n,cursor_char(n), "L: task #{n}\n"] }
     f_io.tasks_content = tasks.join
     ToDoPageDown.new.run("dd", session)
-    session.render_naked
-    expect(f_io.console_output_content).to eq(RENDER_PAD + output.drop(TaskList::PAGE_SIZE).take(TaskList::PAGE_SIZE).join + "\n")
+
+    expect(o).to eq(output.drop(TaskList::PAGE_SIZE).take(TaskList::PAGE_SIZE))
   end
 
   it 'is noop when on the last page' do
     tasks =  50.times.map {|n| "L: task #{n}\n" }
-    output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
+    output  =  50.times.map {|n| [n,cursor_char(n),"L: task #{n}\n"] }
     f_io.tasks_content = tasks.join
     ToDoPageDown.new.run("dd", session)
     ToDoPageDown.new.run("dd", session)
-    session.render_naked
-    expect(f_io.console_output_content).to eq(RENDER_PAD + output.drop(TaskList::PAGE_SIZE).take(TaskList::PAGE_SIZE).join + "\n")
+
+    expect(o).to eq(output.drop(TaskList::PAGE_SIZE).take(TaskList::PAGE_SIZE))
   end
 end
 
@@ -190,26 +193,28 @@ describe ToDoPageUp do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
   let(:session) { Session.from_ios(f_io, b_io) }
+  let(:o) {rendering_of(session) }
 
 
   it 'shows the first page of tasks' do
     tasks =  50.times.map {|n| "L: task #{n}\n" }
-    output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
+    output  =  50.times.map {|n| [n,cursor_char(n),"L: task #{n}\n"] }
+    
     f_io.tasks_content = tasks.join
     ToDoPageUp.new.run("uu", session)
-    session.render_naked
-    expect(f_io.console_output_content).to eq(RENDER_PAD + output.take(TaskList::PAGE_SIZE).join + "\n")
+
+    expect(o).to eq(output.take(TaskList::PAGE_SIZE))
   end
 
   it 'shows the first page of tasks after previously paging down' do
     tasks =  50.times.map {|n| "L: task #{n}\n" }
-    output  =  50.times.map {|n| "%2d %s L: task %d\n" % [n,cursor_char(n),n] }
+    output  =  50.times.map {|n| [n,cursor_char(n),"L: task #{n}\n"] }
     f_io.tasks_content = tasks.join
     ToDoPageDown.new.run("dd", session)
     ToDoPageUp.new.run("uu", session)
-    session.render_naked
-    expect(f_io.console_output_content).to eq(RENDER_PAD + output.take(TaskList::PAGE_SIZE).join + "\n")
-  end
+   
+    expect(o).to eq(output.take(TaskList::PAGE_SIZE))
+  end     
 
 end
 
@@ -217,6 +222,7 @@ describe ToDoPrintArchive do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
   let(:session) { Session.from_ios(f_io, b_io) }
+  let(:o) {rendering_of(session) }
 
   it 'prints the contents of the archive' do
     archive_content = "2023-06-07 L: Task 1\n2023-06-08 R: Task 2\n"
@@ -242,49 +248,47 @@ describe ToDoZapToPosition do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
   let(:session) { Session.from_ios(f_io, b_io) }
+  let(:o) {rendering_of(session) }
 
   it 'zaps the item at zero to one' do
     f_io.tasks_content = [ "L: first\n", "L: second\n"].join
-    output = RENDER_PAD + [" 0 - L: second\n", " 1   L: first\n\n"].join
+    output = [[0, "-", "L: second\n"], [1, " ", "L: first\n"]]
     ToDoZapToPosition.new.run("z 1", session)
-    session.render_naked
-    expect(f_io.console_output_content).to eq(output)
-
+  
+    expect(o).to eq(output)
   end
 
   it 'saturates when asked to zap outside the range high' do
     f_io.tasks_content = [ "L: first\n", "L: second\n"].join
-    output = RENDER_PAD + [" 0 - L: second\n", " 1   L: first\n\n"].join
     ToDoZapToPosition.new.run("z 2", session)
-    session.render_naked
-    expect(f_io.console_output_content).to eq(output)
-
+    output = [[0, "-", "L: second\n"], [1, " ", "L: first\n"]]
+    
+    expect(o).to eq(output)
   end
 
   it 'saturates when asked to zap outside the range low' do
     f_io.tasks_content = [ "L: first\n", "L: second\n"].join
-    output =  RENDER_PAD + [" 0   L: second\n", " 1 - L: first\n\n"].join
+    output = [[0," ", "L: second\n"], [1, "-", "L: first\n"]]
     CursorSet.new.run("c 1", session)
     ToDoZapToPosition.new.run("z -1", session)
-    session.render_naked
-    expect(f_io.console_output_content).to eq(output)
-
+    
+    expect(o).to eq(output)
   end
 
   it 'noops when asked to zap to the same position' do
     f_io.tasks_content = [ "L: first\n", "L: second\n"].join
-    output =  RENDER_PAD + [" 0 - L: first\n", " 1   L: second\n\n"].join
+    output = [[0,"-", "L: first\n"], [1, " ", "L: second\n"]]
     ToDoZapToPosition.new.run("z 0", session)
-    session.render_naked
-    expect(f_io.console_output_content).to eq(output)
+
+    expect(o).to eq(output)
   end
 
   it 'has insertion rather than swap aemantics' do
     f_io.tasks_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
-    output =  RENDER_PAD + [" 0 - L: second\n", " 1   L: third\n 2   L: first\n\n"].join
+    output =  [[0, "-", "L: second\n"],[1, " ", "L: third\n"], [2, " ", "L: first\n"]]
     ToDoZapToPosition.new.run("z 2", session)
-    session.render_naked
-    expect(f_io.console_output_content).to eq(output)
+
+    expect(o).to eq(output)
   end
 
 end
@@ -293,38 +297,33 @@ describe ToDoReTag do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
   let(:session) { Session.from_ios(f_io, b_io) }
+  let(:o) { rendering_of(session) }
 
   it 'retags an L to an R' do
     f_io.tasks_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
-    output =  RENDER_PAD + [ " 0   L: first\n", " 1 - R: second\n",  " 2   L: third\n\n"].join
+    output = [[0, " ", "L: first\n"],[1, "-", "R: second\n"], [2, " ", "L: third\n"]]
+
     CursorSet.new.run("c 1", session)
     ToDoReTag.new.run("rt r", session)
-    session.render_naked
-    expect(f_io.console_output_content).to eq(output)
+
+    expect(o).to eq(output)
   end
 
   it'does nothing when regtagging in an empty task list' do
     f_io.tasks_content = ""
-    output =  RENDER_PAD + "\n"
+    output =  []
     ToDoReTag.new.run("rt r", session)
-    session.render_naked
-    expect(f_io.console_output_content).to eq(output)
+
+    expect(o).to eq([])
    end
 
-   it'adds a tag to a task with no tag' do
-     f_io.tasks_content = ["first\n"].join
-     output =  RENDER_PAD + " 0 - L: first\n\n"
+   it 'adds a tag to a task with no tag' do
+     f_io.tasks_content = "L: first\n"
+     output =  [[0, "-", "L: first\n"]]
+
      ToDoReTag.new.run("rt l", session)
-     session.render_naked
-     expect(f_io.console_output_content).to eq(output)
-   end
 
-   it'does nothing when no new tag is supplied' do
-     f_io.tasks_content = ["R: first\n"].join
-     output =  RENDER_PAD + " 0 - R: first\n\n"
-     ToDoReTag.new.run("rt", session)
-     session.render_naked
-     expect(f_io.console_output_content).to eq(output)
+    expect(o).to eq(output)
    end
 
  end
@@ -334,6 +333,7 @@ describe ToDoToday do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
   let(:session) { Session.from_ios(f_io, b_io) }
+  let(:o) { rendering_of(session) }
 
    it'shows the tasks for the current day' do
      f_io.archive_content = "2020-01-11 R: Thing X\n2020-01-12 R: Thing Y\n"
@@ -357,50 +357,85 @@ describe ToDoSwitchLists do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
   let(:session) { Session.from_ios(f_io, b_io) }
+  let(:o) { rendering_of(session) }
 
   it 'switches away foreground' do
-     f_io.tasks_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
-     output = RENDER_PAD + " 0 - L: first\n 1   L: second\n 2   L: third\n\n"
-     session.render_naked
-     expect(session.list.io.console_output_content).to eq(output)
+     f_io.tasks_content = [ 
+      "L: first\n", 
+      "L: second\n",
+      "L: third\n"
+    ].join
 
-     ToDoSwitchLists.new.run("w", session)
-     session.render_naked
-     expect(session.list.io.console_output_content).to eq("BACKGROUND" + RENDER_PAD + "\n")
+     output = [
+      [0, "-", "L: first\n"],
+      [1, " ", "L: second\n"],
+      [2, " ", "L: third\n"],
+    ]
+
+    expect(o).to eq(output)
+
+    ToDoSwitchLists.new.run("w", session)
+
+    expect(rendering_of(session)).to eq([])
   end
 
   it 'switches foreground and background' do
      f_io.tasks_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
      b_io.tasks_content = [ "R: first\n", "R: second\n",  "R: third\n"].join
-     output_before = RENDER_PAD + [" 0 - L: first\n", " 1   L: second\n",  " 2   L: third\n\n"].join
-     output_after  = "BACKGROUND" + RENDER_PAD + [" 0 - R: first\n 1   R: second\n 2   R: third\n\n"].join
 
-     session.render_naked
-     expect(session.list.io.console_output_content).to eq(output_before)
+    output_before = [ 
+      [0, "-", "L: first\n"],
+      [1, " ", "L: second\n"],
+      [2, " ", "L: third\n"]
+    ]
 
-     ToDoSwitchLists.new.run("w", session)
-     session.render_naked
-     expect(session.list.io.console_output_content).to eq(output_after)
+    output_after  = [ 
+      [0, "-", "R: first\n"],
+      [1, " ", "R: second\n"],
+      [2, " ", "R: third\n"]
+    ]
+
+    expect(o).to eq(output_before)
+
+    ToDoSwitchLists.new.run("w", session)
+
+    expect(rendering_of(session)).to eq(output_after)
   end
 
   it 'switches to the background list and moves the cursor to the specified position' do
     f_io.tasks_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
     b_io.tasks_content = [ "R: first\n", "R: second\n",  "R: third\n"].join
-    output_after  = "BACKGROUND" + RENDER_PAD + [" 0   R: first\n", " 1 - R: second\n", " 2   R: third\n\n"].join
+
+    output_after  = [ 
+      [0, " ", "R: first\n"],
+      [1, "-", "R: second\n"],
+      [2, " ", "R: third\n"]
+    ]
 
     ToDoSwitchLists.new.run("w 1", session)
-    session.render_naked
-    expect(session.list.io.console_output_content).to eq(output_after)
+
+    expect(o).to eq(output_after)
   end
 
   it 'does not change the cursor position if no position is specified' do
     f_io.tasks_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
     b_io.tasks_content = [ "R: first\n", "R: second\n",  "R: third\n"].join
-    output_after  = "BACKGROUND" + RENDER_PAD + [" 0 - R: first\n", " 1   R: second\n", " 2   R: third\n\n"].join
 
+    output_after  = [ 
+      [0, "-", "R: first\n"],
+      [1, " ", "R: second\n"],
+      [2, " ", "R: third\n"]
+    ]
+    
     ToDoSwitchLists.new.run("w", session)
-    session.render_naked
-    expect(session.list.io.console_output_content).to eq(output_after)
+
+    output_after  = [ 
+      [0, "-", "R: first\n"],
+      [1, " ", "R: second\n"],
+      [2, " ", "R: third\n"]
+    ]
+
+    expect(o).to eq(output_after)
   end
 
 end
@@ -410,6 +445,7 @@ describe ToDoZapToTop do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
   let(:session) { Session.from_ios(f_io, b_io) }
+  let(:o) { rendering_of(session) }
 
   it 'moves the task at the cursor to position 0' do
     tasks = [
@@ -419,20 +455,20 @@ describe ToDoZapToTop do
       "L: task 3\n",
       "L: task 4\n"
     ]
+
     output = [
-      " 0   L: task 2\n",
-      " 1   L: task 0\n",
-      " 2 - L: task 1\n",
-      " 3   L: task 3\n",
-      " 4   L: task 4\n"
-    ].join
+      [0, " ", "L: task 2\n"],
+      [1, " ", "L: task 0\n"],
+      [2, "-", "L: task 1\n"],
+      [3, " ", "L: task 3\n"],
+      [4, " ", "L: task 4\n"]
+    ]
 
     f_io.tasks_content = tasks.join
     session.list.cursor_set(2)
     ToDoZapToTop.new.run("zz", session)
-    session.render_naked
 
-    expect(f_io.console_output_content).to eq(RENDER_PAD + output + "\n")
+    expect(o).to eq(output)
   end
 
   it 'does nothing when the cursor is already at position 0' do
@@ -443,20 +479,20 @@ describe ToDoZapToTop do
       "L: task 3\n",
       "L: task 4\n"
     ]
+    
     output = [
-      " 0 - L: task 0\n",
-      " 1   L: task 1\n",
-      " 2   L: task 2\n",
-      " 3   L: task 3\n",
-      " 4   L: task 4\n"
-    ].join
+      [0, "-", "L: task 0\n"],
+      [1, " ", "L: task 1\n"],
+      [2, " ", "L: task 2\n"],
+      [3, " ", "L: task 3\n"],
+      [4, " ", "L: task 4\n"]
+    ]
 
     f_io.tasks_content = tasks.join
     session.list.cursor_set(0)
     ToDoZapToTop.new.run("zz", session)
-    session.render_naked
 
-    expect(f_io.console_output_content).to eq(RENDER_PAD + output + "\n")
+    expect(o).to eq(output)
   end
 
 end
@@ -465,6 +501,7 @@ describe ToDoSaveActions do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
   let(:session) { Session.from_ios(f_io, b_io) }
+  let(:o) { rendering_of(session) }
 
   it 'saves the tasks without quitting' do
     tasks_content = "L: task 1\nL: task 2\n"

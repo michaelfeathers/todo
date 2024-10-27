@@ -25,9 +25,8 @@ describe EditInsert do
       session.list.cursor_set(0)
 
       EditInsert.new.run("ei 1 prefix", session)
-      session.render_naked
 
-      expect(f_io.console_output_content).to eq("\n\n 0 - R: prefix existing task\n\n")
+      expect(o).to eq([[0, "-", "R: prefix existing task\n"]])
     end
 
     it 'handles insertion at the end of the task' do
@@ -35,9 +34,8 @@ describe EditInsert do
       session.list.cursor_set(0)
 
       EditInsert.new.run("ei 3 appended text", session)
-      session.render_naked
 
-      expect(f_io.console_output_content).to eq("\n\n 0 - W: end insertion appended text\n\n")
+      expect(o).to eq([[0, "-", "W: end insertion appended text\n"]])
     end
 
     it 'does not modify the task if the position is out of bounds' do
@@ -45,9 +43,8 @@ describe EditInsert do
       session.list.cursor_set(0)
 
       EditInsert.new.run("ei 10 out of bounds", session)
-      session.render_naked
 
-      expect(f_io.console_output_content).to eq("\n\n 0 - L: unchanged task\n\n")
+      expect(o).to eq([[0,"-","L: unchanged task\n"]])
     end
 
     it 'handles insertion with multiple tokens' do
@@ -55,9 +52,8 @@ describe EditInsert do
       session.list.cursor_set(0)
 
       EditInsert.new.run("ei 2 multiple new tokens here", session)
-      session.render_naked
 
-      expect(f_io.console_output_content).to eq("\n\n 0 - R: before multiple new tokens here after\n\n")
+      expect(o).to eq([[0, "-", "R: before multiple new tokens here after\n"]])
     end
 
     it 'does nothing when no tokens are provided' do
@@ -65,9 +61,8 @@ describe EditInsert do
       session.list.cursor_set(0)
 
       EditInsert.new.run("ei 2", session)
-      session.render_naked
 
-      expect(f_io.console_output_content).to eq("\n\n 0 - W: no change\n\n")
+      expect(o).to eq([[0, "-", "W: no change\n"]])
     end
 
     it 'preserves the task tag when inserting' do
@@ -75,9 +70,8 @@ describe EditInsert do
       session.list.cursor_set(0)
 
       EditInsert.new.run("ei 1 inserted", session)
-      session.render_naked
 
-      expect(f_io.console_output_content).to eq("\n\n 0 - L: inserted preserve tag\n\n")
+      expect(o).to eq([[0, "-", "L: inserted preserve tag\n"]])
     end
   end
 

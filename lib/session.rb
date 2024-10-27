@@ -132,16 +132,4 @@ class Session
     target.render(@list) if render?
   end
 
-  def render_naked
-    return unless render? 
-
-    @list.io.clear_console
-    @list.io.append_to_console @list.description
-
-    lines = @list.window.map {|num, cursor, line| "%2d %s %s%s%s" % [num, cursor, "", line, ""] }
-                        .join
-
-    @list.io.append_to_console lines + $/
-  end
-
 end

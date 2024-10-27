@@ -8,15 +8,15 @@ describe EditReplace do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
   let(:session) { Session.from_ios(f_io, b_io) }
+  let(:o) { rendering_of(session) }
 
   it 'replaces when text to replacement is present' do
     f_io.tasks_content = "L: task AA\nL: task BB\n"
     session.list.cursor_set(1)
 
     EditReplace.new.run("er 2 bb", session)
-    session.render_naked
 
-    expect(f_io.console_output_content).to eq("\n\n 0   L: task AA\n 1 - L: task bb\n\n")
+    expect(o).to eq([[0," ","L: task AA\n"], [1,"-","L: task bb\n"]])
   end
 
   it 'replaces multiple tokens' do
@@ -24,9 +24,8 @@ describe EditReplace do
     session.list.cursor_set(0)
 
     EditReplace.new.run("er 2 new task there", session)
-    session.render_naked
 
-    expect(f_io.console_output_content).to eq("\n\n 0 - L: old new task there\n\n")
+    expect(o).to eq([[0,"-","L: old new task there\n"]])
   end
 
   it 'replaces tokens until replacements run out' do
@@ -34,9 +33,8 @@ describe EditReplace do
     session.list.cursor_set(0)
 
     EditReplace.new.run("er 2 new new", session)
-    session.render_naked
 
-    expect(f_io.console_output_content).to eq("\n\n 0 - L: old new new task\n\n")
+    expect(o).to eq([[0,"-","L: old new new task\n"]])
   end
 
   it 'replaces tokens past the end of the original line' do
@@ -44,9 +42,8 @@ describe EditReplace do
     session.list.cursor_set(0)
 
     EditReplace.new.run("er 2 new new new", session)
-    session.render_naked
 
-    expect(f_io.console_output_content).to eq("\n\n 0 - L: old new new new\n\n")
+    expect(o).to eq([[0,"-","L: old new new new\n"]])
   end
 
   it 'deletes token at position when no replacement provided' do
@@ -54,8 +51,7 @@ describe EditReplace do
     session.list.cursor_set(0)
 
     EditReplace.new.run("er 2", session)
-    session.render_naked
 
-    expect(f_io.console_output_content).to eq("\n\n 0 - L: this a task\n\n")
+    expect(o).to eq([[0,"-","L: this a task\n"]])
   end
 end
