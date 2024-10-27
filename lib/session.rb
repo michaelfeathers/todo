@@ -128,17 +128,8 @@ class Session
     not @list.io.suppress_render_list
   end
 
-  def before cursor
-    cursor == ' ' ? "" : "\e[41m"
-  end
-
-  def after cursor
-    cursor == ' ' ? "" : "\e[0m"
-  end
- 
   def render target = ConsoleRenderer.new
-    return unless render? 
-    target.render(@list)
+    target.render(@list) if render?
   end
 
   def render_naked
