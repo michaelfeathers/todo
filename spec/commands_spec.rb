@@ -2,6 +2,7 @@ require 'spec_helper'
 require 'session'
 require 'commands'
 require 'fakeappio'
+require 'testrenderer'
 
 RENDER_PAD = "\n\n"
 
@@ -10,6 +11,7 @@ describe ToDoMoveToRandomPositionOnOtherList do
   let(:f_io) { FakeAppIo.new }
   let(:b_io) { FakeAppIo.new }
   let(:session) { Session.from_ios(f_io, b_io) }
+  let(:o) {rendering_of(session) }
 
   describe '#run' do
     it 'moves the task at the cursor from the foreground list to a random position on the background list' do
