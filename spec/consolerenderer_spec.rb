@@ -90,10 +90,9 @@ describe ConsoleRenderer do
       allow(tasklist).to receive(:description).and_return("")
       allow(tasklist).to receive(:window).and_return(window)
 
-     " 0 \e[41m- L: task 1\n\e[0m"  
-     expected_output = " 9 \e[41m- L: task 9\n\e[0m"  +
-                       "10   L: task 10\n" +
-                       "\n"
+      expected_output = " 9 \e[41m- L: task 9\n\e[0m"  +
+                        "10   L: task 10\n" +
+                        "\n"
 
       expect(io).to receive(:append_to_console).with("")
       expect(io).to receive(:append_to_console).with(expected_output)
