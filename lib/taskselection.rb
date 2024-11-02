@@ -21,12 +21,10 @@ class TaskSelection
   end
 
   def percent_of other_tasks
-    return 0 if other_tasks.count == 0
-
     other_total = count
     all_total   = other_tasks.count
 
-    (100.0 * other_total / all_total).to_i
+    all_total.zero? ? 0 : (100.0 * other_total / all_total).to_i
   end
 
   def adjusted_count
