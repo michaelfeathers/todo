@@ -33,6 +33,7 @@ class TaskSelection
 
     points_for_wins + points_for_all_others
   end
+
   def count
     @descs.count
   end

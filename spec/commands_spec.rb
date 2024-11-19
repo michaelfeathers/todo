@@ -426,7 +426,7 @@ describe ToDoSwitchLists do
       [1, " ", "R: second\n"],
       [2, " ", "R: third\n"]
     ]
-    
+
     ToDoSwitchLists.new.run("w", session)
 
     output_after  = [ 
