@@ -2,7 +2,7 @@
 
 class Array
   def swap_elements i, j
-    e = self[i]; self[i] = self[j]; self[j] = e
+    self[i], self[j] = self[j], self[i]
     self
   end
 
