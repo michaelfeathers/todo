@@ -1,7 +1,7 @@
 
 
 class Array
-  def swap_elements i, j
+    def swap_elements i, j
     self[i], self[j] = self[j], self[i]
     self
   end
