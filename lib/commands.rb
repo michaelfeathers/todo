@@ -25,7 +25,7 @@ class ToDoSaveActions < Command
   end
 
   def process(line, session)
-    session.on_list {|list| list.save_all }
+    session.save
   end
 
   def description
