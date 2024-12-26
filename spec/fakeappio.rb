@@ -73,7 +73,8 @@ class FakeAppIo
     @today_content
   end
 
-  def suppress_render_list
-    false
+  def renderer
+    NullRenderer.new
   end
+
 end

@@ -1,6 +1,7 @@
 require_relative 'appio'
 require_relative 'tasklist'
 require_relative 'consolerenderer'
+require_relative 'nullrenderer'
 
 
 class Session
@@ -124,12 +125,10 @@ class Session
     @list.io.get_from_console
   end
 
-  def render?
-    not @list.io.suppress_render_list
-  end
-
-  def render target = ConsoleRenderer.new
-    target.render(@list) if render?
+  def render target = nil
+    # target.render(@list) if render?
+    target ||= @list.io.renderer
+    target.render(@list)
   end
 
 end

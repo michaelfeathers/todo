@@ -71,7 +71,8 @@ class AppIo
     Day.new(DateTime.now)
   end
 
-  def suppress_render_list
-    false
+  def renderer
+    ConsoleRenderer.new
   end
+
 end

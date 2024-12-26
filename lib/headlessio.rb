@@ -13,7 +13,8 @@ class HeadlessIo < AppIo
   def clear_console
   end
 
-  def suppress_render_list
-    true
+  def renderer
+    NullRenderer.new
   end
+
 end
