@@ -26,7 +26,6 @@ class Session
     yield @list
   end
 
-
   def switch_lists(target_position = nil)
     toggle_active_list
     @list.cursor_set(target_position) if target_position
@@ -125,10 +124,9 @@ class Session
     @list.io.get_from_console
   end
 
-  def render target = nil
-    # target.render(@list) if render?
-    target ||= @list.io.renderer
-    target.render(@list)
+  def render renderer = nil
+    renderer ||= @list.io.renderer
+    renderer.render(@list)
   end
 
 end
