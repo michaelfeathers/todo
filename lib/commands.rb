@@ -239,7 +239,7 @@ class ToDoTodayTargetFor < Command
   end
 
   def process line, session
-    session.on_list {|list| list.todo_today_target_for(line.split[1].to_i) }
+    session.on_list {|list| list.todo_target_for(line.split[1].to_i) }
   end
 
   def description
