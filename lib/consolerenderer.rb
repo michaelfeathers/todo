@@ -14,17 +14,17 @@ class ConsoleRenderer
 
   def format task_no, cursor, line
     "%2d %s%s %s%s" % [task_no, 
-                       highlight_on(cursor), 
+                       highlight_section_start(cursor), 
                        cursor, 
                        line, 
-                       highlight_off(cursor)]
+                       highlight_section_end(cursor)]
   end
   
-  def highlight_on cursor
+  def highlight_section_start cursor
     cursor == ' ' ? "" : "\e[41m"
   end
   
-  def highlight_off cursor
+  def highlight_section_end cursor
     cursor == ' ' ? "" : "\e[0m"
   end
 
