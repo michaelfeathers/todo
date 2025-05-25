@@ -249,47 +249,6 @@ class TaskList
     @io.get_from_console
   end
   
-  def todo_today_target_for month_target
-    today = @io.today.date
-    dates = @io.read_archive
-               .lines
-               .map {|l| DateTime.parse(l.split[0]) }
-
-    current_month_dates = dates.select {|date| date.month == today.month && date.year == today.year }
-    tasks_done_prev     = current_month_dates.count {|date| date < today }
-    tasks_done_today    = current_month_dates.count(today)
-    tasks_done_so_far   = tasks_done_prev + tasks_done_today
-
-    if tasks_done_so_far >= month_target
-      @io.append_to_console $/ + $/ + "    Goal met" + $/ + $/
-      @io.get_from_console
-      return
-    end
-
-    last_day_of_month             = Date.new(today.year, today.month, -1)
-    remaining_days                = (today..last_day_of_month).count
-    remaining_tasks               = month_target - tasks_done_so_far
-    daily_tasks_needed            = (remaining_tasks.to_f / remaining_days).ceil
-
-    if remaining_days == 1
-      @io.append_to_console "\n\n    Do %d to meet monthly goal of %d\n\n" % [remaining_tasks, month_target]
-      @io.get_from_console
-      return
-    end
-
-    additional_tasks_needed_today = daily_tasks_needed - tasks_done_today
-    if additional_tasks_needed_today <= 0
-      @io.append_to_console "\n\n    Goal met\n\n"
-    else
-      @io.append_to_console "\n\n    Do %d to meet daily goal of %d\n\n" % [additional_tasks_needed_today, daily_tasks_needed]
-    end
-
-    @io.append_to_console "\n\n   Average so far:   %f" % [tasks_done_so_far.to_f / today.day]
-    @io.append_to_console   "\n   Average needed:   %f" % [remaining_tasks.to_f / remaining_days]
-    @io.append_to_console "\n\n"
-    @io.get_from_console
-  end
-
   def window
     @tasks.zip((0..))
           .map {|e, i| [i, cursor_char(i), e] }

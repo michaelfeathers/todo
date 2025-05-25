@@ -48,6 +48,71 @@ describe TaskList do
   let(:io) { FakeAppIo.new }
   let(:task_list) { TaskList.new(io) }
 
+  describe '#todo_target_for' do
+    context 'when calculating targets for the current month' do
+      before do
+        io.today_content = Day.new(DateTime.new(2023, 6, 15))
+        io.archive_content = "2023-06-01 L: Task 1\n2023-06-05 L: Task 2\n2023-06-10 L: Task 3\n"
+      end
+
+      it 'calculates the required tasks per day to meet the monthly goal' do
+        expect(io).to receive(:append_to_console).with("\n\n    Do 2 per day to meet monthly goal of 30\n\n")
+        expect(io).to receive(:get_from_console)
+        
+        task_list.todo_target_for(30)
+      end
+
+      it 'handles the case where the goal has already been exceeded' do
+        expect(io).to receive(:append_to_console).with("\n\n    Do 0 per day to meet monthly goal of 3\n\n")
+        expect(io).to receive(:get_from_console)
+        
+        task_list.todo_target_for(3)
+      end
+    end
+
+    context 'on the last day of the month' do
+      before do
+        io.today_content = Day.new(DateTime.new(2023, 6, 30))
+        io.archive_content = "2023-06-01 L: Task 1\n2023-06-05 L: Task 2\n2023-06-10 L: Task 3\n"
+      end
+
+      it 'calculates the tasks needed for the final day' do
+        expect(io).to receive(:append_to_console).with("\n\n    Do 7 per day to meet monthly goal of 10\n\n")
+        expect(io).to receive(:get_from_console)
+        
+        task_list.todo_target_for(10)
+      end
+    end
+
+    context 'with an empty archive' do
+      before do
+        io.today_content = Day.new(DateTime.new(2023, 6, 15))
+        io.archive_content = ""
+      end
+
+      it 'calculates based on zero completed tasks' do
+        expect(io).to receive(:append_to_console).with("\n\n    Do 2 per day to meet monthly goal of 30\n\n")
+        expect(io).to receive(:get_from_console)
+        
+        task_list.todo_target_for(30)
+      end
+    end
+
+    context 'with tasks from multiple months' do
+      before do
+        io.today_content = Day.new(DateTime.new(2023, 6, 15))
+        io.archive_content = "2023-05-01 L: Task 1\n2023-06-05 L: Task 2\n2023-07-10 L: Task 3\n"
+      end
+
+      it 'only counts tasks from the current month' do
+        expect(io).to receive(:append_to_console).with("\n\n    Do 2 per day to meet monthly goal of 30\n\n")
+        expect(io).to receive(:get_from_console)
+        
+        task_list.todo_target_for(30)
+      end
+    end
+  end
+
   describe '#todo_show_updates' do
     let(:io) { FakeAppIo.new }
     let(:task_list) { TaskList.new(io) }
@@ -399,73 +464,5 @@ describe TaskList do
     expect(task_list.untagged_tally).to eq (2)
   end
 
-
-  describe '#todo_today_target_for' do
-    before do
-      allow(io).to receive(:append_to_console)
-      allow(io).to receive(:get_from_console)
-    end
-
-    context 'when the monthly goal has been met' do
-      it 'displays a message indicating the goal has been met' do
-        io.today_content = Day.from_text("2023-06-15")
-        io.archive_content = "2023-06-01 R: Task 1\n2023-06-02 R: Task 2\n2023-06-03 R: Task 3\n"
-
-        expect(io).to receive(:append_to_console).with("\n\n    Goal met\n\n")
-        task_list.todo_today_target_for(3)
-      end
-    end
-
-    context 'when it is the last day of the month' do
-      it 'displays the number of tasks needed to meet the monthly goal' do
-        io.today_content = Day.from_text("2023-06-30")
-        io.archive_content = "2023-06-01 R: Task 1\n2023-06-02 R: Task 2\n"
-
-        expect(io).to receive(:append_to_console).with("\n\n    Do 3 to meet monthly goal of 5\n\n")
-        task_list.todo_today_target_for(5)
-      end
-    end
-
-    context 'when additional tasks are needed today' do
-      xit 'displays the number of additional tasks needed today' do
-        io.today_content = Day.from_text("2023-06-15")
-        io.archive_content = "2023-06-01 R: Task 1\n2023-06-02 R: Task 2\n2023-06-15 R: Task 3\n"
-
-        expect(io).to receive(:append_to_console).with("\n\n    Do 2 to meet daily goal of 3\n\n")
-        task_list.todo_today_target_for(30)
-      end
-    end
-
-    context 'when no additional tasks are needed today' do
-      it 'displays a message indicating the goal has been met' do
-        io.today_content = Day.from_text("2023-06-15")
-        io.archive_content = "2023-06-01 R: Task 1\n2023-06-02 R: Task 2\n2023-06-15 R: Task 3\n2023-06-15 R: Task 4\n2023-06-15 R: Task 5\n"
-
-        expect(io).to receive(:append_to_console).with("\n\n    Goal met\n\n")
-        task_list.todo_today_target_for(30)
-      end
-    end
-
-    it 'displays the average tasks completed so far' do
-      io.today_content = Day.from_text("2023-06-15")
-      io.archive_content = "2023-06-01 R: Task 1\n2023-06-02 R: Task 2\n2023-06-15 R: Task 3\n"
-
-      expect(io).to receive(:append_to_console).with(/\n\n   Average so far:   0.\d+/)
-      task_list.todo_today_target_for(30)
-    end
-
-    it 'displays the average tasks needed per day to meet the goal' do
-      io.today_content = Day.from_text("2023-06-15")
-      io.archive_content = "2023-06-01 R: Task 1\n2023-06-02 R: Task 2\n2023-06-15 R: Task 3\n"
-
-      expect(io).to receive(:append_to_console).with(/\n   Average needed:   1.\d+/)
-      task_list.todo_today_target_for(30)
-    end
-  end
-
-
-
 end
-
-
 
