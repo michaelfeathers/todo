@@ -11,7 +11,7 @@ class FakeAppIo
     @archive_content = @tasks_content = ""
     @console_output_content = ""
     @log_content = ""
-    @update_content = []
+    @update_content = ""
   end
 
   def read_archive
