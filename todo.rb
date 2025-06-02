@@ -3,7 +3,8 @@ require 'bundler/setup'
 require 'fileutils'
 require_relative 'lib/session'
 
-require_relative 'lib/commands'
+
+# Individual command files
 require_relative 'lib/commands/add'
 require_relative 'lib/commands/cursor_set'
 require_relative 'lib/commands/cursor_to_start'
@@ -20,9 +21,30 @@ require_relative 'lib/commands/insert_blank'
 require_relative 'lib/commands/iterative_find'
 require_relative 'lib/commands/month_summaries'
 require_relative 'lib/commands/move_task_to_other'
-require_relative 'lib/commands/save_to_yesterday'
+require_relative 'lib/commands/move_to_random_position_on_other_list'
+require_relative 'lib/commands/page_down'
+require_relative 'lib/commands/page_up'
+require_relative 'lib/commands/print_archive'
+require_relative 'lib/commands/push'
 require_relative 'lib/commands/quit'
+require_relative 'lib/commands/remove'
+require_relative 'lib/commands/retag'
+require_relative 'lib/commands/save'
+require_relative 'lib/commands/save_actions'
+require_relative 'lib/commands/save_no_remove'
+require_relative 'lib/commands/save_to_yesterday'
+require_relative 'lib/commands/show_command_frequencies'
+require_relative 'lib/commands/show_updates'
+require_relative 'lib/commands/surface'
+require_relative 'lib/commands/switch_lists'
+require_relative 'lib/commands/tag_tallies'
+require_relative 'lib/commands/today'
+require_relative 'lib/commands/today_target_for'
+require_relative 'lib/commands/trend'
+require_relative 'lib/commands/trend_chart'
 require_relative 'lib/commands/up'
+require_relative 'lib/commands/zap_to_position'
+require_relative 'lib/commands/zap_to_top'
 
 require_relative 'lib/appio'
 require_relative 'lib/backgroundio'
@@ -47,30 +69,30 @@ class ToDo
                 IterativeFind.new,
                 MonthSummaries.new,
                 MoveTaskToOther.new,
-                ToDoMoveToRandomPositionOnOtherList.new,
-                ToDoPageDown.new,
-                ToDoPageUp.new,
-                ToDoPrintArchive.new,
-                ToDoPush.new,
+                MoveToRandomPositionOnOtherList.new,
+                PageDown.new,
+                PageUp.new,
+                PrintArchive.new,
+                Push.new,
                 Quit.new,
-                ToDoReTag.new,
-                ToDoRemove.new,
-                ToDoSave.new,
-                ToDoSaveActions.new,
-                ToDoSaveNoRemove.new,
+                Retag.new,
+                Remove.new,
+                Save.new,
+                SaveActions.new,
+                SaveNoRemove.new,
                 SaveToYesterday.new,
-                ToDoShowCommandFrequencices.new,
-                ToDoShowUpdates.new,
-                ToDoSurface.new,
-                ToDoSwitchLists.new,
-                ToDoTagTallies.new,
-                ToDoTodayTargetFor.new,
-                ToDoToday.new,
-                ToDoTrend.new,
-                ToDoTrendChart.new,
+                ShowCommandFrequencies.new,
+                ShowUpdates.new,
+                Surface.new,
+                SwitchLists.new,
+                TagTallies.new,
+                TodayTargetFor.new,
+                Today.new,
+                Trend.new,
+                TrendChart.new,
                 Up.new,
-                ToDoZapToPosition.new,
-                ToDoZapToTop.new]
+                ZapToPosition.new,
+                ZapToTop.new]
 
 
   def self.registered_commands

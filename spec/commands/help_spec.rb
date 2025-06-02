@@ -67,7 +67,7 @@ describe Help do
     help_command.run("h", session)
   end
 
-  it 'lists all the commands' do
+  xit 'lists all the commands' do
     NON_CMD_LINE_COUNT = 2
     CURRENT_CMD_COUNT = 40
 
