@@ -67,14 +67,19 @@ describe Help do
     help_command.run("h", session)
   end
 
-  xit 'lists all the commands' do
+  it 'lists all the commands' do
     NON_CMD_LINE_COUNT = 2
     CURRENT_CMD_COUNT = 40
 
+    # Load all command files manually
+    Dir[File.expand_path('../../../lib/commands/*.rb', __FILE__)].each { |f| require f }
+
     commands = ObjectSpace.each_object(Class)
                           .select { |klass| klass < Command }
+                          .reject { |klass| klass == TestingHelp }
                           .sort_by { |klass| klass.name }
                           .map {|k| k.new.description }
+
 
     help = TestingHelp.new
     help.descs = commands
