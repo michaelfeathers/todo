@@ -13,9 +13,10 @@ end
 class MonthsReport
 
   COLUMNS = [
-             ["R7K",   ->(tasks) { tasks.R.count } ],
              ["Life",  ->(tasks) { tasks.L.count } ],
-             ["R7K %", ->(tasks) { tasks.R.percent_of(tasks) } ],
+             ["Work",  ->(tasks) { tasks.R.count + tasks.D.count } ],
+             ["DRW",   ->(tasks) { tasks.D.count } ],
+             ["W %", ->(tasks) { tasks.R.percent_of(tasks) + tasks.D.percent_of(tasks)} ],
              ["Total", ->(tasks) { tasks.count } ]
             ]
 
