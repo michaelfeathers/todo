@@ -116,7 +116,8 @@ class Session
   end
 
   def get_line
-    @list.io.get_from_console.chomp
+    input = @list.io.get_from_console
+    input ? input.chomp : ""
   end
 
   def message_and_wait text
