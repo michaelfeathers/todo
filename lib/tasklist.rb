@@ -245,7 +245,7 @@ class TaskList
     
     tasks_per_day = remaining_days > 0 ? (remaining_tasks.to_f / remaining_days).ceil : 0
 
-    @io.append_to_console "\n\n    Do %d per day to meet monthly goal of %d\n\n" % [tasks_per_day, month_target]
+    @io.append_to_console "\n\n    Do %d per day to meet monthly goal of %d (%d tasks remaining)\n\n" % [tasks_per_day, month_target, remaining_tasks]
     @io.get_from_console
   end
   
