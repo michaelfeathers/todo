@@ -35,7 +35,6 @@ require_relative 'lib/commands/save_no_remove'
 require_relative 'lib/commands/save_to_yesterday'
 require_relative 'lib/commands/show_command_frequencies'
 require_relative 'lib/commands/show_updates'
-require_relative 'lib/commands/surface'
 require_relative 'lib/commands/switch_lists'
 require_relative 'lib/commands/tag_tallies'
 require_relative 'lib/commands/today'
@@ -83,7 +82,6 @@ class ToDo
                 SaveToYesterday.new,
                 ShowCommandFrequencies.new,
                 ShowUpdates.new,
-                Surface.new,
                 SwitchLists.new,
                 TagTallies.new,
                 TodayTargetFor.new,

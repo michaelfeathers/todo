@@ -69,7 +69,7 @@ describe Help do
 
   it 'lists all the commands' do
     NON_CMD_LINE_COUNT = 2
-    CURRENT_CMD_COUNT = 40
+    CURRENT_CMD_COUNT = 39
 
     # Load all command files manually
     Dir[File.expand_path('../../../lib/commands/*.rb', __FILE__)].each { |f| require f }

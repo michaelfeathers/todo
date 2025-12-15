@@ -91,19 +91,6 @@ class Session
     @list.io.write_log(text)
   end
 
-  def surface count
-    count.times do
-      return if @background_tasks.empty?
-
-      @background_tasks.cursor_set(rand(@background_tasks.count))
-      task = @background_tasks.task_at_cursor
-      @foreground_tasks.add(task)
-
-      @background_tasks.remove_task_at_cursor
-    end
-
-  end
-
   def move_task_to_random_position_on_other_list
     task = @list.task_at_cursor
     @list.remove_task_at_cursor
