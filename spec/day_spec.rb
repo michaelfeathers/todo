@@ -23,4 +23,19 @@ describe Day do
     expect(day.to_s).to eq("2022-12-22")
   end
 
+  describe '.today' do
+    it 'creates a Day object representing today' do
+      day = Day.today
+      expect(day).to be_a(Day)
+      expect(day.to_s).to match(/\d{4}-\d{2}-\d{2}/)
+    end
+
+    it 'returns a day with current date components' do
+      now = DateTime.now
+      day = Day.today
+      expect(day.year_no).to eq(now.year)
+      expect(day.month_no).to eq(now.month)
+    end
+  end
+
 end

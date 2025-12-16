@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'tasklist'
 require 'fakeappio'
+require 'gruff'
 
 require 'commands/add'
 require 'commands/Help'
@@ -367,6 +368,56 @@ describe TaskList do
     expect(task_list.find("b")).to eq([" 1 L: task B\n"])
   end
 
+  describe '#todo_find' do
+    context 'with a limit' do
+      before do
+        io.tasks_content = "L: task AA\nL: task AB\nL: task AC\nL: task AD\nL: task AE\n"
+      end
+
+      it 'limits the results to the specified number' do
+        task_list.todo_find("A", 3)
+        expect(io.console_output_content).to include(" 0 L: task AA\n")
+        expect(io.console_output_content).to include(" 1 L: task AB\n")
+        expect(io.console_output_content).to include(" 2 L: task AC\n")
+        expect(io.console_output_content).not_to include(" 3 L: task AD\n")
+        expect(io.console_output_content).to include("\n3\n")
+      end
+
+      it 'shows all results when limit is greater than matches' do
+        task_list.todo_find("A", 10)
+        expect(io.console_output_content).to include("\n5\n")
+      end
+    end
+
+    context 'without a limit' do
+      before do
+        io.tasks_content = "L: task AA\nL: task AB\nL: task AC\n"
+      end
+
+      it 'shows all matching results' do
+        task_list.todo_find("A")
+        expect(io.console_output_content).to include(" 0 L: task AA\n")
+        expect(io.console_output_content).to include(" 1 L: task AB\n")
+        expect(io.console_output_content).to include(" 2 L: task AC\n")
+        expect(io.console_output_content).to include("\n3\n")
+      end
+    end
+  end
+
+  describe '#todo_save_all' do
+    it 'saves all tasks to the IO' do
+      io.tasks_content = "L: task 1\nL: task 2\n"
+      task_list.todo_save_all
+      expect(io.tasks_content).to eq("L: task 1\nL: task 2\n")
+    end
+
+    it 'saves an empty task list' do
+      io.tasks_content = ""
+      task_list.todo_save_all
+      expect(io.tasks_content).to eq("")
+    end
+  end
+
   it 'produces a summary for an empty archive' do
     io.today_content = Day.from_text("2020-01-01")
     MonthsReport.new(io, nil, TEST_COLUMNS).run
@@ -462,6 +513,158 @@ describe TaskList do
   it 'can return 2 tag tallies' do
     io.tasks_content = "L: task\nR: task\nutaski\nR: task\nutask\n"
     expect(task_list.untagged_tally).to eq (2)
+  end
+
+  describe '#todo_show_command_frequencies' do
+    context 'when there are command log entries' do
+      before do
+        io.log_content = "add,10 save,5 quit,3 help,2"
+      end
+
+      it 'appends formatted command frequencies to the console' do
+        task_list.todo_show_command_frequencies
+
+        expected_output = "\n50.00  10     add\n25.00  5      save\n15.00  3      quit\n10.00  2      help\n\n"
+        expect(io.console_output_content).to eq(expected_output)
+      end
+
+      it 'returns to the prompt after displaying frequencies' do
+        expect(io).to receive(:get_from_console)
+        task_list.todo_show_command_frequencies
+      end
+    end
+
+    context 'when there is only one command in the log' do
+      before do
+        io.log_content = "add,42"
+      end
+
+      it 'shows 100% for a single command' do
+        task_list.todo_show_command_frequencies
+
+        expected_output = "\n100.00  42     add\n\n"
+        expect(io.console_output_content).to eq(expected_output)
+      end
+    end
+
+    context 'when the log is empty' do
+      before do
+        io.log_content = ""
+      end
+
+      it 'appends only newlines to the console' do
+        task_list.todo_show_command_frequencies
+
+        expected_output = "\n\n\n"
+        expect(io.console_output_content).to eq(expected_output)
+      end
+
+      it 'returns to the prompt' do
+        expect(io).to receive(:get_from_console)
+        task_list.todo_show_command_frequencies
+      end
+    end
+
+    context 'when calculating percentages with varying frequencies' do
+      before do
+        io.log_content = "save,100 add,50 quit,25 help,25"
+      end
+
+      it 'correctly calculates percentages that sum to 100' do
+        task_list.todo_show_command_frequencies
+
+        expected_output = "\n50.00  100    save\n25.00  50     add\n12.50  25     quit\n12.50  25     help\n\n"
+        expect(io.console_output_content).to eq(expected_output)
+      end
+    end
+  end
+
+  describe '#todo_trend_chart' do
+    let(:mock_gruff_chart) { instance_double(Gruff::Line) }
+
+    before do
+      allow(Gruff::Line).to receive(:new).and_return(mock_gruff_chart)
+      allow(mock_gruff_chart).to receive(:theme=)
+      allow(mock_gruff_chart).to receive(:data)
+      allow(mock_gruff_chart).to receive(:write)
+      allow(task_list).to receive(:`).and_return(nil)
+    end
+
+    context 'when archive has task data' do
+      before do
+        io.archive_content = "2023-01-15 L: Task A\n2023-01-16 L: Task B\n2023-01-16 R: Task C\n2023-01-17 L: Task D\n"
+      end
+
+      it 'creates a Gruff line chart with width 1600' do
+        expect(Gruff::Line).to receive(:new).with(1600).and_return(mock_gruff_chart)
+        task_list.todo_trend_chart(nil)
+      end
+
+      it 'sets the theme with correct colors' do
+        expected_theme = {
+          colors: ['red'],
+          marker_color: 'gray',
+          font_color: 'black',
+          background_colors: 'white'
+        }
+        expect(mock_gruff_chart).to receive(:theme=).with(expected_theme)
+        task_list.todo_trend_chart(nil)
+      end
+
+      it 'adds frequency data to the chart' do
+        expect(mock_gruff_chart).to receive(:data).with('', [1, 2, 1])
+        task_list.todo_trend_chart(nil)
+      end
+
+      it 'writes the chart to trend.png' do
+        expect(mock_gruff_chart).to receive(:write).with('trend.png')
+        task_list.todo_trend_chart(nil)
+      end
+
+      it 'opens the chart file' do
+        expect(task_list).to receive(:`).with('open trend.png')
+        task_list.todo_trend_chart(nil)
+      end
+    end
+
+    context 'when filtering by year' do
+      before do
+        io.archive_content = "2022-12-31 L: Task 2022\n2023-01-01 L: Task 2023A\n2023-01-02 L: Task 2023B\n2024-01-01 L: Task 2024\n"
+      end
+
+      it 'only includes data from the specified year' do
+        expect(mock_gruff_chart).to receive(:data).with('', [1, 1])
+        task_list.todo_trend_chart("2023")
+      end
+    end
+
+    context 'when archive is empty' do
+      before do
+        io.archive_content = ""
+      end
+
+      it 'creates a chart with empty data' do
+        expect(mock_gruff_chart).to receive(:data).with('', [])
+        task_list.todo_trend_chart(nil)
+      end
+
+      it 'still writes and opens the chart file' do
+        expect(mock_gruff_chart).to receive(:write).with('trend.png')
+        expect(task_list).to receive(:`).with('open trend.png')
+        task_list.todo_trend_chart(nil)
+      end
+    end
+
+    context 'when multiple tasks occur on the same day' do
+      before do
+        io.archive_content = "2023-06-01 L: Task 1\n2023-06-01 L: Task 2\n2023-06-01 R: Task 3\n2023-06-01 W: Task 4\n"
+      end
+
+      it 'aggregates the frequency correctly' do
+        expect(mock_gruff_chart).to receive(:data).with('', [4])
+        task_list.todo_trend_chart(nil)
+      end
+    end
   end
 
 end

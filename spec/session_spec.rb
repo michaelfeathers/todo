@@ -32,6 +32,26 @@ describe Session do
     expect(@io.log_content).to eq("t,1")
   end
 
+  describe '#get_line' do
+    it 'returns the input from console with newline removed' do
+      @io.console_input_content = "test input\n"
+      result = @session.get_line
+      expect(result).to eq("test input")
+    end
+
+    it 'returns empty string when input is nil' do
+      @io.console_input_content = nil
+      result = @session.get_line
+      expect(result).to eq("")
+    end
+
+    it 'returns empty string when input is empty' do
+      @io.console_input_content = ""
+      result = @session.get_line
+      expect(result).to eq("")
+    end
+  end
+
 end
 
 describe 'Session#move_task_to_random_position_on_other_list' do

@@ -72,4 +72,26 @@ describe MonthSummaries do
       expect(desc.line).to eq('show month summaries')
     end
   end
+
+  describe 'today statistics' do
+    it 'shows today statistics when viewing current year and tasks exist for today' do
+      today = DateTime.new(2023, 6, 15)
+      f_io.today_content = Day.new(today)
+      f_io.archive_content = "2023-06-15 L: Task today\n2023-01-01 L: Task Jan\n"
+
+      command.run('m 2023', session)
+
+      expect(f_io.console_output_content).to include("Today")
+    end
+
+    it 'does not show today statistics when viewing a different year' do
+      today = DateTime.new(2023, 6, 15)
+      f_io.today_content = Day.new(today)
+      f_io.archive_content = "2022-01-01 L: Task 2022\n2023-06-15 L: Task today\n"
+
+      command.run('m 2022', session)
+
+      expect(f_io.console_output_content).not_to include("Today")
+    end
+  end
 end

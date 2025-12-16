@@ -67,6 +67,7 @@ describe Help do
     help_command.run("h", session)
   end
 
+
   it 'lists all the commands' do
     NON_CMD_LINE_COUNT = 2
     CURRENT_CMD_COUNT = 39
@@ -76,7 +77,8 @@ describe Help do
 
     commands = ObjectSpace.each_object(Class)
                           .select { |klass| klass < Command }
-                          .reject { |klass| klass == TestingHelp }
+                          .reject { |klass| klass == TestingHelp || klass.name == 'TestCommand' }
+                          .select { |klass| klass.name && klass.instance_methods(false).include?(:description) }
                           .sort_by { |klass| klass.name }
                           .map {|k| k.new.description }
 
