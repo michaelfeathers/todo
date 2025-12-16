@@ -67,6 +67,25 @@ describe Help do
     help_command.run("h", session)
   end
 
+  describe '#command_descs' do
+    it 'maps registered commands to description arrays' do
+      # Create mock commands with descriptions
+      mock_cmd1 = double('Command1')
+      mock_cmd2 = double('Command2')
+
+      allow(mock_cmd1).to receive(:description).and_return(CommandDesc.new('cmd1', 'description 1'))
+      allow(mock_cmd2).to receive(:description).and_return(CommandDesc.new('cmd2', 'description 2'))
+
+      # Stub the ToDo constant and its registered_commands method
+      todo_class = class_double('ToDo').as_stubbed_const
+      allow(todo_class).to receive(:registered_commands).and_return([mock_cmd1, mock_cmd2])
+
+      real_help = Help.new
+      descs = real_help.command_descs
+
+      expect(descs).to eq([['cmd1', 'description 1'], ['cmd2', 'description 2']])
+    end
+  end
 
   it 'lists all the commands' do
     NON_CMD_LINE_COUNT = 2
