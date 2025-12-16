@@ -21,8 +21,8 @@ describe PageDown do
     tasks =  50.times.map {|n| "L: task #{n}\n" }
     output  =  50.times.map {|n| [n,cursor_char(n), "L: task #{n}\n"] }
     f_io.tasks_content = tasks.join
-    
-    expect(o).to eq(output.take(TaskList::PAGE_SIZE))
+
+    expect(o).to eq(output.take(AppIo::PAGE_SIZE))
   end
 
   it 'shows the second page of tasks' do
@@ -31,7 +31,7 @@ describe PageDown do
     f_io.tasks_content = tasks.join
     PageDown.new.run("dd", session)
 
-    expect(o).to eq(output.drop(TaskList::PAGE_SIZE).take(TaskList::PAGE_SIZE))
+    expect(o).to eq(output.drop(AppIo::PAGE_SIZE).take(AppIo::PAGE_SIZE))
   end
 
   it 'is noop when on the last page' do
@@ -41,6 +41,6 @@ describe PageDown do
     PageDown.new.run("dd", session)
     PageDown.new.run("dd", session)
 
-    expect(o).to eq(output.drop(TaskList::PAGE_SIZE).take(TaskList::PAGE_SIZE))
+    expect(o).to eq(output.drop(AppIo::PAGE_SIZE).take(AppIo::PAGE_SIZE))
   end
 end

@@ -19,13 +19,13 @@ describe CursorSet do
 
 
   it 'pages when cursor set off page' do
-    page_size          = TaskList::PAGE_SIZE
+    page_size          = AppIo::PAGE_SIZE
     pos                = page_size + 5
 
     tasks              =  50.times.map {|n| "L: task #{n}\n" }
     expected           =  50.times.map {|n| [n,n == pos ? "-" : " " , "L: task #{n}\n"] }
     f_io.tasks_content =  tasks.join
-    
+
     CursorSet.new.run("c #{pos}", session)
 
     expect(o).to eq(expected.drop(page_size).take(page_size))

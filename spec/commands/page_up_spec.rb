@@ -22,11 +22,11 @@ describe PageUp do
   it 'shows the first page of tasks' do
     tasks =  50.times.map {|n| "L: task #{n}\n" }
     output  =  50.times.map {|n| [n,cursor_char(n),"L: task #{n}\n"] }
-    
+
     f_io.tasks_content = tasks.join
     PageUp.new.run("uu", session)
 
-    expect(o).to eq(output.take(TaskList::PAGE_SIZE))
+    expect(o).to eq(output.take(AppIo::PAGE_SIZE))
   end
 
   it 'shows the first page of tasks after previously paging down' do
@@ -35,7 +35,7 @@ describe PageUp do
     f_io.tasks_content = tasks.join
     PageDown.new.run("dd", session)
     PageUp.new.run("uu", session)
-   
-    expect(o).to eq(output.take(TaskList::PAGE_SIZE))
+
+    expect(o).to eq(output.take(AppIo::PAGE_SIZE))
   end     
 end

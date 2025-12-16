@@ -55,17 +55,24 @@ class Session
 
   def global_find(text)
     io = @list.io
-    io.clear_console
 
-    tasklists = { '' => @foreground_tasks, 'Background:' => @background_tasks }
-
-    tasklists.each do |label, task_list|
-      found = task_list.find(text)
-      next if found.empty?
-
-      io.append_to_console "#{label}#{$/}" unless label.empty?
-      io.append_to_console found.join + $/ + $/
+    # Build output for foreground tasks
+    found_foreground = @foreground_tasks.find(text)
+    foreground_output = ""
+    unless found_foreground.empty?
+      foreground_output = found_foreground.join + $/ + $/
     end
+
+    # Build output for background tasks
+    found_background = @background_tasks.find(text)
+    background_output = ""
+    unless found_background.empty?
+      background_output = "Background:#{$/}" + found_background.join + $/ + $/
+    end
+
+    # Combine outputs and display with pagination
+    combined_output = foreground_output + background_output
+    io.display_paginated(combined_output)
     io.get_from_console
 
   end

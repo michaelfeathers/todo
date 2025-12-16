@@ -7,7 +7,6 @@ require_relative 'array_ext'
 
 class TaskList
 
-  PAGE_SIZE    = 40
   TAG_PATTERN  = /^[A-Z]:$/
 
   attr_reader :io, :description
@@ -87,8 +86,7 @@ class TaskList
   end
 
   def todo_print_archive
-    @io.clear_console
-    @io.append_to_console(@io.read_archive)
+    @io.display_paginated(@io.read_archive)
     @io.get_from_console
   end
 
@@ -137,8 +135,7 @@ class TaskList
   end
 
   def todo_show_updates
-    @io.clear_console
-    @io.append_to_console @io.read_updates
+    @io.display_paginated(@io.read_updates)
     @io.get_from_console
   end
 
@@ -205,7 +202,7 @@ class TaskList
   end
 
   def todo_page_down
-    return unless ((@page_no + 1) * PAGE_SIZE) < @tasks.count
+    return unless ((@page_no + 1) * AppIo::PAGE_SIZE) < @tasks.count
     @page_no = @page_no + 1
   end
 
@@ -256,12 +253,12 @@ class TaskList
   def window
     @tasks.zip((0..))
           .map {|e, i| [i, cursor_char(i), e] }
-          .drop(@page_no * PAGE_SIZE)
-          .take(PAGE_SIZE)
+          .drop(@page_no * AppIo::PAGE_SIZE)
+          .take(AppIo::PAGE_SIZE)
   end
 
   def adjust_page
-    @page_no = @cursor / PAGE_SIZE
+    @page_no = @cursor / AppIo::PAGE_SIZE
   end
 
   def cursor_char index

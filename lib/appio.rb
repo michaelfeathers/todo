@@ -7,6 +7,45 @@ LOG_FILE     = ROOT_DIR + "log.txt"
 LOCK_FILE    = ROOT_DIR + "todo.lock"
 
 class AppIo
+  PAGE_SIZE = 40
+
+  def display_paginated(content)
+    lines = content.lines
+
+    # If content is short, just display it normally
+    if lines.count <= PAGE_SIZE
+      clear_console
+      append_to_console(content)
+      return content
+    end
+
+    # Paginate for longer content
+    page = 0
+    total_pages = (lines.count.to_f / PAGE_SIZE).ceil
+
+    loop do
+      start_line = page * PAGE_SIZE
+      end_line = [start_line + PAGE_SIZE, lines.count].min
+      page_content = lines[start_line...end_line].join
+
+      clear_console
+      append_to_console(page_content)
+
+      if end_line >= lines.count
+        # Last page, just wait for any input
+        break
+      else
+        # More pages available
+        append_to_console($/ + ",,," + $/)
+        input = get_from_console
+        break if input && input.strip.downcase == 'q'
+        page += 1
+      end
+    end
+
+    content
+  end
+
   def read_archive
     File.read(ARCHIVE_FILE)
   end

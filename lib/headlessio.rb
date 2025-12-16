@@ -6,6 +6,13 @@ class HeadlessIo < AppIo
     @done = false
   end
 
+  def display_paginated(content)
+    # No pagination in headless mode - just display all content
+    clear_console
+    append_to_console(content)
+    content
+  end
+
   def get_from_console
     @done ? "q\n" : (@done = true; ARGV.join(' ') + "\n")
   end

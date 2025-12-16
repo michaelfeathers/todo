@@ -11,7 +11,7 @@ describe Down do
   let(:o) { rendering_of(session) }
 
   it 'pages when cursor set off page' do
-    page_size = TaskList::PAGE_SIZE
+    page_size = AppIo::PAGE_SIZE
     pos       = page_size - 1
 
     tasks     =  50.times.map {|n| "L: task #{n}\n" }
