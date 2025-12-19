@@ -83,16 +83,3 @@ class ToDo
   end
 
 end
-
-
-def run
-  return puts "Another instance of todo is already running." if File.exist?(LOCK_FILE)
-
-  FileUtils.touch(LOCK_FILE)
-  ios = ARGV.empty? ? [AppIo, BackgroundIo] : [HeadlessIo, BackgroundIo]
-  ToDo.new(*ios.map(&:new)).run
-ensure
-  FileUtils.rm(LOCK_FILE) if File.exist?(LOCK_FILE)
-end
-
-run

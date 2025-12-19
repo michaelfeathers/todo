@@ -8,6 +8,8 @@ require 'simplecov'
 SimpleCov.start do
   add_filter '/spec/' # Exclude spec files from coverage
   add_filter '/lib/appio.rb'
+  add_filter '/lib/backgroundio.rb'
+  add_filter '/lib/headlessio.rb'
 end
 
 Dir[File.expand_path('../lib/**/*.rb', __FILE__)].each { |f| require f }

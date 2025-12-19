@@ -11,10 +11,10 @@ export PATH="/usr/local/opt/ruby/bin:/Users/michaelfeathers/.gem/ruby/3.4.0/bin:
 export PATH="/usr/local/opt/ruby/bin:/Users/michaelfeathers/.gem/ruby/3.4.0/bin:$PATH" && bundle exec rspec spec/path/to/specific_spec.rb
 
 ### Run the main application
-ruby todo.rb
+ruby bin/todo
 
 ### Run with headless mode (no console output)
-ruby todo.rb headless
+ruby bin/todo headless
 
 ### Install dependencies
 bundle install
@@ -25,6 +25,7 @@ This is a Ruby-based todo list application with a command-driven interface. The 
 
 ### Core Components
 
+- **Executable** (`bin/todo`): Entry point that handles lock file management and launches the application
 - **ToDo** (`todo.rb`): Main application class that manages command execution and the main run loop
 - **Session** (`lib/session.rb`): Manages the session state, including foreground/background task lists and command logging
 - **TaskList** (`lib/tasklist.rb`): Handles task list operations (add, remove, edit, search, etc.)
@@ -36,7 +37,8 @@ Commands are implemented using a plugin-like architecture:
 - Each command inherits from `Command` class (`lib/command.rb`)
 - Commands must implement `matches?(line)` to check if they handle a given input
 - Commands implement `process(line, session)` to execute their functionality
-- All commands are registered in `ToDo.registered_commands` (`todo.rb:56-95`)
+- All commands are auto-loaded from `lib/commands/` via `lib/commands.rb`
+- All commands are registered in `ToDo.registered_commands` (`todo.rb:13-51`)
 
 ### Data Storage
 
