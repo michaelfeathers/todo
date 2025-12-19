@@ -18,7 +18,12 @@ class ToDoUpdater
     @io.write_tasks(new_tasks)
 
     sorted_non_due = non_due_updates.sort_by do |line|
-      Day.from_text(line.split.first).date
+      begin
+        Day.from_text(line.split.first).date
+      rescue
+        # Invalid dates sort to the end
+        DateTime.new(9999, 12, 31)
+      end
     end
     @io.write_updates(sorted_non_due)
   end

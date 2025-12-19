@@ -91,20 +91,41 @@ describe ToDoUpdater do
     end
 
     context 'when updates have invalid dates' do
-      it 'raises an error when trying to sort invalid dates' do
+      it 'keeps invalid dates in updates and sorts them to the end' do
         io.tasks_content = "Original task\n"
         io.update_content = "invalid-date Some task\n2025-01-20 Future task\n"
 
-        expect { updater.run }.to raise_error(Date::Error)
+        updater.run
+
+        expect(io.tasks_content).to eq("Original task\n")
+        expect(io.update_content).to eq([
+          "2025-01-20 Future task\n",
+          "invalid-date Some task\n"
+        ])
       end
 
-      it 'raises an error even with a single invalid date' do
+      it 'processes successfully with only invalid dates' do
         io.tasks_content = "Original task\n"
         io.update_content = "invalid-date Some task\n"
 
-        # Invalid dates are treated as non-due (due? returns false)
-        # but then sorting fails when trying to parse the invalid date
-        expect { updater.run }.to raise_error(Date::Error)
+        updater.run
+
+        # Invalid dates are treated as non-due and kept in updates
+        expect(io.tasks_content).to eq("Original task\n")
+        expect(io.update_content).to eq(["invalid-date Some task\n"])
+      end
+
+      it 'sorts multiple invalid dates together at the end' do
+        io.tasks_content = ""
+        io.update_content = "bad-date Task A\n2025-01-20 Valid task\nalso-bad Task B\n"
+
+        updater.run
+
+        expect(io.update_content).to eq([
+          "2025-01-20 Valid task\n",
+          "bad-date Task A\n",
+          "also-bad Task B\n"
+        ])
       end
     end
   end
