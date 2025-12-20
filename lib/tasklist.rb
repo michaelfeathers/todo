@@ -86,11 +86,6 @@ class TaskList
     @io.get_from_console
   end
 
-  def todo_print_archive
-    @io.display_paginated(@io.read_archive_for_display)
-    @io.get_from_console
-  end
-
   def todo_push days_text
     return if @tasks.count < 1
 
