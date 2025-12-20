@@ -667,5 +667,180 @@ describe TaskList do
     end
   end
 
+  describe 'empty list edge cases' do
+    let(:empty_io) { FakeAppIo.new }
+    let(:empty_list) { TaskList.new(empty_io) }
+
+    before do
+      empty_io.tasks_content = ""
+      empty_io.today_content = Day.today
+    end
+
+    describe '#cursor_set' do
+      it 'does not crash when setting cursor on empty list' do
+        expect { empty_list.cursor_set(0) }.not_to raise_error
+        expect { empty_list.cursor_set(5) }.not_to raise_error
+        expect { empty_list.cursor_set(-1) }.not_to raise_error
+      end
+
+      it 'keeps cursor at 0 when list is empty' do
+        empty_list.cursor_set(10)
+        expect(empty_list.instance_variable_get(:@cursor)).to eq(0)
+      end
+    end
+
+    describe '#todo_zap_to_position' do
+      it 'does not crash when zapping on empty list' do
+        expect { empty_list.todo_zap_to_position(0) }.not_to raise_error
+        expect { empty_list.todo_zap_to_position(5) }.not_to raise_error
+      end
+
+      it 'keeps list empty after zap attempt' do
+        empty_list.todo_zap_to_position(10)
+        expect(empty_list.empty?).to be true
+      end
+    end
+
+    describe '#todo_iterative_find_continue' do
+      it 'does not crash when continuing find on empty list' do
+        empty_list.instance_variable_set(:@last_search_text, "test")
+        expect { empty_list.todo_iterative_find_continue }.not_to raise_error
+      end
+
+      it 'handles empty list gracefully when search text exists' do
+        empty_list.instance_variable_set(:@last_search_text, "find me")
+        empty_list.todo_iterative_find_continue
+        expect(empty_list.instance_variable_get(:@cursor)).to eq(0)
+      end
+    end
+
+    describe '#remove_task_at_cursor' do
+      it 'does not crash when removing from empty list' do
+        expect { empty_list.remove_task_at_cursor }.not_to raise_error
+      end
+
+      it 'keeps cursor at 0 after removing from empty list' do
+        empty_list.remove_task_at_cursor
+        expect(empty_list.instance_variable_get(:@cursor)).to eq(0)
+      end
+
+      it 'maintains valid cursor state after removing last task' do
+        empty_io.tasks_content = "Single task\n"
+        list_with_one = TaskList.new(empty_io)
+
+        list_with_one.remove_task_at_cursor
+
+        expect(list_with_one.empty?).to be true
+        expect(list_with_one.instance_variable_get(:@cursor)).to eq(0)
+      end
+    end
+
+    describe '#task_at_cursor' do
+      it 'returns empty string for empty list' do
+        expect(empty_list.task_at_cursor).to eq("")
+      end
+    end
+
+    describe '#down' do
+      it 'does not crash on empty list' do
+        expect { empty_list.down }.not_to raise_error
+      end
+
+      it 'cursor stays at 0 on empty list' do
+        empty_list.down
+        expect(empty_list.instance_variable_get(:@cursor)).to eq(0)
+      end
+    end
+
+    describe '#up' do
+      it 'does not crash on empty list' do
+        expect { empty_list.up }.not_to raise_error
+      end
+
+      it 'cursor stays at 0 on empty list' do
+        empty_list.up
+        expect(empty_list.instance_variable_get(:@cursor)).to eq(0)
+      end
+    end
+
+    describe '#edit' do
+      it 'does not crash on empty list' do
+        expect { empty_list.edit("new text") }.not_to raise_error
+      end
+    end
+
+    describe '#edit_replace' do
+      it 'does not crash on empty list' do
+        expect { empty_list.edit_replace(0, ["new", "text"]) }.not_to raise_error
+      end
+    end
+
+    describe '#edit_insert' do
+      it 'does not crash on empty list' do
+        expect { empty_list.edit_insert(1, ["new", "text"]) }.not_to raise_error
+      end
+    end
+
+    describe '#todo_push' do
+      it 'does not crash on empty list' do
+        expect { empty_list.todo_push("5") }.not_to raise_error
+      end
+    end
+
+    describe '#todo_save' do
+      it 'does not crash on empty list' do
+        expect { empty_list.todo_save }.not_to raise_error
+      end
+    end
+
+    describe '#todo_save_no_remove' do
+      it 'does not crash on empty list' do
+        expect { empty_list.todo_save_no_remove }.not_to raise_error
+      end
+    end
+
+    describe '#todo_retag' do
+      it 'does not crash on empty list' do
+        expect { empty_list.todo_retag("W") }.not_to raise_error
+      end
+    end
+
+    describe '#todo_insert_blank' do
+      it 'can insert blank line into empty list' do
+        empty_list.todo_insert_blank
+        expect(empty_list.count).to eq(1)
+      end
+    end
+
+    describe '#todo_iterative_find_init' do
+      it 'does not crash on empty list' do
+        expect { empty_list.todo_iterative_find_init("test") }.not_to raise_error
+      end
+
+      it 'does not find anything on empty list' do
+        empty_list.todo_iterative_find_init("test")
+        expect(empty_list.instance_variable_get(:@cursor)).to eq(0)
+      end
+    end
+
+    describe '#window' do
+      it 'returns empty array for empty list' do
+        expect(empty_list.window).to eq([])
+      end
+    end
+
+    describe '#find' do
+      it 'returns empty array for empty list' do
+        expect(empty_list.find("test")).to eq([])
+      end
+    end
+
+    describe '#todo_zap_to_top' do
+      it 'does not crash on empty list' do
+        expect { empty_list.todo_zap_to_top }.not_to raise_error
+      end
+    end
+  end
+
 end
 

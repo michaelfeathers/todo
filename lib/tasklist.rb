@@ -38,6 +38,7 @@ class TaskList
   end
 
   def cursor_set line_no
+    return if @tasks.empty?
     @cursor = line_no.clamp(0, @tasks.count - 1)
     adjust_page
   end
@@ -212,6 +213,7 @@ class TaskList
   end
 
   def todo_zap_to_position line_no
+    return if @tasks.empty?
     clamped_line_no = line_no.clamp(0, @tasks.count - 1)
     @tasks = @tasks.insert(clamped_line_no, @tasks.delete_at(@cursor))
   end
@@ -274,7 +276,7 @@ class TaskList
 
   def remove_task_at_cursor
     @tasks.delete_at(@cursor)
-    @cursor = [@cursor, @tasks.count - 1].min
+    @cursor = [@cursor, [@tasks.count - 1, 0].max].min
   end
 
   def task_at_cursor
@@ -328,6 +330,7 @@ class TaskList
   def todo_iterative_find_continue
     text = @last_search_text
     return unless text
+    return if @tasks.empty?
 
     start_index = [@cursor + 1, @tasks.count - 1].min
     found_position = @tasks[start_index..-1].index { |task| task =~ /#{Regexp.escape(text)}/i }
