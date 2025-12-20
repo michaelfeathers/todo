@@ -87,7 +87,7 @@ class TaskList
   end
 
   def todo_print_archive
-    @io.display_paginated(@io.read_archive)
+    @io.display_paginated(@io.read_archive_for_display)
     @io.get_from_console
   end
 
