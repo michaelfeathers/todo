@@ -8,6 +8,7 @@ class FakeAppIo
   attr_accessor :log_content
 
   def initialize
+    # Don't load history in tests
     @archive_content = @tasks_content = ""
     @console_output_content = ""
     @log_content = ""

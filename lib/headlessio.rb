@@ -3,6 +3,7 @@
 class HeadlessIo < AppIo
 
   def initialize
+    # Don't load history in headless mode
     @done = false
   end
 

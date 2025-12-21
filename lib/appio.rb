@@ -1,3 +1,5 @@
+require 'readline'
+
 ROOT_DIR     = "/Users/michaelfeathers/Projects/todo/lib/data/"
 TODO_FILE    = ROOT_DIR + "todo.txt"
 UPDATE_FILE  = ROOT_DIR + "updates.txt"
@@ -5,9 +7,17 @@ ARCHIVE_FILE = ROOT_DIR + "archive.txt"
 JUNK_FILE    = ROOT_DIR + "junk.txt"
 LOG_FILE     = ROOT_DIR + "log.txt"
 LOCK_FILE    = ROOT_DIR + "todo.lock"
+HISTORY_FILE = ROOT_DIR + "command_history.txt"
 
 class AppIo
   PAGE_SIZE = 40
+  MAX_HISTORY = 1000
+  @@history_loaded = false
+
+  def initialize
+    load_history unless @@history_loaded
+    @@history_loaded = true
+  end
 
   def display_paginated(content)
     lines = content.lines
@@ -99,7 +109,12 @@ class AppIo
   end
 
   def get_from_console
-    gets
+    input = Readline.readline('', false)
+    if input && !input.strip.empty?
+      Readline::HISTORY.push(input)
+      save_history
+    end
+    input ? input + "\n" : input
   end
 
   def clear_console
@@ -112,6 +127,24 @@ class AppIo
 
   def renderer
     ConsoleRenderer.new
+  end
+
+  private
+
+  def load_history
+    return unless File.exist?(HISTORY_FILE)
+    File.readlines(HISTORY_FILE).each do |line|
+      Readline::HISTORY.push(line.chomp)
+    end
+  rescue
+    # Ignore errors loading history
+  end
+
+  def save_history
+    history = Readline::HISTORY.to_a.last(MAX_HISTORY)
+    File.write(HISTORY_FILE, history.join("\n") + "\n")
+  rescue
+    # Ignore errors saving history
   end
 
 end
