@@ -5,7 +5,6 @@ require_relative 'lib/session'
 require_relative 'lib/commands'
 require_relative 'lib/appio'
 require_relative 'lib/backgroundio'
-require_relative 'lib/headlessio.rb'
 require_relative 'lib/todoupdater'
 
 
@@ -60,10 +59,18 @@ class ToDo
     @background_io = background_io
     ToDoUpdater.new(@foreground_io).run
     @session = Session.from_ios(@foreground_io, @background_io)
-    @session.render
+    @headless = !ARGV.empty?
+    @session.render unless @headless
   end
 
   def run
+    # Headless mode: process ARGV and exit
+    if @headless
+      on_line(ARGV.join(' '), @session)
+      return
+    end
+
+    # Interactive mode: run the main loop
     while true
       on_line(@session.get_line, @session)
       @session.render
