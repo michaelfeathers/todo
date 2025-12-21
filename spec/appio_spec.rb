@@ -83,3 +83,38 @@ describe 'AppIo::PAGE_SIZE' do
     expect(AppIo::PAGE_SIZE).to eq(40)
   end
 end
+
+describe 'AppIo#should_save_to_history?' do
+  let(:io) { AppIo.new }
+
+  before do
+    # Clear history before each test
+    Readline::HISTORY.clear
+  end
+
+  it 'does not save empty input' do
+    expect(io.send(:should_save_to_history?, '')).to eq(false)
+    expect(io.send(:should_save_to_history?, '   ')).to eq(false)
+  end
+
+  it 'does not save the quit command' do
+    expect(io.send(:should_save_to_history?, 'q')).to eq(false)
+    expect(io.send(:should_save_to_history?, '  q  ')).to eq(false)
+  end
+
+  it 'does not save consecutive duplicates' do
+    # Add a command to history
+    Readline::HISTORY.push('d')
+    expect(io.send(:should_save_to_history?, 'd')).to eq(false)
+  end
+
+  it 'saves non-duplicate commands' do
+    Readline::HISTORY.push('u')
+    expect(io.send(:should_save_to_history?, 'd')).to eq(true)
+  end
+
+  it 'saves regular commands' do
+    expect(io.send(:should_save_to_history?, 's')).to eq(true)
+    expect(io.send(:should_save_to_history?, 'a task description')).to eq(true)
+  end
+end

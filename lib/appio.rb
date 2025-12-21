@@ -110,7 +110,7 @@ class AppIo
 
   def get_from_console
     input = Readline.readline('', false)
-    if input && !input.strip.empty?
+    if input && should_save_to_history?(input)
       Readline::HISTORY.push(input)
       save_history
     end
@@ -131,6 +131,13 @@ class AppIo
 
   private
 
+  def should_save_to_history?(input)
+    return false if input.strip.empty?
+    return false if input.strip == 'q'
+    return false if !Readline::HISTORY.empty? && Readline::HISTORY.to_a.last == input
+    true
+  end
+
   def load_history
     return unless File.exist?(HISTORY_FILE)
     File.readlines(HISTORY_FILE).each do |line|
@@ -142,7 +149,9 @@ class AppIo
 
   def save_history
     history = Readline::HISTORY.to_a.last(MAX_HISTORY)
-    File.write(HISTORY_FILE, history.join("\n") + "\n")
+    # Remove consecutive duplicates
+    deduped_history = history.chunk { |x| x }.map(&:first)
+    File.write(HISTORY_FILE, deduped_history.join("\n") + "\n")
   rescue
     # Ignore errors saving history
   end
