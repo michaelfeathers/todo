@@ -30,22 +30,37 @@ describe Push do
   end
 
   describe '#process' do
-    let(:mock_list) { instance_double(TaskList) }
-
-    before do
-      allow(session).to receive(:on_list).and_yield(mock_list)
-    end
-
-    it 'calls todo_push with the number of days' do
-      expect(mock_list).to receive(:todo_push).with('5')
+    it 'pushes the task at cursor to updates with future date and removes it' do
+      f_io.tasks_content = "L: task 1\nL: task 2\n"
+      f_io.update_content = ""
+      f_io.today_content = Day.new(DateTime.new(2023, 6, 15))
 
       command.run('p 5', session)
+
+      expect(f_io.update_content.first).to eq("2023-06-20 L: task 1\n")
+      expect(session.list.count).to eq(1)
+      expect(session.list.task_at_cursor).to eq("L: task 2")
     end
 
-    it 'calls todo_push with different day counts' do
-      expect(mock_list).to receive(:todo_push).with('10')
+    it 'pushes with different day counts' do
+      f_io.tasks_content = "L: task A\n"
+      f_io.update_content = ""
+      f_io.today_content = Day.new(DateTime.new(2023, 6, 15))
 
       command.run('p 10', session)
+
+      expect(f_io.update_content.first).to eq("2023-06-25 L: task A\n")
+      expect(session.list.count).to eq(0)
+    end
+
+    it 'does not push when list is empty' do
+      f_io.tasks_content = ""
+      f_io.update_content = []
+      f_io.today_content = Day.new(DateTime.new(2023, 6, 15))
+
+      command.run('p 5', session)
+
+      expect(f_io.update_content).to eq([])
     end
   end
 

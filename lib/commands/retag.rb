@@ -8,7 +8,7 @@ class Retag < Command
   end
 
   def process line, session
-    session.on_list {|list| list.todo_retag(line.split[1]) }
+    session.on_list {|list| list.retag(line.split[1]) }
   end
 
   def description

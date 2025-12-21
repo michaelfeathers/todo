@@ -9,7 +9,7 @@ class GrabToggle < Command
   end
 
   def process line, session
-    session.on_list {|list| list.todo_grab_toggle }
+    session.on_list {|list| list.grab_toggle }
   end
 
   def description

@@ -189,48 +189,173 @@ describe ToDo do
   describe '#run' do
     let(:session) { todo_app.instance_variable_get(:@session) }
 
-    it 'calls on_line and render in a loop' do
-      # Mock session to break out of infinite loop
-      iteration_count = 0
-      allow(session).to receive(:get_line) do
-        iteration_count += 1
-        raise 'break loop' if iteration_count > 2
-        'a Task'
-      end
-      allow(session).to receive(:render)
+    context 'in headless mode' do
+      it 'processes ARGV as a single command and returns' do
+        stub_const('ARGV', ['a', 'Test', 'task'])
 
-      expect { todo_app.run }.to raise_error('break loop')
-      expect(iteration_count).to eq(3)
+        # Create a new instance with ARGV set
+        headless_todo = ToDo.new(f_io, b_io)
+        headless_session = headless_todo.instance_variable_get(:@session)
+
+        # Mock on_line to verify it's called with ARGV.join(' ')
+        expect(headless_todo).to receive(:on_line).with('a Test task', headless_session).once
+
+        # Mock render to verify it's NOT called in headless mode
+        expect(headless_session).not_to receive(:render)
+
+        # Run should process the command and return immediately
+        headless_todo.run
+      end
+
+      it 'does not enter the interactive loop' do
+        stub_const('ARGV', ['help'])
+
+        headless_todo = ToDo.new(f_io, b_io)
+        headless_session = headless_todo.instance_variable_get(:@session)
+
+        # Mock get_line to verify it's never called in headless mode
+        expect(headless_session).not_to receive(:get_line)
+
+        allow(headless_todo).to receive(:on_line)
+
+        headless_todo.run
+      end
+
+      it 'enters interactive mode when ARGV is empty' do
+        stub_const('ARGV', [])
+
+        # With empty ARGV, it's not headless
+        interactive_todo = ToDo.new(f_io, b_io)
+        interactive_session = interactive_todo.instance_variable_get(:@session)
+
+        # Should enter interactive mode - verify get_line is called
+        call_count = 0
+        allow(interactive_session).to receive(:get_line) do
+          call_count += 1
+          raise 'break loop' if call_count > 1
+          'test command'
+        end
+
+        allow(interactive_session).to receive(:render)
+        allow(interactive_todo).to receive(:on_line)
+
+        expect { interactive_todo.run }.to raise_error('break loop')
+        expect(call_count).to be > 0  # Verify interactive mode was entered
+      end
     end
 
-    it 'processes each line through on_line' do
-      allow(session).to receive(:get_line).and_return('a Test', 'break')
-      allow(session).to receive(:render)
-
-      # Mock on_line to count calls
-      call_count = 0
-      allow(todo_app).to receive(:on_line) do |line, sess|
-        call_count += 1
-        raise 'break loop' if line == 'break'
+    context 'in interactive mode' do
+      before do
+        # Ensure ARGV is empty for interactive mode
+        stub_const('ARGV', [])
       end
 
-      expect { todo_app.run }.to raise_error('break loop')
-      expect(call_count).to eq(2)
-    end
+      it 'calls on_line and render in a loop' do
+        # Mock session to break out of infinite loop
+        iteration_count = 0
+        allow(session).to receive(:get_line) do
+          iteration_count += 1
+          raise 'break loop' if iteration_count > 2
+          'a Task'
+        end
+        allow(session).to receive(:render)
 
-    it 'renders after each command' do
-      iteration_count = 0
-      allow(session).to receive(:get_line) do
-        iteration_count += 1
-        raise 'break loop' if iteration_count > 1
-        'a Task'
+        expect { todo_app.run }.to raise_error('break loop')
+        expect(iteration_count).to eq(3)
       end
 
-      render_count = 0
-      allow(session).to receive(:render) { render_count += 1 }
+      it 'processes each line through on_line' do
+        lines = ['a Test', 'another command', 'break']
+        line_index = 0
 
-      expect { todo_app.run }.to raise_error('break loop')
-      expect(render_count).to eq(1)
+        allow(session).to receive(:get_line) do
+          line = lines[line_index]
+          line_index += 1
+          line
+        end
+        allow(session).to receive(:render)
+
+        # Mock on_line to count calls
+        call_count = 0
+        allow(todo_app).to receive(:on_line) do |line, sess|
+          call_count += 1
+          raise 'break loop' if line == 'break'
+        end
+
+        expect { todo_app.run }.to raise_error('break loop')
+        expect(call_count).to eq(3)
+      end
+
+      it 'renders after each command' do
+        iteration_count = 0
+        allow(session).to receive(:get_line) do
+          iteration_count += 1
+          raise 'break loop' if iteration_count > 1
+          'a Task'
+        end
+
+        render_count = 0
+        allow(session).to receive(:render) { render_count += 1 }
+
+        expect { todo_app.run }.to raise_error('break loop')
+        expect(render_count).to eq(1)
+      end
+
+      it 'passes the session to on_line' do
+        allow(session).to receive(:get_line).once.and_return('help')
+        allow(session).to receive(:render).once
+
+        expect(todo_app).to receive(:on_line).with('help', session).once do
+          # Break the loop after first call
+          allow(session).to receive(:get_line).and_raise('break loop')
+        end
+
+        expect { todo_app.run }.to raise_error('break loop')
+      end
+
+      it 'continues looping after processing commands' do
+        commands = ['a First', 'a Second', 'a Third']
+        command_index = 0
+
+        allow(session).to receive(:get_line) do
+          command = commands[command_index]
+          command_index += 1
+          raise 'break loop' if command_index > commands.length
+          command
+        end
+
+        allow(session).to receive(:render)
+
+        on_line_calls = []
+        allow(todo_app).to receive(:on_line) do |line, sess|
+          on_line_calls << line
+        end
+
+        expect { todo_app.run }.to raise_error('break loop')
+        expect(on_line_calls).to eq(commands)
+      end
+
+      it 'always renders after on_line completes' do
+        call_sequence = []
+
+        allow(session).to receive(:get_line) do
+          raise 'break loop' if call_sequence.length >= 6
+          'command'
+        end
+
+        allow(todo_app).to receive(:on_line) do |line, sess|
+          call_sequence << :on_line
+        end
+
+        allow(session).to receive(:render) do
+          call_sequence << :render
+        end
+
+        expect { todo_app.run }.to raise_error('break loop')
+
+        # Verify alternating pattern: on_line, render, on_line, render, ...
+        expect(call_sequence).to eq([:on_line, :render, :on_line, :render, :on_line, :render])
+      end
     end
   end
 end

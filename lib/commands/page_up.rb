@@ -8,7 +8,7 @@ class PageUp < Command
   end
 
   def process line, session
-    session.on_list {|list| list.todo_page_up }
+    session.on_list {|list| list.page_up }
   end
 
   def description

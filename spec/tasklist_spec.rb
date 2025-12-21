@@ -49,144 +49,6 @@ describe TaskList do
   let(:io) { FakeAppIo.new }
   let(:task_list) { TaskList.new(io) }
 
-   describe '#todo_save' do
-     context 'when there are tasks in the list' do
-       before do
-        io.tasks_content = "L: task 1\nL: task 2\nL: task 3\n"
-        io.today_content = Day.new(DateTime.new(2023, 6, 1))
-        task_list.cursor_set(1)
-      end
-
-      it 'appends the task at the cursor to the archive' do
-        task_list.todo_save
-
-        expect(io.archive_content).to eq("2023-06-01 L: task 2\n")
-      end
-
-      it 'removes the task at the cursor from the tasks' do
-        task_list.todo_save
-
-        expect(task_list.window).to eq([[0, " ", "L: task 1\n"], [1, "-", "L: task 3\n"]])
-      end
-
-      it 'updates the cursor position to the next task' do
-        task_list.todo_save
-
-        expect(task_list.window).to eq([[0, " ", "L: task 1\n"], [1, "-", "L: task 3\n"]])
-      end
-
-      it 'updates the cursor position to the previous task when at the last task' do
-        task_list.cursor_set(2)
-        task_list.todo_save
-
-        expect(task_list.window).to eq([[0, " ", "L: task 1\n"], [1, "-", "L: task 2\n"]])
-      end
-    end
-
-    context 'when the list is empty' do
-      before do
-        io.tasks_content = ""
-      end
-
-      it 'does not append anything to the archive' do
-        task_list.todo_save
-
-        expect(io.archive_content).to eq("")
-      end
-
-      it 'does not modify the tasks' do
-        task_list.todo_save
-
-        expect(io.tasks_content).to eq("")
-      end
-    end
-
-    context 'when the task at the cursor is empty' do
-      before do
-        io.tasks_content = "L: task 1\n\nL: task 3\n"
-        task_list.cursor_set(1)
-      end
-
-      it 'does not append anything to the archive' do
-        task_list.todo_save
-
-        expect(io.archive_content).to eq("")
-      end
-
-      it 'does not remove the empty task from the tasks' do
-        task_list.todo_save
-
-        expect(io.tasks_content).to eq("L: task 1\n\nL: task 3\n")
-      end
-    end
-  end
-
-    describe '#todo_save_no_remove' do
-    context 'when there are tasks in the list' do
-      before do
-        io.tasks_content = "L: task 1\nL: task 2\nL: task 3\n"
-        io.today_content = Day.new(DateTime.new(2023, 6, 1))
-        task_list.cursor_set(1)
-      end
-
-      it 'appends the task at the cursor to the archive' do
-        task_list.todo_save_no_remove
-
-        expect(io.archive_content).to eq("2023-06-01 L: task 2\n")
-      end
-
-      it 'does not remove the task at the cursor from the tasks' do
-        task_list.todo_save_no_remove
-
-        expect(io.tasks_content).to eq("L: task 1\nL: task 2\nL: task 3\n")
-      end
-
-      it 'does not modify the cursor position' do
-        task_list.todo_save_no_remove
-
-        expect(task_list.window).to eq([[0, " ", "L: task 1\n"], [1, "-", "L: task 2\n"], [2, " ", "L: task 3\n"]])
-      end
-    end
-
-    context 'when the list is empty' do
-      before do
-        io.tasks_content = ""
-      end
-
-      it 'does not append anything to the archive' do
-        task_list.todo_save_no_remove
-
-        expect(io.archive_content).to eq("")
-      end
-
-      it 'does not modify the tasks' do
-        task_list.todo_save_no_remove
-
-        expect(io.tasks_content).to eq("")
-      end
-    end
-
-    context 'when the task at the cursor is empty' do
-      before do
-        io.tasks_content = "L: task 1\n\nL: task 3\n"
-        task_list.cursor_set(1)
-      end
-
-      it 'does not append anything to the archive' do
-        task_list.todo_save_no_remove
-
-        expect(io.archive_content).to eq("")
-      end
-
-      it 'does not modify the tasks' do
-        task_list.todo_save_no_remove
-
-        expect(io.tasks_content).to eq("L: task 1\n\nL: task 3\n")
-      end
-    end
-  end
-
-
   describe '#up' do
     it 'moves the cursor up by one position' do
       # io.tasks_content = "L: task 1\nL: task 2\nL: task 3\n"
@@ -217,7 +79,7 @@ describe TaskList do
       io.tasks_content = "L: task 1\nL: task 2\nL: task 3\n"
 
       task_list.cursor_set(1)
-      task_list.todo_grab_toggle
+      task_list.grab_toggle
 
       task_list.up
 
@@ -256,16 +118,16 @@ describe TaskList do
     expect(task_list.find("b")).to eq([" 1 L: task B\n"])
   end
 
-  describe '#todo_save_all' do
+  describe '#save_all' do
     it 'saves all tasks to the IO' do
       io.tasks_content = "L: task 1\nL: task 2\n"
-      task_list.todo_save_all
+      task_list.save_all
       expect(io.tasks_content).to eq("L: task 1\nL: task 2\n")
     end
 
     it 'saves an empty task list' do
       io.tasks_content = ""
-      task_list.todo_save_all
+      task_list.save_all
       expect(io.tasks_content).to eq("")
     end
   end
@@ -293,43 +155,10 @@ describe TaskList do
 
   it 'moves the cursor on an add' do
     io.tasks_content = 50.times.map { "L: task\n" }.join
-    task_list.todo_page_down
+    task_list.page_down
     task_list.add("L: new task")
 
     expect(task_list.window[0]).to eq([0, "-", "L: new task\n"])
-  end
-
-  it 'does not write to archive when saving an empty todo list' do
-    io.tasks_content = ""
-    task_list.todo_save
-
-    expect(task_list.window).to eq([])
-  end
-
-  it 'does not write to archive when save_no_remove on an empty todo list' do
-    io.tasks_content = ""
-    task_list.todo_save_no_remove
-
-    expect(task_list.window).to eq([])
-  end
-
-  it 'pushes task at cursor to next day' do
-    io.tasks_content = "L: task A\n"
-    io.update_content = ""
-    io.today_content = Day.from_text("2022-12-21")
-    task_list.todo_push "1"
-
-    expect(io.update_content.first).to eq("2022-12-22 L: task A\n")
-    expect(task_list.window).to eq([])
-  end
-
-  it 'noops push on no tasks' do
-    io.update_content = []
-    io.today_content = Day.from_text("2022-12-21")
-    task_list.todo_push "1"
-
-    expect(io.update_content).to eq([])
-    expect(task_list.window).to eq([])
   end
 
   it 'preserves a tag on editing' do
@@ -376,27 +205,27 @@ describe TaskList do
       end
     end
 
-    describe '#todo_zap_to_position' do
+    describe '#zap_to_position' do
       it 'does not crash when zapping on empty list' do
-        expect { empty_list.todo_zap_to_position(0) }.not_to raise_error
-        expect { empty_list.todo_zap_to_position(5) }.not_to raise_error
+        expect { empty_list.zap_to_position(0) }.not_to raise_error
+        expect { empty_list.zap_to_position(5) }.not_to raise_error
       end
 
       it 'keeps list empty after zap attempt' do
-        empty_list.todo_zap_to_position(10)
+        empty_list.zap_to_position(10)
         expect(empty_list.empty?).to be true
       end
     end
 
-    describe '#todo_iterative_find_continue' do
+    describe '#iterative_find_continue' do
       it 'does not crash when continuing find on empty list' do
         empty_list.instance_variable_set(:@last_search_text, "test")
-        expect { empty_list.todo_iterative_find_continue }.not_to raise_error
+        expect { empty_list.iterative_find_continue }.not_to raise_error
       end
 
       it 'handles empty list gracefully when search text exists' do
         empty_list.instance_variable_set(:@last_search_text, "find me")
-        empty_list.todo_iterative_find_continue
+        empty_list.iterative_find_continue
         expect(empty_list.instance_variable_get(:@cursor)).to eq(0)
       end
     end
@@ -468,44 +297,26 @@ describe TaskList do
       end
     end
 
-    describe '#todo_push' do
+    describe '#retag' do
       it 'does not crash on empty list' do
-        expect { empty_list.todo_push("5") }.not_to raise_error
+        expect { empty_list.retag("W") }.not_to raise_error
       end
     end
 
-    describe '#todo_save' do
-      it 'does not crash on empty list' do
-        expect { empty_list.todo_save }.not_to raise_error
-      end
-    end
-
-    describe '#todo_save_no_remove' do
-      it 'does not crash on empty list' do
-        expect { empty_list.todo_save_no_remove }.not_to raise_error
-      end
-    end
-
-    describe '#todo_retag' do
-      it 'does not crash on empty list' do
-        expect { empty_list.todo_retag("W") }.not_to raise_error
-      end
-    end
-
-    describe '#todo_insert_blank' do
+    describe '#insert_blank' do
       it 'can insert blank line into empty list' do
-        empty_list.todo_insert_blank
+        empty_list.insert_blank
         expect(empty_list.count).to eq(1)
       end
     end
 
-    describe '#todo_iterative_find_init' do
+    describe '#iterative_find_init' do
       it 'does not crash on empty list' do
-        expect { empty_list.todo_iterative_find_init("test") }.not_to raise_error
+        expect { empty_list.iterative_find_init("test") }.not_to raise_error
       end
 
       it 'does not find anything on empty list' do
-        empty_list.todo_iterative_find_init("test")
+        empty_list.iterative_find_init("test")
         expect(empty_list.instance_variable_get(:@cursor)).to eq(0)
       end
     end
@@ -522,9 +333,9 @@ describe TaskList do
       end
     end
 
-    describe '#todo_zap_to_top' do
+    describe '#zap_to_top' do
       it 'does not crash on empty list' do
-        expect { empty_list.todo_zap_to_top }.not_to raise_error
+        expect { empty_list.zap_to_top }.not_to raise_error
       end
     end
   end

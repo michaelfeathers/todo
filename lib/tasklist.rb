@@ -74,38 +74,6 @@ class TaskList
     end
   end
 
-  def todo_push days_text
-    return if @tasks.count < 1
-
-    updates = @io.read_updates.lines.to_a
-    date_text = @io.today.with_more_days(days_text.to_i).to_s
-
-    updates << [date_text, @tasks[@cursor]].join(' ')
-    updates = updates.sort_by {|line| DateTime.parse(line.split.first) }
-
-    @io.write_updates(updates)
-    remove_task_at_cursor
-  end
-
-  def todo_save
-    return if @tasks.count < 1
-    return if task_at_cursor.strip.empty?
-
-    @io.append_to_archive(@io.today.to_s + " " + @tasks[@cursor])
-    remove_task_at_cursor
-  end
-
-  def todo_save_all
-    save_all
-  end
-
-  def todo_save_no_remove
-    return if @tasks.count < 1
-    return if task_at_cursor.strip.empty?
-
-    @io.append_to_archive(@io.today.to_s + " " + @tasks[@cursor])
-  end
-
   def edit text
     return if @tasks.empty?
     new_tokens = text.split
@@ -127,27 +95,27 @@ class TaskList
     update_task_at_cursor(tokens.join(' '))
   end
 
-  def todo_grab_toggle
+  def grab_toggle
     @grab_mode = (not @grab_mode)
   end
 
-  def todo_page_down
+  def page_down
     return unless ((@page_no + 1) * AppIo::PAGE_SIZE) < @tasks.count
     @page_no = @page_no + 1
   end
 
-  def todo_page_up
+  def page_up
     return unless @page_no > 0
     @page_no = @page_no - 1
   end
 
-  def todo_zap_to_position line_no
+  def zap_to_position line_no
     return if @tasks.empty?
     clamped_line_no = line_no.clamp(0, @tasks.count - 1)
     @tasks = @tasks.insert(clamped_line_no, @tasks.delete_at(@cursor))
   end
 
-  def todo_retag new_tag
+  def retag new_tag
     current_task = @tasks[@cursor]
     return unless current_task
 
@@ -163,15 +131,6 @@ class TaskList
           .map {|e, i| [i, cursor_char(i), e] }
           .drop(@page_no * AppIo::PAGE_SIZE)
           .take(AppIo::PAGE_SIZE)
-  end
-
-  def adjust_page
-    @page_no = @cursor / AppIo::PAGE_SIZE
-  end
-
-  def cursor_char index
-    return " " unless @cursor == index
-    @grab_mode ? "*" : "-"
   end
 
   def find text
@@ -198,18 +157,18 @@ class TaskList
     filter_tasks(:reject).count
   end
 
-  def todo_insert_blank
+  def insert_blank
     @tasks.insert(@cursor, $/)
     adjust_page
   end
 
-  def todo_iterative_find_init text
+  def iterative_find_init text
     @last_search_text = text
     found_position = @tasks.index { |task| task =~ /#{Regexp.escape(text)}/i }
     cursor_set(found_position) if found_position
   end
 
-  def todo_iterative_find_continue
+  def iterative_find_continue
     text = @last_search_text
     return unless text
     return if @tasks.empty?
@@ -221,8 +180,8 @@ class TaskList
     cursor_set(found_position) if found_position
   end
 
-  def todo_zap_to_top
-    todo_zap_to_position(0)
+  def zap_to_top
+    zap_to_position(0)
   end
 
   def count
@@ -230,6 +189,15 @@ class TaskList
   end
 
   private
+
+  def adjust_page
+    @page_no = @cursor / AppIo::PAGE_SIZE
+  end
+
+  def cursor_char index
+    return " " unless @cursor == index
+    @grab_mode ? "*" : "-"
+  end
 
   def update_task_at_cursor task_text
     @tasks[@cursor] = task_text + $/

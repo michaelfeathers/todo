@@ -13,9 +13,9 @@ class IterativeFind < Command
       tokens = line.split
       if tokens.count > 1
         text = tokens[1]
-        list.todo_iterative_find_init(text)
+        list.iterative_find_init(text)
       else
-        list.todo_iterative_find_continue
+        list.iterative_find_continue
       end
     end
   end

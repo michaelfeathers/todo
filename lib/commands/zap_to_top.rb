@@ -8,7 +8,7 @@ class ZapToTop < Command
   end
 
   def process(line, session)
-    session.on_list {|list| list.todo_zap_to_top }
+    session.on_list {|list| list.zap_to_top }
   end
 
   def description

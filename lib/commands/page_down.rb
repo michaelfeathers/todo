@@ -8,7 +8,7 @@ class PageDown < Command
   end
 
   def process line, session
-    session.on_list {|list| list.todo_page_down }
+    session.on_list {|list| list.page_down }
   end
 
   def description

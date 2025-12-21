@@ -106,7 +106,7 @@ class Session
     random_position = rand(other_list.count)
 
     other_list.add(task)
-    other_list.todo_zap_to_position(random_position)
+    other_list.zap_to_position(random_position)
   end
 
   def get_line

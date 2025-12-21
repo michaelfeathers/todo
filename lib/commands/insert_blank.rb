@@ -9,7 +9,7 @@ class InsertBlank < Command
   end
 
   def process(line, session)
-    session.on_list {|list| list.todo_insert_blank }
+    session.on_list {|list| list.insert_blank }
   end
 
   def description

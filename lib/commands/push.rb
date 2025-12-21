@@ -1,6 +1,7 @@
 require_relative '../command'
 require_relative '../session'
 require_relative '../appio'
+require 'date'
 
 class Push < Command
   def matches? line
@@ -8,7 +9,22 @@ class Push < Command
   end
 
   def process line, session
-    session.on_list {|list| list.todo_push(line.split[1]) }
+    days_text = line.split[1]
+
+    session.on_list do |list|
+      return if list.count < 1
+
+      io = list.io
+      updates = io.read_updates.lines.to_a
+      date_text = io.today.with_more_days(days_text.to_i).to_s
+
+      updates << [date_text, list.task_at_cursor + "\n"].join(' ')
+      updates = updates.sort_by {|line| DateTime.parse(line.split.first) }
+
+      io.write_updates(updates)
+      list.remove_task_at_cursor
+      list.save_all
+    end
   end
 
   def description

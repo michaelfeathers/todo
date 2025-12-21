@@ -8,7 +8,7 @@ class ZapToPosition < Command
   end
 
   def process line, session
-    session.on_list {|list| list.todo_zap_to_position(line.split[1].to_i) }
+    session.on_list {|list| list.zap_to_position(line.split[1].to_i) }
   end
 
   def description

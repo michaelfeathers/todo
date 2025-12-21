@@ -31,8 +31,8 @@ describe GrabToggle do
       allow(session).to receive(:on_list).and_yield(mock_list)
     end
 
-    it 'calls todo_grab_toggle on the list' do
-      expect(mock_list).to receive(:todo_grab_toggle)
+    it 'calls grab_toggle on the list' do
+      expect(mock_list).to receive(:grab_toggle)
 
       command.run('g', session)
     end
