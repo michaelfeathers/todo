@@ -9,22 +9,22 @@ require 'commands/Help'
 
 empty_archive_expected = "
 
-             Win        R7K       Life      Total   Adjusted
+             Win        R7K       Life      Total
 
-Jan            0          0          0          0          0
-Feb            0          0          0          0          0
-Mar            0          0          0          0          0
-Apr            0          0          0          0          0
-May            0          0          0          0          0
-Jun            0          0          0          0          0
-Jul            0          0          0          0          0
-Aug            0          0          0          0          0
-Sep            0          0          0          0          0
-Oct            0          0          0          0          0
-Nov            0          0          0          0          0
-Dec            0          0          0          0          0
+Jan            0          0          0          0
+Feb            0          0          0          0
+Mar            0          0          0          0
+Apr            0          0          0          0
+May            0          0          0          0
+Jun            0          0          0          0
+Jul            0          0          0          0
+Aug            0          0          0          0
+Sep            0          0          0          0
+Oct            0          0          0          0
+Nov            0          0          0          0
+Dec            0          0          0          0
 
-               0          0          0          0          0
+               0          0          0          0
 
 
 
@@ -33,8 +33,7 @@ Dec            0          0          0          0          0
 TEST_COLUMNS = [["Win",   ->(tasks) { tasks.W.count } ],
                 ["R7K",   ->(tasks) { tasks.R.count } ],
                 ["Life",  ->(tasks) { tasks.L.count } ],
-                ["Total", ->(tasks) { tasks.count } ],
-                ["Adjusted", ->(tasks) { tasks.adjusted_count } ]]
+                ["Total", ->(tasks) { tasks.count } ]]
 
 
 class TestingHelp < Help

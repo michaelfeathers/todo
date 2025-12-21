@@ -27,13 +27,6 @@ class TaskSelection
     all_total.zero? ? 0 : (100.0 * other_total / all_total).to_i
   end
 
-  def adjusted_count
-    points_for_wins       = 5 * self.W.count
-    points_for_all_others = count - self.W.count
-
-    points_for_wins + points_for_all_others
-  end
-
   def count
     @descs.count
   end
