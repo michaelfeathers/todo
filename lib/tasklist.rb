@@ -74,18 +74,6 @@ class TaskList
     end
   end
 
-  def todo_find text, limit = nil
-    @io.clear_console
-
-    found           = find(text)
-    found_to_report = limit ? found.take(limit) : found
-
-    report = "#{found_to_report.join}#{$/}#{found_to_report.count}#{$/}#{$/}#{$/}"
-    @io.append_to_console(report)
-
-    @io.get_from_console
-  end
-
   def todo_push days_text
     return if @tasks.count < 1
 
@@ -130,11 +118,6 @@ class TaskList
     @io.append_to_archive(@io.today.to_s + " " + @tasks[@cursor])
   end
 
-  def todo_show_updates
-    @io.display_paginated(@io.read_updates)
-    @io.get_from_console
-  end
-
   def edit text
     return if @tasks.empty?
     new_tokens = text.split
@@ -164,37 +147,6 @@ class TaskList
     year ||= @io.today.year_no
 
     MonthsReport.new(@io, year).run
-  end
-
-  def todo_today days_prev
-    day_to_display = @io.today.with_fewer_days(days_prev.to_i)
-    found = @io.read_archive
-               .lines
-               .select {|line| Day.from_text(line.split.first) === day_to_display }
-
-    @io.append_to_console($/)
-    found.each {|line| @io.append_to_console(line) }
-    @io.append_to_console($/ + "#{found.count}" + $/ + $/)
-    @io.get_from_console
-  end
-
-  def todo_trend
-      day_frequencies.each {|e| @io.append_to_console(("%3s  %s" %  [e[1], e[0]]) + $/) }
-      @io.append_to_console($/)
-      @io.get_from_console
-  end
-
-  def todo_trend_chart opt_year
-    g = Gruff::Line.new(1600)
-    g.theme = {
-      colors: %w[red],
-      marker_color: 'gray',
-      font_color: 'black',
-      background_colors: 'white'
-    }
-    g.data('', day_frequencies(opt_year).map {|e| e[1] })
-    g.write('trend.png')
-    `open trend.png`
   end
 
   def todo_page_down
@@ -279,36 +231,12 @@ class TaskList
     @tasks[@cursor].chomp
   end
 
-  def todo_tag_tallies
-    mask = "   %-10s%3d"
-    tagged = tag_tallies.map {|t, n| mask % [t, n] }.join($/)
-    untagged = mask % ["Untagged", untagged_tally]
-
-    @io.append_to_console $/ + $/ + "#{tagged}\n\n#{untagged}" + $/ + $/
-    @io.get_from_console
-  end
-
   def tag_tallies
     filter_tasks(:select).freq
   end
 
   def untagged_tally
     filter_tasks(:reject).count
-  end
-
-  def todo_show_command_frequencies
-    data    = @io.read_log
-                 .split
-                 .map{|line| line.split(',') }
-                 .map{|name,count| [name, count.to_i] }
-
-    total   = data.sum {|_,count| count }
-
-    results = data.map {|name, count| "%-5.2f  %-4d   %s" % [count * 100.0 / total, count, name]}
-                  .join($/)
-
-    @io.append_to_console $/ + results + $/ + $/
-    @io.get_from_console
   end
 
   def todo_insert_blank
@@ -343,14 +271,6 @@ class TaskList
   end
 
   private
-
-  def day_frequencies year = nil
-    @io.read_archive
-       .lines
-       .map {|line| line.split.first }
-       .select {|d| !year || Day.from_text(d).year ==  year }
-       .freq
-  end
 
   def update_task_at_cursor task_text
     @tasks[@cursor] = task_text + $/

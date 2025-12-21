@@ -25,16 +25,22 @@ describe Trend do
   end
 
   describe '#process' do
-    let(:mock_list) { instance_double(TaskList) }
-
-    before do
-      allow(session).to receive(:on_list).and_yield(mock_list)
-    end
-
-    it 'calls todo_trend on the list' do
-      expect(mock_list).to receive(:todo_trend)
+    it 'displays trend data from archive' do
+      f_io.archive_content = "2020-01-11 R: Thing X\n2020-01-12 R: Thing Y\n2020-01-12 L: Another thing\n"
+      f_io.console_input_content = "\n"
 
       command.run('tr', session)
+
+      expect(f_io.console_output_content).to eq("  1  2020-01-11\n  2  2020-01-12\n\n")
+    end
+
+    it 'displays empty trend when archive is empty' do
+      f_io.archive_content = ""
+      f_io.console_input_content = "\n"
+
+      command.run('tr', session)
+
+      expect(f_io.console_output_content).to eq("\n")
     end
   end
 

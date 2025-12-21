@@ -8,7 +8,11 @@ class ShowUpdates < Command
   end
 
   def process line, session
-    session.on_list {|list| list.todo_show_updates }
+    session.on_list do |list|
+      io = list.io
+      io.display_paginated(io.read_updates)
+      io.get_from_console
+    end
   end
 
   def description

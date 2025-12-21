@@ -25,16 +25,23 @@ describe ShowUpdates do
   end
 
   describe '#process' do
-    let(:mock_list) { instance_double(TaskList) }
-
-    before do
-      allow(session).to receive(:on_list).and_yield(mock_list)
-    end
-
-    it 'calls todo_show_updates on the list' do
-      expect(mock_list).to receive(:todo_show_updates)
+    it 'displays updates' do
+      f_io.update_content = "2023-12-01 Task 1\n2023-12-02 Task 2\n"
+      f_io.console_input_content = "\n"
 
       command.run('pp', session)
+
+      expect(f_io.console_output_content).to include("2023-12-01 Task 1")
+      expect(f_io.console_output_content).to include("2023-12-02 Task 2")
+    end
+
+    it 'displays empty updates' do
+      f_io.update_content = ""
+      f_io.console_input_content = "\n"
+
+      command.run('pp', session)
+
+      expect(f_io.console_output_content).to eq("")
     end
   end
 
