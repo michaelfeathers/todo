@@ -30,22 +30,25 @@ describe TodayTargetFor do
   end
 
   describe '#process' do
-    let(:mock_list) { instance_double(TaskList) }
-
-    before do
-      allow(session).to receive(:on_list).and_yield(mock_list)
-    end
-
-    it 'calls todo_target_for with the monthly goal' do
-      expect(mock_list).to receive(:todo_target_for).with(30)
+    it 'calculates tasks needed per day to meet monthly goal' do
+      f_io.today_content = Day.new(DateTime.new(2023, 6, 15))
+      f_io.archive_content = "2023-06-01 L: Task A\n2023-06-02 L: Task B\n2023-06-03 L: Task C\n"
+      f_io.console_input_content = "\n"
 
       command.run('tf 30', session)
+
+      expect(f_io.console_output_content).to include("Do 2 per day to meet monthly goal of 30")
+      expect(f_io.console_output_content).to include("Daily average so far: 0.2")
     end
 
-    it 'calls todo_target_for with different goal values' do
-      expect(mock_list).to receive(:todo_target_for).with(50)
+    it 'shows 0 tasks per day when goal is already exceeded' do
+      f_io.today_content = Day.new(DateTime.new(2023, 6, 15))
+      f_io.archive_content = "2023-06-01 L: Task A\n2023-06-02 L: Task B\n2023-06-03 L: Task C\n"
+      f_io.console_input_content = "\n"
 
-      command.run('tf 50', session)
+      command.run('tf 3', session)
+
+      expect(f_io.console_output_content).to include("Do 0 per day to meet monthly goal of 3")
     end
   end
 

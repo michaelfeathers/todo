@@ -1,6 +1,7 @@
 require_relative '../command'
 require_relative '../session'
 require_relative '../appio'
+require_relative '../monthsreport'
 
 
 class MonthSummaries < Command
@@ -10,8 +11,11 @@ class MonthSummaries < Command
 
   def process line, session
     session.on_list do |list|
-      month = line.split[1].to_i if line.split.size > 1
-      list.todo_month_summaries(month)
+      io = list.io
+      year = line.split[1].to_i if line.split.size > 1
+      year ||= io.today.year_no
+
+      MonthsReport.new(io, year).run
     end
   end
 
