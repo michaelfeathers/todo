@@ -3,32 +3,18 @@ module DateToggleFormatter
     lines = content.lines
     return content if lines.empty?
 
-    formatted_lines = []
-    last_date = nil
-    use_reverse = false
-
-    lines.each do |line|
-      # Extract the date (first word) from the line
-      parts = line.split(' ', 2)
-      next if parts.empty?
-
-      date = parts[0]
-      rest = parts[1] || ""
-
-      # Toggle reverse video when date changes
-      if date != last_date
-        last_date = date
-        use_reverse = !use_reverse
-      end
-
-      # Apply formatting to the date only
-      if use_reverse
-        formatted_lines << "\e[7m#{date}\e[0m #{rest}"
-      else
-        formatted_lines << "#{date} #{rest}"
-      end
-    end
-
-    formatted_lines.join
+    lines
+      .map { |line| line.split(' ', 2) }
+      .reject(&:empty?)
+      .chunk { |parts| parts.first }
+      .with_index
+      .flat_map { |(date, parts_group), chunk_index|
+        use_reverse = chunk_index.even?
+        parts_group.map { |parts|
+          rest = parts[1] || ""
+          use_reverse ? "\e[7m#{date}\e[0m #{rest}" : "#{date} #{rest}"
+        }
+      }
+      .join
   end
 end
