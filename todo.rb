@@ -11,6 +11,7 @@ require_relative 'lib/todoupdater'
 class ToDo
   @@commands = [Add.new,
                 CursorSet.new,
+                CursorToRandom.new,
                 CursorToStart.new,
                 DisplayEdit.new,
                 Down.new,
@@ -39,6 +40,7 @@ class ToDo
                 SaveToYesterday.new,
                 ShowCommandFrequencies.new,
                 ShowUpdates.new,
+                Surface.new,
                 SwitchLists.new,
                 TagTallies.new,
                 TodayTargetFor.new,

@@ -6,7 +6,7 @@ require_relative 'nullrenderer'
 
 class Session
 
-  attr_reader :list
+  attr_reader :list, :foreground_tasks, :background_tasks
 
   def self.from_ios foreground_io, background_io
     @foreground_tasks = TaskList.new(foreground_io)
