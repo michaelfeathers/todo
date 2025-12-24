@@ -24,10 +24,27 @@ class Surface < Command
     # Save current list state
     original_list_was_foreground = (session.list == session.foreground_tasks)
 
-    # Switch to foreground and insert blank line at top first
+    # Switch to foreground and check if blank line already exists at top
     session.switch_lists unless session.list == session.foreground_tasks
-    session.list.cursor_set(0)
-    session.list.insert_blank
+
+    # Check if first task is blank, insert one only if needed
+    blank_line_inserted = false
+    unless session.list.empty?
+      session.list.cursor_set(0)
+      first_task = session.list.task_at_cursor
+      if first_task.strip.empty?
+        # Blank line already exists, don't insert another
+        blank_line_inserted = false
+      else
+        # No blank line, insert one
+        session.list.insert_blank
+        blank_line_inserted = true
+      end
+    else
+      # Empty list, insert blank line
+      session.list.insert_blank
+      blank_line_inserted = true
+    end
 
     # Switch to background
     session.switch_lists
@@ -47,8 +64,8 @@ class Surface < Command
       tasks_moved += 1
     end
 
-    # If no tasks were moved, remove the blank line we added
-    if tasks_moved == 0
+    # If no tasks were moved and we inserted a blank line, remove it
+    if tasks_moved == 0 && blank_line_inserted
       session.switch_lists unless session.list == session.foreground_tasks
       session.list.cursor_set(0)
       session.list.remove_task_at_cursor

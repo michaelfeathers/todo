@@ -150,6 +150,46 @@ describe Surface do
       end
     end
 
+    context 'when foreground already has blank line at top' do
+      it 'does not insert another blank line' do
+        f_io.tasks_content = "\nF: task 1\nF: task 2\n"
+        b_io.tasks_content = "B: task A\nB: task B\n"
+
+        command.run('su 1', session)
+
+        # Foreground: 1 background task + 1 existing blank + 2 original = 4
+        # Should NOT have 2 blank lines
+        expect(session.foreground_tasks.count).to eq(4)
+        expect(session.background_tasks.count).to eq(1)
+
+        foreground_window = session.foreground_tasks.window
+        # First task should be from background
+        expect(foreground_window[0][2]).to match(/^B:/)
+        # Second should be the original blank line
+        expect(foreground_window[1][2]).to eq("\n")
+        # Third and fourth should be original foreground tasks
+        expect(foreground_window[2][2]).to eq("F: task 1\n")
+        expect(foreground_window[3][2]).to eq("F: task 2\n")
+      end
+
+      it 'uses existing blank line for multiple tasks' do
+        f_io.tasks_content = "\nF: task 1\n"
+        b_io.tasks_content = "B: task A\nB: task B\nB: task C\n"
+
+        command.run('su 2', session)
+
+        # Foreground: 2 background tasks + 1 existing blank + 1 original = 4
+        expect(session.foreground_tasks.count).to eq(4)
+        expect(session.background_tasks.count).to eq(1)
+
+        foreground_window = session.foreground_tasks.window
+        expect(foreground_window[0][2]).to match(/^B:/)
+        expect(foreground_window[1][2]).to match(/^B:/)
+        expect(foreground_window[2][2]).to eq("\n")
+        expect(foreground_window[3][2]).to eq("F: task 1\n")
+      end
+    end
+
     context 'when starting from background list' do
       it 'returns to background list after surfacing' do
         f_io.tasks_content = "F: task 1\n"
