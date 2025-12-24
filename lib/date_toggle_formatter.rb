@@ -6,13 +6,13 @@ module DateToggleFormatter
     lines
       .map { |line| line.split(' ', 2) }
       .reject(&:empty?)
-      .chunk { |parts| parts.first }
+      .chunk { |line_parts| line_parts.first }
       .with_index
-      .flat_map { |(date, parts_group), chunk_index|
-        use_reverse = chunk_index.even?
-        parts_group.map { |parts|
-          rest = parts[1] || ""
-          use_reverse ? "\e[7m#{date}\e[0m #{rest}" : "#{date} #{rest}"
+      .flat_map { |(date, span_lines), span_index|
+        reverse_video = span_index.even?
+        span_lines.map { |line_parts|
+          line_text = line_parts[1] || ""
+          reverse_video ? "\e[7m#{date}\e[0m #{line_text}" : "#{date} #{line_text}"
         }
       }
       .join
