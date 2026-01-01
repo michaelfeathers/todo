@@ -15,7 +15,6 @@ class PrintArchive < Command
       io = list.io
       formatted_archive = format_with_date_toggle(io.read_archive)
       io.display_paginated(formatted_archive)
-      io.get_from_console
     end
   end
 

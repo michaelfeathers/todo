@@ -15,7 +15,6 @@ class ShowUpdates < Command
       io = list.io
       formatted_updates = format_with_date_toggle(io.read_updates)
       io.display_paginated(formatted_updates)
-      io.get_from_console
     end
   end
 
