@@ -14,8 +14,12 @@ class Trend < Command
       io = list.io
       day_frequencies = calculate_day_frequencies(io, nil)
 
-      day_frequencies.each {|e| io.append_to_console(("%3s  %s" %  [e[1], e[0]]) + $/) }
-      io.append_to_console($/)
+      if day_frequencies.empty?
+        output = $/
+      else
+        output = day_frequencies.map {|e| "%3s  %s" %  [e[1], e[0]] }.join($/) + $/ + $/
+      end
+      io.display_paginated(output)
       io.get_from_console
     end
   end
