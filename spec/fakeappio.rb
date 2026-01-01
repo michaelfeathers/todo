@@ -1,4 +1,4 @@
-
+require_relative '../lib/interactive_paginator'
 
 class FakeAppIo
 
@@ -66,7 +66,7 @@ class FakeAppIo
     lines = content.lines
 
     # If content is short, just display it normally
-    if lines.count <= AppIo::PAGE_SIZE
+    if lines.count <= InteractivePaginator::PAGE_SIZE
       clear_console
       append_to_console(content)
       return content
@@ -74,11 +74,11 @@ class FakeAppIo
 
     # Paginate for longer content
     page = 0
-    total_pages = (lines.count.to_f / AppIo::PAGE_SIZE).ceil
+    total_pages = (lines.count.to_f / InteractivePaginator::PAGE_SIZE).ceil
 
     loop do
-      start_line = page * AppIo::PAGE_SIZE
-      end_line = [start_line + AppIo::PAGE_SIZE, lines.count].min
+      start_line = page * InteractivePaginator::PAGE_SIZE
+      end_line = [start_line + InteractivePaginator::PAGE_SIZE, lines.count].min
       page_content = lines[start_line...end_line].join
 
       clear_console

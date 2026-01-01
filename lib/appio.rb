@@ -1,5 +1,7 @@
 require 'readline'
 require 'io/console'
+require_relative 'interactive_paginator'
+require_relative 'headless_paginator'
 
 ROOT_DIR     = "/Users/michaelfeathers/Projects/todo/lib/data/"
 TODO_FILE    = ROOT_DIR + "todo.txt"
@@ -11,82 +13,17 @@ LOCK_FILE    = ROOT_DIR + "todo.lock"
 HISTORY_FILE = ROOT_DIR + "command_history.txt"
 
 class AppIo
-  PAGE_SIZE = 40
   MAX_HISTORY = 1000
   @@history_loaded = false
 
-  def initialize
+  def initialize(headless: false)
+    @paginator = headless ? HeadlessPaginator.new(self) : InteractivePaginator.new(self)
     load_history unless @@history_loaded
     @@history_loaded = true
   end
 
   def display_paginated(content)
-    lines = content.lines
-
-    # If content is short, just display it normally
-    if lines.count <= PAGE_SIZE
-      clear_console
-      append_to_console(content)
-      return content
-    end
-
-    # Paginate for longer content with arrow key navigation
-    page = 0
-    total_pages = (lines.count.to_f / PAGE_SIZE).ceil
-
-    loop do
-      start_line = page * PAGE_SIZE
-      end_line = [start_line + PAGE_SIZE, lines.count].min
-      page_content = lines[start_line...end_line].join
-
-      clear_console
-      append_to_console(page_content)
-
-      # Show navigation instructions
-      page_indicator = "--- Page #{page + 1} of #{total_pages} (↑/↓ arrows to navigate, q to quit) ---"
-      append_to_console($/ + page_indicator + $/)
-
-      # Get raw input to capture arrow keys
-      input = get_paginated_input
-
-      case input
-      when :up
-        page = [page - 1, 0].max
-      when :down
-        page = [page + 1, total_pages - 1].min
-      when :quit
-        break
-      end
-    end
-
-    content
-  end
-
-  def get_paginated_input
-    # Read raw input character by character to capture arrow keys
-    char = STDIN.getch
-
-    # Check for 'q' to quit
-    return :quit if char == 'q' || char == 'Q'
-
-    # Check for escape sequence (arrow keys start with ESC)
-    if char == "\e"
-      # Read the next two characters for arrow key sequence
-      char2 = STDIN.getch
-      char3 = STDIN.getch
-
-      if char2 == '['
-        case char3
-        when 'A' # Up arrow
-          return :up
-        when 'B' # Down arrow
-          return :down
-        end
-      end
-    end
-
-    # Default: treat as down (continue forward like before)
-    :down
+    @paginator.display_paginated(content)
   end
 
   def read_archive

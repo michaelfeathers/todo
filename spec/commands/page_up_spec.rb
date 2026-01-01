@@ -4,6 +4,7 @@ require 'commands/page_up'
 require 'commands/page_down'
 require 'fakeappio'
 require 'testrenderer'
+require 'interactive_paginator'
 
 RENDER_PAD = "\n\n" unless defined?(RENDER_PAD)
 
@@ -26,7 +27,7 @@ describe PageUp do
     f_io.tasks_content = tasks.join
     PageUp.new.run("uu", session)
 
-    expect(o).to eq(output.take(AppIo::PAGE_SIZE))
+    expect(o).to eq(output.take(InteractivePaginator::PAGE_SIZE))
   end
 
   it 'shows the first page of tasks after previously paging down' do
@@ -36,6 +37,6 @@ describe PageUp do
     PageDown.new.run("dd", session)
     PageUp.new.run("uu", session)
 
-    expect(o).to eq(output.take(AppIo::PAGE_SIZE))
+    expect(o).to eq(output.take(InteractivePaginator::PAGE_SIZE))
   end     
 end

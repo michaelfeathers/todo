@@ -3,6 +3,7 @@ require 'session'
 require 'commands/cursor_set'
 require 'fakeappio'
 require 'testrenderer'
+require 'interactive_paginator'
 
 def rendering_of session
   target = TestRenderer.new
@@ -19,7 +20,7 @@ describe CursorSet do
 
 
   it 'pages when cursor set off page' do
-    page_size          = AppIo::PAGE_SIZE
+    page_size          = InteractivePaginator::PAGE_SIZE
     pos                = page_size + 5
 
     tasks              =  50.times.map {|n| "L: task #{n}\n" }

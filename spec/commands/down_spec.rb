@@ -2,6 +2,7 @@ require 'spec_helper'
 require 'session'
 require 'commands/down'
 require 'fakeappio'
+require 'interactive_paginator'
 
 
 describe Down do
@@ -11,7 +12,7 @@ describe Down do
   let(:o) { rendering_of(session) }
 
   it 'pages when cursor set off page' do
-    page_size = AppIo::PAGE_SIZE
+    page_size = InteractivePaginator::PAGE_SIZE
     pos       = page_size - 1
 
     tasks     =  50.times.map {|n| "L: task #{n}\n" }

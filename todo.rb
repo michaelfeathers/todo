@@ -59,9 +59,9 @@ class ToDo
   def initialize foreground_io, background_io
     @foreground_io = foreground_io
     @background_io = background_io
+    @headless = !ARGV.empty?
     ToDoUpdater.new(@foreground_io).run
     @session = Session.from_ios(@foreground_io, @background_io)
-    @headless = !ARGV.empty?
     @session.render unless @headless
   end
 

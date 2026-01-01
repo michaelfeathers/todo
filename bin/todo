@@ -6,7 +6,8 @@ def run
   return puts "Another instance of todo is already running." if File.exist?(LOCK_FILE)
 
   FileUtils.touch(LOCK_FILE)
-  ToDo.new(AppIo.new, BackgroundIo.new).run
+  headless = !ARGV.empty?
+  ToDo.new(AppIo.new(headless: headless), BackgroundIo.new(headless: headless)).run
 ensure
   FileUtils.rm(LOCK_FILE) if File.exist?(LOCK_FILE)
 end

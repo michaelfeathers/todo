@@ -2,6 +2,7 @@ require_relative 'day'
 require_relative 'taskselection'
 require_relative 'monthsreport'
 require_relative 'appio'
+require_relative 'interactive_paginator'
 require_relative 'array_ext'
 
 
@@ -100,7 +101,7 @@ class TaskList
   end
 
   def page_down
-    return unless ((@page_no + 1) * AppIo::PAGE_SIZE) < @tasks.count
+    return unless ((@page_no + 1) * InteractivePaginator::PAGE_SIZE) < @tasks.count
     @page_no = @page_no + 1
   end
 
@@ -129,8 +130,8 @@ class TaskList
   def window
     @tasks.zip((0..))
           .map {|e, i| [i, cursor_char(i), e] }
-          .drop(@page_no * AppIo::PAGE_SIZE)
-          .take(AppIo::PAGE_SIZE)
+          .drop(@page_no * InteractivePaginator::PAGE_SIZE)
+          .take(InteractivePaginator::PAGE_SIZE)
   end
 
   def find text
@@ -191,7 +192,7 @@ class TaskList
   private
 
   def adjust_page
-    @page_no = @cursor / AppIo::PAGE_SIZE
+    @page_no = @cursor / InteractivePaginator::PAGE_SIZE
   end
 
   def cursor_char index

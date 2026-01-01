@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'appio'
 require 'fakeappio'
+require 'interactive_paginator'
 
 describe 'AppIo#display_paginated' do
   context 'when using FakeAppIo' do
@@ -46,9 +47,9 @@ describe 'AppIo#display_paginated' do
   end
 end
 
-describe 'AppIo::PAGE_SIZE' do
+describe 'InteractivePaginator::PAGE_SIZE' do
   it 'is set to 40' do
-    expect(AppIo::PAGE_SIZE).to eq(40)
+    expect(InteractivePaginator::PAGE_SIZE).to eq(40)
   end
 end
 
