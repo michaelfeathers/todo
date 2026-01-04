@@ -146,6 +146,92 @@ describe InteractivePaginator do
 
         expect(result).to eq(content)
       end
+
+      it 'jumps to page 2 when user types "2" followed by return' do
+        content = (1..120).map { |i| "Line #{i}\n" }.join
+        io.input_sequence = ['2', "\n", 'q']  # Type "2" + Enter, then quit
+
+        result = paginator.display_paginated(content)
+
+        expect(result).to eq(content)
+        expect(io.output).to include("Line 41")
+        expect(io.output).to include("Page 2 of 3")
+      end
+
+      it 'jumps to page 3 when user types "3" followed by return' do
+        content = (1..120).map { |i| "Line #{i}\n" }.join
+        io.input_sequence = ['3', "\n", 'q']  # Type "3" + Enter, then quit
+
+        result = paginator.display_paginated(content)
+
+        expect(result).to eq(content)
+        expect(io.output).to include("Line 81")
+        expect(io.output).to include("Page 3 of 3")
+      end
+
+      it 'jumps to page 1 when user types "1" followed by return' do
+        content = (1..120).map { |i| "Line #{i}\n" }.join
+        io.input_sequence = ["\e", '[', 'B', '1', "\n", 'q']  # Navigate down, then jump to page 1, then quit
+
+        result = paginator.display_paginated(content)
+
+        expect(result).to eq(content)
+        expect(io.output).to include("Line 1")
+        expect(io.output).to include("Page 1 of 3")
+      end
+
+      it 'handles multi-digit page numbers' do
+        content = (1..500).map { |i| "Line #{i}\n" }.join
+        io.input_sequence = ['1', '0', "\n", 'q']  # Type "10" + Enter, then quit
+
+        result = paginator.display_paginated(content)
+
+        expect(result).to eq(content)
+        expect(io.output).to include("Line 361")
+        expect(io.output).to include("Page 10 of 13")
+      end
+
+      it 'does nothing (noop) when user enters invalid page number (too high)' do
+        content = (1..120).map { |i| "Line #{i}\n" }.join
+        io.input_sequence = ['9', '9', "\n", 'q']  # Type "99" + Enter (invalid), then quit
+
+        result = paginator.display_paginated(content)
+
+        expect(result).to eq(content)
+        expect(io.output).to include("Page 1 of 3")  # Should still be on page 1
+      end
+
+      it 'does nothing (noop) when user enters page number 0' do
+        content = (1..120).map { |i| "Line #{i}\n" }.join
+        io.input_sequence = ['0', "\n", 'q']  # Type "0" + Enter (invalid), then quit
+
+        result = paginator.display_paginated(content)
+
+        expect(result).to eq(content)
+        expect(io.output).to include("Page 1 of 3")  # Should still be on page 1
+      end
+
+      it 'works with carriage return instead of newline' do
+        content = (1..120).map { |i| "Line #{i}\n" }.join
+        io.input_sequence = ['2', "\r", 'q']  # Type "2" + CR, then quit
+
+        result = paginator.display_paginated(content)
+
+        expect(result).to eq(content)
+        expect(io.output).to include("Line 41")
+        expect(io.output).to include("Page 2 of 3")
+      end
+
+      it 'treats digit followed by non-digit as down (noop)' do
+        content = (1..120).map { |i| "Line #{i}\n" }.join
+        io.input_sequence = ['2', 'x', 'q']  # Type "2" followed by invalid char 'x', then quit
+
+        result = paginator.display_paginated(content)
+
+        expect(result).to eq(content)
+        # Should advance one page (down behavior) since invalid input
+        expect(io.output).to include("Page 2 of 3")
+      end
     end
 
     context 'with exactly PAGE_SIZE lines' do
