@@ -6,7 +6,7 @@ module DateToggleFormatter
     lines
       .map { |line| line.split(' ', 2) }
       .reject(&:empty?)
-      .chunk { |words| words.first }
+      .chunk { |sections| sections.first }
       .with_index
       .flat_map { |(date, lines), line_index|
         reverse_video = line_index.even?
