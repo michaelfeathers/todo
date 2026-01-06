@@ -90,8 +90,13 @@ class TaskList
     return if task.nil?
 
     tokens = task.split
-    tokens[position, new_tokens.length] = new_tokens unless new_tokens.empty?
-    tokens.delete_at(position) if new_tokens.empty?
+    if new_tokens.empty?
+      tokens.delete_at(position)
+    elsif position >= tokens.size
+      tokens.concat(new_tokens)
+    else
+      tokens[position, new_tokens.length] = new_tokens
+    end
 
     update_task_at_cursor(tokens.join(' '))
   end

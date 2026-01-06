@@ -288,6 +288,24 @@ describe TaskList do
       it 'does not crash on empty list' do
         expect { empty_list.edit_replace(0, ["new", "text"]) }.not_to raise_error
       end
+
+      it 'appends tokens when position is beyond task size' do
+        io.tasks_content = "L: one two three\n"
+        task_list.cursor_set(0)
+
+        task_list.edit_replace(10, ["four", "five"])
+
+        expect(task_list.task_at_cursor).to eq("L: one two three four five")
+      end
+
+      it 'appends tokens when position equals task size' do
+        io.tasks_content = "L: one two\n"
+        task_list.cursor_set(0)
+
+        task_list.edit_replace(3, ["three"])
+
+        expect(task_list.task_at_cursor).to eq("L: one two three")
+      end
     end
 
     describe '#edit_insert' do
