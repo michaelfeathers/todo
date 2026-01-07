@@ -9,14 +9,17 @@ class PullUpdates < Command
 
   def process(line, session)
     io = session.foreground_tasks.io
-    tomorrow = io.today.with_more_days(1).to_s
-
     updates = io.read_updates.lines.to_a
-    tomorrow_updates, remaining_updates = updates.partition do |update|
-      update.split.first == tomorrow
+    return if updates.empty?
+
+    next_date = updates.map { |u| u.split.first }.min
+    next_day_updates, remaining_updates = updates.partition do |update|
+      update.split.first == next_date
     end
 
-    tomorrow_updates.reverse.each do |update|
+    session.foreground_tasks.add("")
+
+    next_day_updates.reverse.each do |update|
       task = update.split(' ', 2).last.chomp
       session.foreground_tasks.add(task)
     end
@@ -25,6 +28,6 @@ class PullUpdates < Command
   end
 
   def description
-    CommandDesc.new("pu", "pull tomorrow's updates to foreground list")
+    CommandDesc.new("pu", "pull next day's updates to foreground list")
   end
 end

@@ -2,7 +2,6 @@ require 'spec_helper'
 require 'session'
 require 'commands/pull_updates'
 require 'fakeappio'
-require 'day'
 
 describe PullUpdates do
   let(:f_io) { FakeAppIo.new }
@@ -26,24 +25,20 @@ describe PullUpdates do
   end
 
   describe '#process' do
-    it 'pulls tomorrow\'s updates to foreground list' do
-      today = Day.from_text('2023-12-01')
-      tomorrow = '2023-12-02'
-      f_io.today_content = today
-      f_io.update_content = "#{tomorrow} Task for tomorrow\n2023-12-03 Task for later\n"
+    it 'pulls the next day\'s updates to foreground list' do
+      f_io.update_content = "2023-12-02 Task for next day\n2023-12-03 Task for later\n"
       f_io.tasks_content = ""
 
       command.run('pu', session)
 
-      expect(session.foreground_tasks.task_at_cursor).to eq("Task for tomorrow")
+      expect(session.foreground_tasks.task_at_cursor).to eq("Task for next day")
+      session.foreground_tasks.down
+      expect(session.foreground_tasks.task_at_cursor).to eq("")
       expect(f_io.update_content).to eq(["2023-12-03 Task for later\n"])
     end
 
-    it 'pulls multiple tomorrow updates preserving order' do
-      today = Day.from_text('2023-12-01')
-      tomorrow = '2023-12-02'
-      f_io.today_content = today
-      f_io.update_content = "#{tomorrow} First task\n#{tomorrow} Second task\n2023-12-03 Future task\n"
+    it 'pulls multiple updates for the earliest date preserving order' do
+      f_io.update_content = "2023-12-02 First task\n2023-12-02 Second task\n2023-12-03 Future task\n"
       f_io.tasks_content = ""
 
       command.run('pu', session)
@@ -52,31 +47,31 @@ describe PullUpdates do
       expect(session.foreground_tasks.task_at_cursor).to eq("First task")
       session.foreground_tasks.down
       expect(session.foreground_tasks.task_at_cursor).to eq("Second task")
+      session.foreground_tasks.down
+      expect(session.foreground_tasks.task_at_cursor).to eq("")
       expect(f_io.update_content).to eq(["2023-12-03 Future task\n"])
     end
 
-    it 'does nothing when no tomorrow updates exist' do
-      today = Day.from_text('2023-12-01')
-      f_io.today_content = today
-      f_io.update_content = "2023-12-03 Future task\n2023-12-04 Another future task\n"
-      f_io.tasks_content = "Existing task\n"
+    it 'pulls earliest date even when updates are not sorted' do
+      f_io.update_content = "2023-12-05 Later task\n2023-12-02 Earlier task\n2023-12-03 Middle task\n"
+      f_io.tasks_content = ""
 
       command.run('pu', session)
 
-      expect(session.foreground_tasks.task_at_cursor).to eq("Existing task")
-      expect(f_io.update_content).to eq(["2023-12-03 Future task\n", "2023-12-04 Another future task\n"])
+      expect(session.foreground_tasks.task_at_cursor).to eq("Earlier task")
+      session.foreground_tasks.down
+      expect(session.foreground_tasks.task_at_cursor).to eq("")
+      expect(f_io.update_content).to eq(["2023-12-05 Later task\n", "2023-12-03 Middle task\n"])
     end
 
     it 'handles empty updates' do
-      today = Day.from_text('2023-12-01')
-      f_io.today_content = today
       f_io.update_content = ""
       f_io.tasks_content = ""
 
       command.run('pu', session)
 
       expect(session.foreground_tasks.task_at_cursor).to eq("")
-      expect(f_io.update_content).to eq([])
+      expect(f_io.update_content).to eq("")
     end
   end
 
@@ -84,7 +79,7 @@ describe PullUpdates do
     it 'returns the correct command description' do
       desc = command.description
       expect(desc.name).to eq('pu')
-      expect(desc.line).to eq("pull tomorrow's updates to foreground list")
+      expect(desc.line).to eq("pull next day's updates to foreground list")
     end
   end
 end
