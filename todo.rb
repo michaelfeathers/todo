@@ -31,6 +31,7 @@ class ToDo
                 PageUp.new,
                 PrintArchive.new,
                 Push.new,
+                PullUpdates.new,
                 Quit.new,
                 Retag.new,
                 Remove.new,
