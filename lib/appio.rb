@@ -17,9 +17,14 @@ class AppIo
   @@history_loaded = false
 
   def initialize(headless: false)
+    @headless = headless
     @paginator = headless ? HeadlessPaginator.new(self) : InteractivePaginator.new(self)
     load_history unless @@history_loaded
     @@history_loaded = true
+  end
+
+  def headless?
+    @headless
   end
 
   def display_paginated(content)

@@ -116,4 +116,8 @@ class FakeAppIo
     NullRenderer.new
   end
 
+  def headless?
+    true
+  end
+
 end
