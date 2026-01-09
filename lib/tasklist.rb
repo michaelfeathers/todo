@@ -69,10 +69,11 @@ class TaskList
     task_tokens = current_task.split
     tag = task_tokens.shift if task_tokens.first =~ TAG_PATTERN
 
-    if position.between?(1, task_tokens.size + 1)
-      task_tokens.insert(position - 1, *new_tokens)
-      update_task_at_cursor([tag, task_tokens.join(' ')].compact.join(' '))
-    end
+    return if position < 1
+
+    insert_position = [position - 1, task_tokens.size].min
+    task_tokens.insert(insert_position, *new_tokens)
+    update_task_at_cursor([tag, task_tokens.join(' ')].compact.join(' '))
   end
 
   def edit text

@@ -38,13 +38,13 @@ describe EditInsert do
       expect(o).to eq([[0, "-", "W: end insertion appended text\n"]])
     end
 
-    it 'does not modify the task if the position is out of bounds' do
+    it 'appends tokens if position is beyond end of task' do
       f_io.tasks_content = "L: unchanged task\n"
       session.list.cursor_set(0)
 
-      EditInsert.new.run("ei 10 out of bounds", session)
+      EditInsert.new.run("ei 10 appended text", session)
 
-      expect(o).to eq([[0,"-","L: unchanged task\n"]])
+      expect(o).to eq([[0, "-", "L: unchanged task appended text\n"]])
     end
 
     it 'handles insertion with multiple tokens' do
