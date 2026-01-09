@@ -8,49 +8,13 @@ class InteractivePaginator
   end
 
   def display_paginated(content)
-    lines = content.lines
+    @lines = content.lines
+    @total_pages = (@lines.count.to_f / PAGE_SIZE).ceil
 
-    # If content is short, just display it normally
-    if lines.count <= PAGE_SIZE
-      @io.clear_console
-      @io.append_to_console(content)
-      return content
-    end
-
-    # Paginate for longer content with arrow key navigation
-    page = 0
-    total_pages = (lines.count.to_f / PAGE_SIZE).ceil
-
-    loop do
-      start_line = page * PAGE_SIZE
-      end_line = [start_line + PAGE_SIZE, lines.count].min
-      page_content = lines[start_line...end_line].join
-
-      @io.clear_console
-      @io.append_to_console(page_content)
-
-      # Show navigation instructions
-      page_indicator = "--- Page #{page + 1} of #{total_pages} (↑/↓ arrows, page#, or q to quit) ---"
-      @io.append_to_console($/ + page_indicator + $/)
-
-      # Get raw input to capture arrow keys
-      input = get_paginated_input
-
-      case input
-      when :up
-        page = [page - 1, 0].max
-      when :down
-        page = [page + 1, total_pages - 1].min
-      when :quit
-        break
-      when Hash
-        # Handle page jump
-        target_page = input[:page]
-        if target_page >= 1 && target_page <= total_pages
-          page = target_page - 1  # Convert to 0-based index
-        end
-        # If invalid page number, do nothing (noop)
-      end
+    if fits_on_single_page?
+      display_content(content)
+    else
+      paginate
     end
 
     content
@@ -58,53 +22,104 @@ class InteractivePaginator
 
   private
 
-  def get_paginated_input
-    # Read raw input character by character to capture arrow keys
+  def fits_on_single_page?
+    @lines.count <= PAGE_SIZE
+  end
+
+  def display_content(content)
+    @io.clear_console
+    @io.append_to_console(content)
+  end
+
+  def paginate
+    @page = 0
+
+    loop do
+      display_current_page
+      break if navigate == :quit
+    end
+  end
+
+  def display_current_page
+    display_content(current_page_content)
+    @io.append_to_console($/ + page_indicator + $/)
+  end
+
+  def current_page_content
+    start_line = @page * PAGE_SIZE
+    end_line = [start_line + PAGE_SIZE, @lines.count].min
+    @lines[start_line...end_line].join
+  end
+
+  def page_indicator
+    "--- Page #{@page + 1} of #{@total_pages} (↑/↓ arrows, page#, or q to quit) ---"
+  end
+
+  def navigate
+    input = read_input
+
+    case input
+    when :up
+      @page = [@page - 1, 0].max
+    when :down
+      @page = [@page + 1, @total_pages - 1].min
+    when :quit
+      :quit
+    when Integer
+      jump_to_page(input)
+    end
+  end
+
+  def jump_to_page(target)
+    @page = target - 1 if target.between?(1, @total_pages)
+  end
+
+  def read_input
     char = STDIN.getch
 
-    # Check for 'q' to quit
-    return :quit if char == 'q' || char == 'Q'
+    return :quit if quit_key?(char)
+    return read_page_number(char) if digit?(char)
+    return read_arrow_key if escape_key?(char)
 
-    # Check if it's a digit - start collecting page number
-    if char =~ /[0-9]/
-      page_num_str = char
-
-      # Keep reading characters until we hit return/newline
-      loop do
-        next_char = STDIN.getch
-        break if next_char == "\r" || next_char == "\n"
-
-        # Only accept more digits
-        if next_char =~ /[0-9]/
-          page_num_str += next_char
-        else
-          # Invalid input, treat as noop (return current page)
-          return :down
-        end
-      end
-
-      # Parse and return page number
-      page_num = page_num_str.to_i
-      return { page: page_num }
-    end
-
-    # Check for escape sequence (arrow keys start with ESC)
-    if char == "\e"
-      # Read the next two characters for arrow key sequence
-      char2 = STDIN.getch
-      char3 = STDIN.getch
-
-      if char2 == '['
-        case char3
-        when 'A' # Up arrow
-          return :up
-        when 'B' # Down arrow
-          return :down
-        end
-      end
-    end
-
-    # Default: treat as down (continue forward like before)
     :down
+  end
+
+  def quit_key?(char)
+    char == 'q' || char == 'Q'
+  end
+
+  def digit?(char)
+    char =~ /[0-9]/
+  end
+
+  def escape_key?(char)
+    char == "\e"
+  end
+
+  def read_page_number(first_digit)
+    digits = first_digit
+
+    loop do
+      char = STDIN.getch
+      break if enter_key?(char)
+      return :down unless digit?(char)
+      digits += char
+    end
+
+    digits.to_i
+  end
+
+  def enter_key?(char)
+    char == "\r" || char == "\n"
+  end
+
+  def read_arrow_key
+    return :down unless STDIN.getch == '['
+
+    case STDIN.getch
+    when 'A' then :up
+    when 'B' then :down
+    else :down
+    end
   end
 end
