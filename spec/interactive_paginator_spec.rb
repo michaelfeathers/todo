@@ -147,6 +147,16 @@ describe InteractivePaginator do
         expect(result).to eq(content)
       end
 
+      it 'handles unknown arrow key codes as down' do
+        content = (1..80).map { |i| "Line #{i}\n" }.join
+        io.input_sequence = ["\e", '[', 'C', 'q']  # Right arrow (C) treated as down
+
+        result = paginator.display_paginated(content)
+
+        expect(result).to eq(content)
+        expect(io.output).to include("Page 2 of 2")
+      end
+
       it 'jumps to page 2 when user types "2" followed by return' do
         content = (1..120).map { |i| "Line #{i}\n" }.join
         io.input_sequence = ['2', "\n", 'q']  # Type "2" + Enter, then quit
