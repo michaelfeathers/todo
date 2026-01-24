@@ -4,18 +4,10 @@ require_relative 'appio'
 require_relative 'summary_columns'
 
 
-MONTH_NAMES = %w[Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec].freeze
+class YearsReport
 
-def month_name_of(month_no)
-  MONTH_NAMES[month_no - 1] || ''
-end
-
-
-class MonthsReport
-
-  def initialize io, year, columns = SUMMARY_COLUMNS
+  def initialize io, columns = SUMMARY_COLUMNS
     @io = io
-    @year = year
     @columns = columns
     @tasks = nil
 
@@ -38,34 +30,25 @@ class MonthsReport
   end
 
   def print_body
-    print_months_statistics
-    print_year_statistics
-    print_today_statistics
+    print_years_statistics
+    print_total_statistics
   end
 
   def print_footer
     @io.append_to_console $/
   end
 
-  def print_months_statistics
-    (1..12).each do |month|
-      month_tasks = year_tasks.month(month)
-      @io.append_to_console body_row(month_name_of(month), month_tasks)
+  def print_years_statistics
+    years.each do |year|
+      year_tasks = all_tasks.year(year)
+      @io.append_to_console body_row(year.to_s, year_tasks)
     end
 
     @io.append_to_console $/
   end
 
-  def print_today_statistics
-    if today_tasks.count > 0 && @year == @io.today.year_no
-      @io.append_to_console body_row("Today", today_tasks)
-    end
-
-    @io.append_to_console $/
-  end
-
-  def print_year_statistics
-    @io.append_to_console body_row("", year_tasks)
+  def print_total_statistics
+    @io.append_to_console body_row("", all_tasks)
 
     @io.append_to_console $/
   end
@@ -76,12 +59,17 @@ class MonthsReport
                   .map {|l| TaskDesc.from_line(l) }
   end
 
-  def year_tasks
-    TaskSelection.new(read_task_descs).year(@year)
+  def all_tasks
+    TaskSelection.new(read_task_descs)
   end
 
-  def today_tasks
-    TaskSelection.new(read_task_descs).date(@io.today)
+  def years
+    return [] if read_task_descs.empty?
+
+    min_year = read_task_descs.map { |d| d.date.year_no }.min
+    max_year = @io.today.year_no
+
+    (min_year..max_year).to_a
   end
 
   def body_row(label, tasks)

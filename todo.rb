@@ -49,6 +49,7 @@ class ToDo
                 Trend.new,
                 TrendChart.new,
                 Up.new,
+                YearSummaries.new,
                 ZapToPosition.new,
                 ZapToTop.new]
 
