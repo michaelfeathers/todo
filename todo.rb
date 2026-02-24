@@ -11,6 +11,7 @@ require_relative 'lib/todoupdater'
 class ToDo
   @@commands = [Add.new,
                 CursorSet.new,
+                CursorToEnd.new,
                 CursorToRandom.new,
                 CursorToStart.new,
                 DisplayEdit.new,
