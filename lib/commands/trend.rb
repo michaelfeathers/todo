@@ -19,7 +19,7 @@ class Trend < Command
       else
         output = day_frequencies.map {|e| "%3s  %s" %  [e[1], e[0]] }.join($/) + $/ + $/
       end
-      io.display_paginated(output)
+      io.display_paginated(output, start_at_end: true)
     end
   end
 

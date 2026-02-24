@@ -27,8 +27,8 @@ class AppIo
     @headless
   end
 
-  def display_paginated(content)
-    @paginator.display_paginated(content)
+  def display_paginated(content, start_at_end: false)
+    @paginator.display_paginated(content, start_at_end: start_at_end)
   end
 
   def read_archive

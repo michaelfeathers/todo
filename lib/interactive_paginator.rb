@@ -7,14 +7,14 @@ class InteractivePaginator
     @io = io
   end
 
-  def display_paginated(content)
+  def display_paginated(content, start_at_end: false)
     @lines = content.lines
     @total_pages = (@lines.count.to_f / PAGE_SIZE).ceil
 
     if fits_on_single_page?
       display_content(content)
     else
-      paginate
+      paginate(start_at_end: start_at_end)
     end
 
     content
@@ -31,8 +31,8 @@ class InteractivePaginator
     @io.append_to_console(content)
   end
 
-  def paginate
-    @page = 0
+  def paginate(start_at_end: false)
+    @page = start_at_end ? @total_pages - 1 : 0
 
     loop do
       display_current_page

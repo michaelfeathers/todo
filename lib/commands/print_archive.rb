@@ -14,7 +14,7 @@ class PrintArchive < Command
     session.on_list do |list|
       io = list.io
       formatted_archive = format_with_date_toggle(io.read_archive)
-      io.display_paginated(formatted_archive)
+      io.display_paginated(formatted_archive, start_at_end: true)
       io.get_from_console unless io.headless?
     end
   end

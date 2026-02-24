@@ -3,7 +3,7 @@ class HeadlessPaginator
     @io = io
   end
 
-  def display_paginated(content)
+  def display_paginated(content, start_at_end: false)
     @io.append_to_console(content)
     content
   end

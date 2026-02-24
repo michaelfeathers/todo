@@ -61,7 +61,7 @@ class FakeAppIo
     @console_output_content = @console_output_content + text
   end
 
-  def display_paginated(content)
+  def display_paginated(content, start_at_end: false)
     # For testing, use the same pagination logic as AppIo
     lines = content.lines
 
