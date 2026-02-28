@@ -14,6 +14,7 @@ class ToDo
                 CursorToEnd.new,
                 CursorToRandom.new,
                 CursorToStart.new,
+                DetailToggle.new,
                 DisplayEdit.new,
                 Down.new,
                 Edit.new,

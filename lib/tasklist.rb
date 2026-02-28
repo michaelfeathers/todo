@@ -19,6 +19,7 @@ class TaskList
     @last_search_text = nil
     @cursor = 0
     @grab_mode = false
+    @detail_mode = false
     @page_no = 0
 
     @description = description + $/ + $/
@@ -106,6 +107,10 @@ class TaskList
     @grab_mode = (not @grab_mode)
   end
 
+  def detail_toggle
+    @detail_mode = !@detail_mode
+  end
+
   def page_down
     return unless ((@page_no + 1) * InteractivePaginator::PAGE_SIZE) < @tasks.count
     @page_no = @page_no + 1
@@ -135,7 +140,7 @@ class TaskList
 
   def window
     @tasks.zip((0..))
-          .map {|e, i| [i, cursor_char(i), e] }
+          .map {|e, i| [i, cursor_char(i), display_text(e)] }
           .drop(@page_no * InteractivePaginator::PAGE_SIZE)
           .take(InteractivePaginator::PAGE_SIZE)
   end
@@ -199,6 +204,16 @@ class TaskList
 
   def adjust_page
     @page_no = @cursor / InteractivePaginator::PAGE_SIZE
+  end
+
+  def display_text task
+    return task if @detail_mode
+    tokens = task.split
+    if tokens.first =~ TAG_PATTERN && tokens.size > 1
+      tokens.drop(1).join(' ') + $/
+    else
+      task
+    end
   end
 
   def cursor_char index
