@@ -14,7 +14,7 @@ describe EditReplace do
     f_io.tasks_content = "L: task AA\nL: task BB\n"
     session.list.cursor_set(1)
 
-    EditReplace.new.run("er 2 bb", session)
+    EditReplace.new.run("er 1 bb", session)
 
     expect(o).to eq([[0," ","L: task AA\n"], [1,"-","L: task bb\n"]])
   end
@@ -23,7 +23,7 @@ describe EditReplace do
     f_io.tasks_content = "L: old task here\n"
     session.list.cursor_set(0)
 
-    EditReplace.new.run("er 2 new task there", session)
+    EditReplace.new.run("er 1 new task there", session)
 
     expect(o).to eq([[0,"-","L: old new task there\n"]])
   end
@@ -32,7 +32,7 @@ describe EditReplace do
     f_io.tasks_content = "L: old old old task\n"
     session.list.cursor_set(0)
 
-    EditReplace.new.run("er 2 new new", session)
+    EditReplace.new.run("er 1 new new", session)
 
     expect(o).to eq([[0,"-","L: old new new task\n"]])
   end
@@ -41,7 +41,7 @@ describe EditReplace do
     f_io.tasks_content = "L: old old old\n"
     session.list.cursor_set(0)
 
-    EditReplace.new.run("er 2 new new new", session)
+    EditReplace.new.run("er 1 new new new", session)
 
     expect(o).to eq([[0,"-","L: old new new new\n"]])
   end
@@ -50,7 +50,7 @@ describe EditReplace do
     f_io.tasks_content = "L: this is a task\n"
     session.list.cursor_set(0)
 
-    EditReplace.new.run("er 2", session)
+    EditReplace.new.run("er 1", session)
 
     expect(o).to eq([[0,"-","L: this a task\n"]])
   end

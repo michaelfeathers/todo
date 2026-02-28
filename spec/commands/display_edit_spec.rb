@@ -16,7 +16,7 @@ describe DisplayEdit do
     DisplayEdit.new.run("ed", session)
 
     expected_output = "L: This is a test line\n" +
-                      "   1    2  3 4    5    \n\n"
+                      "   0    1  2 3    4    \n\n"
     expect(f_io.console_output_content).to eq(expected_output)
   end
 
@@ -27,6 +27,17 @@ describe DisplayEdit do
     expect(f_io).to receive(:get_from_console)
 
     DisplayEdit.new.run("ed", session)
+  end
+
+  it 'displays an untagged task with numbered columns' do
+    f_io.tasks_content = "experiment\n"
+    session.list.cursor_set(0)
+
+    DisplayEdit.new.run("ed", session)
+
+    expected_output = "experiment\n" +
+                      "0          \n\n"
+    expect(f_io.console_output_content).to eq(expected_output)
   end
 
   it 'displays an empty line if the cursor is on an empty line' do

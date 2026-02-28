@@ -302,7 +302,7 @@ describe TaskList do
         io.tasks_content = "L: one two\n"
         task_list.cursor_set(0)
 
-        task_list.edit_replace(3, ["three"])
+        task_list.edit_replace(2, ["three"])
 
         expect(task_list.task_at_cursor).to eq("L: one two three")
       end
@@ -310,7 +310,7 @@ describe TaskList do
 
     describe '#edit_insert' do
       it 'does not crash on empty list' do
-        expect { empty_list.edit_insert(1, ["new", "text"]) }.not_to raise_error
+        expect { empty_list.edit_insert(0, ["new", "text"]) }.not_to raise_error
       end
     end
 

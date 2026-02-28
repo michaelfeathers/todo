@@ -70,9 +70,9 @@ class TaskList
     task_tokens = current_task.split
     tag = task_tokens.shift if task_tokens.first =~ TAG_PATTERN
 
-    return if position < 1
+    return if position < 0
 
-    insert_position = [position - 1, task_tokens.size].min
+    insert_position = [position, task_tokens.size].min
     task_tokens.insert(insert_position, *new_tokens)
     update_task_at_cursor([tag, task_tokens.join(' ')].compact.join(' '))
   end
@@ -92,6 +92,8 @@ class TaskList
     return if task.nil?
 
     tokens = task.split
+    tag = tokens.shift if tokens.first =~ TAG_PATTERN
+
     if new_tokens.empty?
       tokens.delete_at(position)
     elsif position >= tokens.size
@@ -100,7 +102,7 @@ class TaskList
       tokens[position, new_tokens.length] = new_tokens
     end
 
-    update_task_at_cursor(tokens.join(' '))
+    update_task_at_cursor([tag, tokens.join(' ')].compact.join(' '))
   end
 
   def grab_toggle
@@ -140,7 +142,7 @@ class TaskList
 
   def window
     @tasks.zip((0..))
-          .map {|e, i| [i, cursor_char(i), display_text(e)] }
+          .map {|e, i| [i, cursor_char(i), e] }
           .drop(@page_no * InteractivePaginator::PAGE_SIZE)
           .take(InteractivePaginator::PAGE_SIZE)
   end
@@ -200,20 +202,20 @@ class TaskList
     @tasks.count
   end
 
+  def display_text task
+    tokens = task.split
+    has_tag = tokens.first =~ TAG_PATTERN
+    if @detail_mode
+      has_tag ? task : "   " + task
+    else
+      has_tag && tokens.size > 1 ? tokens.drop(1).join(' ') + $/ : task
+    end
+  end
+
   private
 
   def adjust_page
     @page_no = @cursor / InteractivePaginator::PAGE_SIZE
-  end
-
-  def display_text task
-    return task if @detail_mode
-    tokens = task.split
-    if tokens.first =~ TAG_PATTERN && tokens.size > 1
-      tokens.drop(1).join(' ') + $/
-    else
-      task
-    end
   end
 
   def cursor_char index

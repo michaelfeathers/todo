@@ -20,14 +20,22 @@ class DisplayEdit < Command
   end
 
   def message text
-    tag, *words = text.split
+    tokens = text.split
+    if tokens.first =~ TaskList::TAG_PATTERN
+      tag = tokens.shift
+      prefix = "#{tag} "
+      indent = " " * prefix.length
+    else
+      prefix = ""
+      indent = ""
+    end
 
-    task_line   = words.join(' ')
-    index_line  = words.map
-                       .with_index {|w,i| index_field(i + 1, field_size(w))  }
-                       .join
+    task_line   = tokens.join(' ')
+    index_line  = tokens.map
+                        .with_index {|w,i| index_field(i, field_size(w))  }
+                        .join
 
-    "#{tag} #{task_line}\n   #{index_line}\n\n"
+    "#{prefix}#{task_line}\n#{indent}#{index_line}\n\n"
   end
 
   def field_size word

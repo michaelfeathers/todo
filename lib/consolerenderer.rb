@@ -5,7 +5,7 @@ class ConsoleRenderer
     list.io.clear_console
     list.io.append_to_console list.description
   
-    lines = list.window.map {|fields| format(*fields) }.join
+    lines = list.window.map {|n, c, line| format(n, c, list.display_text(line)) }.join
   
     list.io.append_to_console lines + $/
   end

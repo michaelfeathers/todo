@@ -10,6 +10,7 @@ describe ConsoleRenderer do
 
   before do
     allow(tasklist).to receive(:io).and_return(io)
+    allow(tasklist).to receive(:display_text) { |task| task }
     allow(io).to receive(:clear_console)
     allow(io).to receive(:append_to_console)
   end

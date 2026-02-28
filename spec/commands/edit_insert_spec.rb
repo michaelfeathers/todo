@@ -15,7 +15,7 @@ describe EditInsert do
       f_io.tasks_content = "L: task one two three\n"
       session.list.cursor_set(0)
 
-      EditInsert.new.run("ei 2 new inserted", session)
+      EditInsert.new.run("ei 1 new inserted", session)
 
       expect(o).to eq([[0, "-", "L: task new inserted one two three\n"]])
     end
@@ -24,7 +24,7 @@ describe EditInsert do
       f_io.tasks_content = "R: existing task\n"
       session.list.cursor_set(0)
 
-      EditInsert.new.run("ei 1 prefix", session)
+      EditInsert.new.run("ei 0 prefix", session)
 
       expect(o).to eq([[0, "-", "R: prefix existing task\n"]])
     end
@@ -33,7 +33,7 @@ describe EditInsert do
       f_io.tasks_content = "W: end insertion\n"
       session.list.cursor_set(0)
 
-      EditInsert.new.run("ei 3 appended text", session)
+      EditInsert.new.run("ei 2 appended text", session)
 
       expect(o).to eq([[0, "-", "W: end insertion appended text\n"]])
     end
@@ -51,7 +51,7 @@ describe EditInsert do
       f_io.tasks_content = "R: before after\n"
       session.list.cursor_set(0)
 
-      EditInsert.new.run("ei 2 multiple new tokens here", session)
+      EditInsert.new.run("ei 1 multiple new tokens here", session)
 
       expect(o).to eq([[0, "-", "R: before multiple new tokens here after\n"]])
     end
@@ -69,7 +69,7 @@ describe EditInsert do
       f_io.tasks_content = "L: preserve tag\n"
       session.list.cursor_set(0)
 
-      EditInsert.new.run("ei 1 inserted", session)
+      EditInsert.new.run("ei 0 inserted", session)
 
       expect(o).to eq([[0, "-", "L: inserted preserve tag\n"]])
     end
