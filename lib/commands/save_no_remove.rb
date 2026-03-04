@@ -10,6 +10,7 @@ class SaveNoRemove < Command
   def process line, session
     session.on_list do |list|
       return if list.count < 1
+      return if list.cursor_on_section_header?
       return if list.task_at_cursor.strip.empty?
 
       io = list.io

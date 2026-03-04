@@ -15,7 +15,7 @@ describe Retag do
 
   it 'retags an L to an R' do
     f_io.tasks_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
-    output = [[0, " ", "L: first\n"],[1, "-", "R: second\n"], [2, " ", "L: third\n"]]
+    output = [["0", " ", "L: first\n"],["1", "-", "R: second\n"], ["2", " ", "L: third\n"]]
 
     CursorSet.new.run("c 1", session)
     Retag.new.run("rt r", session)
@@ -33,7 +33,7 @@ describe Retag do
 
    it 'adds a tag to a task with no tag' do
      f_io.tasks_content = "L: first\n"
-     output =  [[0, "-", "L: first\n"]]
+     output =  [["0", "-", "L: first\n"]]
 
      Retag.new.run("rt l", session)
 

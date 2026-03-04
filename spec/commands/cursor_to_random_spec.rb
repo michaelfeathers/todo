@@ -40,9 +40,9 @@ describe CursorToRandom do
 
       command.run('cr', session)
 
-      # Cursor should be somewhere between 0 and 4
+      # Cursor should be somewhere between 1 and 5
       cursor_position = session.list.window.find { |_, marker, _| marker == '-' }&.first
-      expect(cursor_position).to be_between(0, 4)
+      expect(cursor_position.to_i).to be_between(0, 4)
     end
 
     it 'handles empty list gracefully' do
@@ -60,7 +60,7 @@ describe CursorToRandom do
       # With only one task, cursor must be at position 0
       expect(session.list.task_at_cursor).to eq("L: only task")
       cursor_position = session.list.window.first&.first
-      expect(cursor_position).to eq(0)
+      expect(cursor_position).to eq("0")
     end
 
     it 'selects from full range of tasks' do

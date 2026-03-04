@@ -17,7 +17,7 @@ describe InsertBlank do
 
     InsertBlank.new.run("i", session)
 
-    expect(o).to eq([[0,"-", "\n"],[1," ","L: task AA\n"],[2," ", "L: task BB\n"]])
+    expect(o).to eq([["0","-", "\n"],["1"," ","L: task AA\n"],["2"," ", "L: task BB\n"]])
   end
 
   it 'inserts a blank line and maintains the cursor position on the same task' do

@@ -9,7 +9,10 @@ require_relative 'lib/todoupdater'
 
 
 class ToDo
-  @@commands = [Add.new,
+  @@commands = [SectionToggle.new,
+                SectionInsert.new,
+                Add.new,
+                AddSection.new,
                 CursorSet.new,
                 CursorToEnd.new,
                 CursorToRandom.new,
@@ -27,6 +30,7 @@ class ToDo
                 InsertBlank.new,
                 IterativeFind.new,
                 MonthSummaries.new,
+                OpenToggle.new,
                 MoveTaskToOther.new,
                 MoveToRandomPositionOnOtherList.new,
                 PageDown.new,

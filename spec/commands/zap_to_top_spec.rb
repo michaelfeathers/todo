@@ -22,11 +22,11 @@ describe ZapToTop do
     ]
 
     output = [
-      [0, " ", "L: task 2\n"],
-      [1, " ", "L: task 0\n"],
-      [2, "-", "L: task 1\n"],
-      [3, " ", "L: task 3\n"],
-      [4, " ", "L: task 4\n"]
+      ["0", " ", "L: task 2\n"],
+      ["1", " ", "L: task 0\n"],
+      ["2", "-", "L: task 1\n"],
+      ["3", " ", "L: task 3\n"],
+      ["4", " ", "L: task 4\n"]
     ]
 
     f_io.tasks_content = tasks.join
@@ -44,13 +44,13 @@ describe ZapToTop do
       "L: task 3\n",
       "L: task 4\n"
     ]
-    
+
     output = [
-      [0, "-", "L: task 0\n"],
-      [1, " ", "L: task 1\n"],
-      [2, " ", "L: task 2\n"],
-      [3, " ", "L: task 3\n"],
-      [4, " ", "L: task 4\n"]
+      ["0", "-", "L: task 0\n"],
+      ["1", " ", "L: task 1\n"],
+      ["2", " ", "L: task 2\n"],
+      ["3", " ", "L: task 3\n"],
+      ["4", " ", "L: task 4\n"]
     ]
 
     f_io.tasks_content = tasks.join

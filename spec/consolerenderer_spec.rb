@@ -35,39 +35,39 @@ describe ConsoleRenderer do
 
     it 'renders tasks with proper formatting' do
       window = [
-        [0, "-", "L: task 1\n"],
-        [1, " ", "L: task 2\n"]
+        ["0", "-", "L: task 1\n"],
+        ["1", " ", "L: task 2\n"]
       ]
       allow(tasklist).to receive(:description).and_return("")
       allow(tasklist).to receive(:window).and_return(window)
 
-      expected_output = " 0 \e[41m- L: task 1\n\e[0m" + 
-                       " 1   L: task 2\n" +
+      expected_output = "   0 \e[41m- L: task 1\n\e[0m" +
+                       "   1   L: task 2\n" +
                        "\n"
 
       expect(io).to receive(:append_to_console).with("")
       expect(io).to receive(:append_to_console).with(expected_output)
-      
+
       renderer.render(tasklist)
     end
 
     it 'renders tasks with cursor highlighting' do
       window = [
-        [0, "-", "L: task 1\n"],
-        [1, "*", "L: task 2\n"],
-        [2, " ", "L: task 3\n"]
+        ["0", "-", "L: task 1\n"],
+        ["1", "*", "L: task 2\n"],
+        ["2", " ", "L: task 3\n"]
       ]
       allow(tasklist).to receive(:description).and_return("")
       allow(tasklist).to receive(:window).and_return(window)
 
-      expected_output = " 0 \e[41m- L: task 1\n\e[0m" +
-                        " 1 \e[41m* L: task 2\n\e[0m" +
-                        " 2   L: task 3\n" +
+      expected_output = "   0 \e[41m- L: task 1\n\e[0m" +
+                        "   1 \e[41m* L: task 2\n\e[0m" +
+                        "   2   L: task 3\n" +
                         "\n"
 
       expect(io).to receive(:append_to_console).with("")
       expect(io).to receive(:append_to_console).with(expected_output)
-      
+
       renderer.render(tasklist)
     end
 
@@ -79,27 +79,48 @@ describe ConsoleRenderer do
 
       expect(io).to receive(:append_to_console).with("")
       expect(io).to receive(:append_to_console).with(expected_output)
-      
+
       renderer.render(tasklist)
     end
 
     it 'handles tasks with varying line numbers' do
       window = [
-        [9, "-", "L: task 9\n"],
-        [10, " ", "L: task 10\n"]
+        ["9", "-", "L: task 9\n"],
+        ["10", " ", "L: task 10\n"]
       ]
       allow(tasklist).to receive(:description).and_return("")
       allow(tasklist).to receive(:window).and_return(window)
 
-      expected_output = " 9 \e[41m- L: task 9\n\e[0m"  +
-                        "10   L: task 10\n" +
+      expected_output = "   9 \e[41m- L: task 9\n\e[0m"  +
+                        "  10   L: task 10\n" +
                         "\n"
 
       expect(io).to receive(:append_to_console).with("")
       expect(io).to receive(:append_to_console).with(expected_output)
-      
+
       renderer.render(tasklist)
     end
+
+    it 'renders section headers in yellow' do
+      window = [
+        ["3", " ", "#2 Work Projects\n"],
+        ["3.1", " ", "L: task 1\n"]
+      ]
+      allow(tasklist).to receive(:description).and_return("")
+      allow(tasklist).to receive(:display_text).with("#2 Work Projects\n").and_return("Work Projects\n")
+      allow(tasklist).to receive(:display_text).with("L: task 1\n").and_return("L: task 1\n")
+      allow(tasklist).to receive(:window).and_return(window)
+
+      expected_output = "   3 \e[33m  Work Projects\n\e[0m" +
+                        " 3.1   " + "  " + "L: task 1\n" +
+                        "\n"
+
+      expect(io).to receive(:append_to_console).with("")
+      expect(io).to receive(:append_to_console).with(expected_output)
+
+      renderer.render(tasklist)
+    end
+
   end
 
 end

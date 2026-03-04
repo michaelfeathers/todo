@@ -17,7 +17,7 @@ describe EditInsert do
 
       EditInsert.new.run("ei 1 new inserted", session)
 
-      expect(o).to eq([[0, "-", "L: task new inserted one two three\n"]])
+      expect(o).to eq([["0", "-", "L: task new inserted one two three\n"]])
     end
 
     it 'handles insertion at the beginning of the task' do
@@ -26,7 +26,7 @@ describe EditInsert do
 
       EditInsert.new.run("ei 0 prefix", session)
 
-      expect(o).to eq([[0, "-", "R: prefix existing task\n"]])
+      expect(o).to eq([["0", "-", "R: prefix existing task\n"]])
     end
 
     it 'handles insertion at the end of the task' do
@@ -35,7 +35,7 @@ describe EditInsert do
 
       EditInsert.new.run("ei 2 appended text", session)
 
-      expect(o).to eq([[0, "-", "W: end insertion appended text\n"]])
+      expect(o).to eq([["0", "-", "W: end insertion appended text\n"]])
     end
 
     it 'appends tokens if position is beyond end of task' do
@@ -44,7 +44,7 @@ describe EditInsert do
 
       EditInsert.new.run("ei 10 appended text", session)
 
-      expect(o).to eq([[0, "-", "L: unchanged task appended text\n"]])
+      expect(o).to eq([["0", "-", "L: unchanged task appended text\n"]])
     end
 
     it 'handles insertion with multiple tokens' do
@@ -53,7 +53,7 @@ describe EditInsert do
 
       EditInsert.new.run("ei 1 multiple new tokens here", session)
 
-      expect(o).to eq([[0, "-", "R: before multiple new tokens here after\n"]])
+      expect(o).to eq([["0", "-", "R: before multiple new tokens here after\n"]])
     end
 
     it 'does nothing when no tokens are provided' do
@@ -62,7 +62,7 @@ describe EditInsert do
 
       EditInsert.new.run("ei 2", session)
 
-      expect(o).to eq([[0, "-", "W: no change\n"]])
+      expect(o).to eq([["0", "-", "W: no change\n"]])
     end
 
     it 'preserves the task tag when inserting' do
@@ -71,7 +71,7 @@ describe EditInsert do
 
       EditInsert.new.run("ei 0 inserted", session)
 
-      expect(o).to eq([[0, "-", "L: inserted preserve tag\n"]])
+      expect(o).to eq([["0", "-", "L: inserted preserve tag\n"]])
     end
   end
 

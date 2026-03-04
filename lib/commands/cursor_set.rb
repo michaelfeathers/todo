@@ -14,7 +14,7 @@ class CursorSet < Command
 
   def process line, session
     session.on_list do |list|
-      list.cursor_set(line.split[1].to_i)
+      list.cursor_set(line.split[1])
     end
   end
 

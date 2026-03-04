@@ -20,7 +20,7 @@ describe PageDown do
 
   it 'shows the first page of tasks' do
     tasks =  50.times.map {|n| "L: task #{n}\n" }
-    output  =  50.times.map {|n| [n,cursor_char(n), "L: task #{n}\n"] }
+    output  =  50.times.map {|n| [n.to_s,cursor_char(n), "L: task #{n}\n"] }
     f_io.tasks_content = tasks.join
 
     expect(o).to eq(output.take(InteractivePaginator::PAGE_SIZE))
@@ -28,7 +28,7 @@ describe PageDown do
 
   it 'shows the second page of tasks' do
     tasks =  50.times.map {|n| "L: task #{n}\n" }
-    output  =  50.times.map {|n| [n,cursor_char(n), "L: task #{n}\n"] }
+    output  =  50.times.map {|n| [n.to_s,cursor_char(n), "L: task #{n}\n"] }
     f_io.tasks_content = tasks.join
     PageDown.new.run("dd", session)
 
@@ -37,7 +37,7 @@ describe PageDown do
 
   it 'is noop when on the last page' do
     tasks =  50.times.map {|n| "L: task #{n}\n" }
-    output  =  50.times.map {|n| [n,cursor_char(n),"L: task #{n}\n"] }
+    output  =  50.times.map {|n| [n.to_s,cursor_char(n),"L: task #{n}\n"] }
     f_io.tasks_content = tasks.join
     PageDown.new.run("dd", session)
     PageDown.new.run("dd", session)

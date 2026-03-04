@@ -21,7 +21,7 @@ describe IterativeFind do
     ]
     expected = tasks.map.with_index do |task, i|
       cursor = i == 2 ? '-' : ' '
-      [i, cursor, task]
+      [i.to_s, cursor, task]
     end
 
     f_io.tasks_content = tasks.join
@@ -42,7 +42,7 @@ describe IterativeFind do
 
     expected = tasks.map.with_index do |task, i|
       cursor = i == 1 ? '-' : ' '
-      [i, cursor, task]
+      [i.to_s, cursor, task]
     end
 
     f_io.tasks_content = tasks.join
@@ -64,7 +64,7 @@ describe IterativeFind do
   
     expected = tasks.map.with_index do |task, i|
       cursor = i == 3 ? '-' : ' '
-      [i, cursor, task]
+      [i.to_s, cursor, task]
     end
 
     f_io.tasks_content = tasks.join

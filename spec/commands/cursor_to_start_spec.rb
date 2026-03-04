@@ -17,7 +17,7 @@ describe CursorToStart do
       "L: task 2\n"
     ]
     expected = tasks.map.with_index do |task, i|
-      [i, i.zero? ? '-' : ' ', task]
+      [i.to_s, i.zero? ? '-' : ' ', task]
     end
 
     f_io.tasks_content = tasks.join
@@ -34,7 +34,7 @@ describe CursorToStart do
       "L: task 2\n"
     ]
     expected = tasks.map.with_index do |task, i|
-      [i, i.zero? ? '-' : ' ', task]
+      [i.to_s, i.zero? ? '-' : ' ', task]
     end
 
     f_io.tasks_content = tasks.join

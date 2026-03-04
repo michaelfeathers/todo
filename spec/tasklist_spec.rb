@@ -59,9 +59,9 @@ describe TaskList do
 
       task_list.up
 
-      expect(task_list.window).to eq([[0, " ", "L: T 1\n"],
-                                      [1, "-", "L: T 2\n"],
-                                      [2, " ", "L: T 3\n"]])
+      expect(task_list.window).to eq([["0", " ", "L: T 1\n"],
+                                      ["1", "-", "L: T 2\n"],
+                                      ["2", " ", "L: T 3\n"]])
 
     end
 
@@ -71,7 +71,7 @@ describe TaskList do
 
       task_list.up
 
-      expect(task_list.window).to eq([[0, "-", "L: task 1\n"], [1, " ", "L: task 2\n"], [2, " ", "L: task 3\n"]])
+      expect(task_list.window).to eq([["0", "-", "L: task 1\n"], ["1", " ", "L: task 2\n"], ["2", " ", "L: task 3\n"]])
     end
 
     it 'moves the task above the cursor down when in grab mode' do
@@ -82,8 +82,8 @@ describe TaskList do
 
       task_list.up
 
-      expect(task_list.window[0]).to eq([0, "*",  "L: task 2\n"])
-      expect(task_list.window[1]).to eq([1, " ",  "L: task 1\n"])
+      expect(task_list.window[0]).to eq(["0", "*",  "L: task 2\n"])
+      expect(task_list.window[1]).to eq(["1", " ",  "L: task 1\n"])
     end
 
     it 'does not move the task above the cursor down when not in grab mode' do
@@ -93,8 +93,8 @@ describe TaskList do
 
       task_list.up
 
-      expect(task_list.window[0]).to eq([0, "-",  "L: task 1\n"])
-      expect(task_list.window[1]).to eq([1, " ",  "L: task 2\n"])
+      expect(task_list.window[0]).to eq(["0", "-",  "L: task 1\n"])
+      expect(task_list.window[1]).to eq(["1", " ",  "L: task 2\n"])
     end
   end
 
@@ -109,12 +109,12 @@ describe TaskList do
 
   it 'finds simple text' do
     io.tasks_content = "L: task AA\nL: task BB\n"
-    expect(task_list.find("AA")).to eq([" 0 L: task AA\n"])
+    expect(task_list.find("AA")).to eq(["   0 L: task AA\n"])
   end
 
   it 'ignores case when it finds' do
     io.tasks_content = "L: task A\nL: task B\n"
-    expect(task_list.find("b")).to eq([" 1 L: task B\n"])
+    expect(task_list.find("b")).to eq(["   1 L: task B\n"])
   end
 
   describe '#save_all' do
@@ -142,14 +142,14 @@ describe TaskList do
   it 'adds a task on an empty todo list' do
     io.tasks_content = ""
     task_list.add("this is a test")
-    expect(task_list.window).to eq([[0, "-", "this is a test\n"]])
+    expect(task_list.window).to eq([["0", "-", "this is a test\n"]])
   end
 
   it 'adds a task on an non-empty todo list' do
     io.tasks_content = "L: task A\n"
     task_list.add("L: this is a test")
 
-    expect(task_list.window).to eq([[0, "-", "L: this is a test\n"],[1, " ", "L: task A\n"]])
+    expect(task_list.window).to eq([["0", "-", "L: this is a test\n"],["1", " ", "L: task A\n"]])
   end
 
   it 'moves the cursor on an add' do
@@ -157,14 +157,14 @@ describe TaskList do
     task_list.page_down
     task_list.add("L: new task")
 
-    expect(task_list.window[0]).to eq([0, "-", "L: new task\n"])
+    expect(task_list.window[0]).to eq(["0", "-", "L: new task\n"])
   end
 
   it 'preserves a tag on editing' do
     io.tasks_content = "L: task\n"
     task_list.edit "edited task"
 
-    expect(task_list.window).to eq([[0, "-", "L: edited task\n"]])
+    expect(task_list.window).to eq([["0", "-", "L: edited task\n"]])
   end
 
   it 'can return 1 tag tally' do
@@ -200,7 +200,7 @@ describe TaskList do
 
       it 'keeps cursor at 0 when list is empty' do
         empty_list.cursor_set(10)
-        expect(empty_list.instance_variable_get(:@cursor)).to eq(0)
+        expect(empty_list.instance_variable_get(:@cursor)).to eq([0, nil])
       end
     end
 
@@ -225,7 +225,7 @@ describe TaskList do
       it 'handles empty list gracefully when search text exists' do
         empty_list.instance_variable_set(:@last_search_text, "find me")
         empty_list.iterative_find_continue
-        expect(empty_list.instance_variable_get(:@cursor)).to eq(0)
+        expect(empty_list.instance_variable_get(:@cursor)).to eq([0, nil])
       end
     end
 
@@ -236,7 +236,7 @@ describe TaskList do
 
       it 'keeps cursor at 0 after removing from empty list' do
         empty_list.remove_task_at_cursor
-        expect(empty_list.instance_variable_get(:@cursor)).to eq(0)
+        expect(empty_list.instance_variable_get(:@cursor)).to eq([0, nil])
       end
 
       it 'maintains valid cursor state after removing last task' do
@@ -246,7 +246,7 @@ describe TaskList do
         list_with_one.remove_task_at_cursor
 
         expect(list_with_one.empty?).to be true
-        expect(list_with_one.instance_variable_get(:@cursor)).to eq(0)
+        expect(list_with_one.instance_variable_get(:@cursor)).to eq([0, nil])
       end
     end
 
@@ -263,7 +263,7 @@ describe TaskList do
 
       it 'cursor stays at 0 on empty list' do
         empty_list.down
-        expect(empty_list.instance_variable_get(:@cursor)).to eq(0)
+        expect(empty_list.instance_variable_get(:@cursor)).to eq([0, nil])
       end
     end
 
@@ -274,7 +274,7 @@ describe TaskList do
 
       it 'cursor stays at 0 on empty list' do
         empty_list.up
-        expect(empty_list.instance_variable_get(:@cursor)).to eq(0)
+        expect(empty_list.instance_variable_get(:@cursor)).to eq([0, nil])
       end
     end
 
@@ -334,7 +334,7 @@ describe TaskList do
 
       it 'does not find anything on empty list' do
         empty_list.iterative_find_init("test")
-        expect(empty_list.instance_variable_get(:@cursor)).to eq(0)
+        expect(empty_list.instance_variable_get(:@cursor)).to eq([0, nil])
       end
     end
 

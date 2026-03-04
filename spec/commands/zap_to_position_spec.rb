@@ -15,32 +15,32 @@ describe ZapToPosition do
 
   it 'zaps the item at zero to one' do
     f_io.tasks_content = [ "L: first\n", "L: second\n"].join
-    output = [[0, "-", "L: second\n"], [1, " ", "L: first\n"]]
+    output = [["0", "-", "L: second\n"], ["1", " ", "L: first\n"]]
     ZapToPosition.new.run("z 1", session)
-  
+
     expect(o).to eq(output)
   end
 
   it 'saturates when asked to zap outside the range high' do
     f_io.tasks_content = [ "L: first\n", "L: second\n"].join
     ZapToPosition.new.run("z 2", session)
-    output = [[0, "-", "L: second\n"], [1, " ", "L: first\n"]]
-    
+    output = [["0", "-", "L: second\n"], ["1", " ", "L: first\n"]]
+
     expect(o).to eq(output)
   end
 
   it 'saturates when asked to zap outside the range low' do
     f_io.tasks_content = [ "L: first\n", "L: second\n"].join
-    output = [[0," ", "L: second\n"], [1, "-", "L: first\n"]]
+    output = [["0"," ", "L: second\n"], ["1", "-", "L: first\n"]]
     CursorSet.new.run("c 1", session)
     ZapToPosition.new.run("z -1", session)
-    
+
     expect(o).to eq(output)
   end
 
   it 'noops when asked to zap to the same position' do
     f_io.tasks_content = [ "L: first\n", "L: second\n"].join
-    output = [[0,"-", "L: first\n"], [1, " ", "L: second\n"]]
+    output = [["0","-", "L: first\n"], ["1", " ", "L: second\n"]]
     ZapToPosition.new.run("z 0", session)
 
     expect(o).to eq(output)
@@ -48,9 +48,19 @@ describe ZapToPosition do
 
   it 'has insertion rather than swap aemantics' do
     f_io.tasks_content = [ "L: first\n", "L: second\n",  "L: third\n"].join
-    output =  [[0, "-", "L: second\n"],[1, " ", "L: third\n"], [2, " ", "L: first\n"]]
+    output =  [["0", "-", "L: second\n"],["1", " ", "L: third\n"], ["2", " ", "L: first\n"]]
     ZapToPosition.new.run("z 2", session)
 
     expect(o).to eq(output)
+  end
+
+  it 'zaps a section member to a position outside the section' do
+    f_io.tasks_content = "#2 Work\nL: w1\nL: w2\nL: orphan\n".dup
+    CursorSet.new.run("c 0.1", session)
+    ZapToPosition.new.run("z 1", session)
+
+    session.save
+    lines = f_io.tasks_content.split("\n")
+    expect(lines).to eq(["#1 Work", "L: w2", "L: w1", "L: orphan"])
   end
 end

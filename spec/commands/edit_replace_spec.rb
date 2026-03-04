@@ -16,7 +16,7 @@ describe EditReplace do
 
     EditReplace.new.run("er 1 bb", session)
 
-    expect(o).to eq([[0," ","L: task AA\n"], [1,"-","L: task bb\n"]])
+    expect(o).to eq([["0"," ","L: task AA\n"], ["1","-","L: task bb\n"]])
   end
 
   it 'replaces multiple tokens' do
@@ -25,7 +25,7 @@ describe EditReplace do
 
     EditReplace.new.run("er 1 new task there", session)
 
-    expect(o).to eq([[0,"-","L: old new task there\n"]])
+    expect(o).to eq([["0","-","L: old new task there\n"]])
   end
 
   it 'replaces tokens until replacements run out' do
@@ -34,7 +34,7 @@ describe EditReplace do
 
     EditReplace.new.run("er 1 new new", session)
 
-    expect(o).to eq([[0,"-","L: old new new task\n"]])
+    expect(o).to eq([["0","-","L: old new new task\n"]])
   end
 
   it 'replaces tokens past the end of the original line' do
@@ -43,7 +43,7 @@ describe EditReplace do
 
     EditReplace.new.run("er 1 new new new", session)
 
-    expect(o).to eq([[0,"-","L: old new new new\n"]])
+    expect(o).to eq([["0","-","L: old new new new\n"]])
   end
 
   it 'deletes token at position when no replacement provided' do
@@ -52,6 +52,6 @@ describe EditReplace do
 
     EditReplace.new.run("er 1", session)
 
-    expect(o).to eq([[0,"-","L: this a task\n"]])
+    expect(o).to eq([["0","-","L: this a task\n"]])
   end
 end

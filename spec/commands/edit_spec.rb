@@ -18,7 +18,7 @@ describe Edit do
 
       Edit.new.run("e new task", session)
 
-      expect(o).to eq([[0, "-", "L: new task\n"], [1, " ", "R: another task\n"]])
+      expect(o).to eq([["0", "-", "L: new task\n"], ["1", " ", "R: another task\n"]])
     end
 
     it 'preserves the tag when editing' do
@@ -27,7 +27,7 @@ describe Edit do
 
       Edit.new.run("e updated work task", session)
 
-      expect(o).to eq([[0, "-", "W: updated work task\n"],[1, " ", "R: another task\n"]])
+      expect(o).to eq([["0", "-", "W: updated work task\n"],["1", " ", "R: another task\n"]])
     end
 
     it 'does nothing when the task list is empty' do
@@ -44,7 +44,7 @@ describe Edit do
 
       Edit.new.run("e new task", session)
 
-      expect(o).to eq([[0, "-", "\n"]]) 
+      expect(o).to eq([["0", "-", "\n"]])
     end
 
     it 'handles multiple words in the edit command' do
@@ -53,7 +53,7 @@ describe Edit do
 
       Edit.new.run("e new multiple word task", session)
 
-      expect(o).to eq([[0, "-", "L: new multiple word task\n"]])
+      expect(o).to eq([["0", "-", "L: new multiple word task\n"]])
     end
   end
 

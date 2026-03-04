@@ -17,7 +17,7 @@ describe CursorToEnd do
       "L: task 2\n"
     ]
     expected = tasks.map.with_index do |task, i|
-      [i, i == 2 ? '-' : ' ', task]
+      [i.to_s, i == 2 ? '-' : ' ', task]
     end
 
     f_io.tasks_content = tasks.join
@@ -33,7 +33,7 @@ describe CursorToEnd do
       "L: task 2\n"
     ]
     expected = tasks.map.with_index do |task, i|
-      [i, i == 2 ? '-' : ' ', task]
+      [i.to_s, i == 2 ? '-' : ' ', task]
     end
 
     f_io.tasks_content = tasks.join
