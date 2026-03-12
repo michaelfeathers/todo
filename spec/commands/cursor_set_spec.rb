@@ -31,4 +31,32 @@ describe CursorSet do
 
     expect(o).to eq(expected.drop(page_size).take(page_size))
   end
+
+  it 'navigates to a section by name' do
+    f_io.tasks_content = "#1 Work\nL: task1\n#1 Home\nL: task2\n"
+
+    CursorSet.new.run('c Home', session)
+
+    expect(session.list.task_at_cursor).to eq('#1 Home')
+  end
+
+  it 'navigates to a section by prefix' do
+    f_io.tasks_content = "#1 Work Projects\nL: task1\n#1 Home\nL: task2\n"
+
+    CursorSet.new.run('c Wo', session)
+
+    expect(session.list.task_at_cursor).to eq('#1 Work Projects')
+  end
+
+  it 'does nothing when no section matches' do
+    f_io.tasks_content = "#1 Work\nL: task1\n#1 Home\nL: task2\n"
+
+    CursorSet.new.run('c Nope', session)
+
+    expect(session.list.task_at_cursor).to eq('#1 Work')
+  end
+
+  it 'matches "c" with multi-word text' do
+    expect(CursorSet.new.matches?('c Work Projects')).to be_truthy
+  end
 end
