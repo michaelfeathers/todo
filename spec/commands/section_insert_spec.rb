@@ -64,6 +64,18 @@ describe SectionInsert do
       expect(session.list.section_declared_count(0)).to eq(1)
     end
 
+    it 'opens a collapsed section when a task is inserted' do
+      f_io.tasks_content = "#1 Work\nL: existing\nL: orphan\n"
+      session.list.cursor_set(2)
+
+      command.run('si Work', session)
+
+      expect(session.list.task_at_cursor).to eq('L: orphan')
+      # Section should be open (not collapsed) so the inserted task is visible
+      window_texts = session.list.window.map { |row| row[2] }
+      expect(window_texts).to include("L: orphan\n")
+    end
+
     it 'does nothing when no section matches' do
       f_io.tasks_content = "#1 Work\nL: task\nL: orphan\n"
       session.list.cursor_set(2)

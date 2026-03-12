@@ -420,6 +420,7 @@ class TaskList
       target_top_index = adjusted
     end
 
+    @items[target_top_index].collapsed = false
     @cursor = [target_top_index, @items[target_top_index].children.size - 1]
     adjust_page
   end
