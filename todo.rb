@@ -58,7 +58,8 @@ class ToDo
                 Up.new,
                 YearSummaries.new,
                 ZapToPosition.new,
-                ZapToTop.new]
+                ZapToTop.new,
+                ExportHtml.new]
 
 
   def self.registered_commands
