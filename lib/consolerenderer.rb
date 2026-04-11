@@ -23,11 +23,15 @@ class ConsoleRenderer
                          section_color_end(cursor)]
     else
       indent = task_no.include?('.') ? "  " : ""
-      "%4s %s%s %s%s%s" % [task_no,
+      tag_color = raw_line =~ /\bX:/ ? "\e[35m" : ""
+      tag_color_end = tag_color.empty? ? "" : "\e[0m"
+      "%4s %s%s %s%s%s%s%s" % [task_no,
                          highlight_section_start(cursor),
                          cursor,
                          indent,
+                         tag_color,
                          display_line,
+                         tag_color_end,
                          highlight_section_end(cursor)]
     end
   end
