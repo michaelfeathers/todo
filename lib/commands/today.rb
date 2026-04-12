@@ -2,6 +2,7 @@ require_relative '../command'
 require_relative '../session'
 require_relative '../appio'
 require_relative '../day'
+require_relative '../tasklist'
 
 class Today < Command
   def matches? line
@@ -17,6 +18,10 @@ class Today < Command
       found = io.read_archive
                  .lines
                  .select {|line| Day.from_text(line.split.first) === day_to_display }
+                 .sort_by {|line|
+                   tok = line.split[1]
+                   (tok =~ TaskList::TAG_PATTERN) ? [0, tok] : [1, ""]
+                 }
 
       io.append_to_console($/)
       found.each {|line| io.append_to_console(line) }
