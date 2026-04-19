@@ -5,6 +5,7 @@
 *.sh
 *.lock
 lib/.tmp.driveupload/
+lib/.tmp.drivedownload/
 .DS_Store
 .rspec
 coverage/
