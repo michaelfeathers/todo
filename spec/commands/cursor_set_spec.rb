@@ -59,4 +59,12 @@ describe CursorSet do
   it 'matches "c" with multi-word text' do
     expect(CursorSet.new.matches?('c Work Projects')).to be_truthy
   end
+
+  it 'opens a collapsed section when cursor targets a child' do
+    f_io.tasks_content = "#2 Work\nL: task1\nL: task2\n"
+
+    CursorSet.new.run('c 0.2', session)
+
+    expect(session.list.task_at_cursor).to eq('L: task2')
+  end
 end

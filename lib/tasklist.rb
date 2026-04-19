@@ -65,6 +65,7 @@ class TaskList
         return unless top >= 0 && top < @items.size
         return unless @items[top].section?
         return unless child >= 0 && child < @items[top].children.size
+        @items[top].collapsed = false
         @cursor = [top, child]
       else
         top = line_no.to_i.clamp(0, @items.size - 1)
