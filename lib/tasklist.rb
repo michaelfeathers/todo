@@ -183,6 +183,10 @@ class TaskList
     @page_no = @page_no + 1
   end
 
+  def more_below?
+    ((@page_no + 1) * InteractivePaginator::PAGE_SIZE) < visible_count
+  end
+
   def page_up
     return unless @page_no > 0
     @page_no = @page_no - 1

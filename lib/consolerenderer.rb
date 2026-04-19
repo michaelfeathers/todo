@@ -3,11 +3,14 @@ class ConsoleRenderer
 
   SECTION_PATTERN = /^#(\d+)\s/
 
+  TEXT_INDENT = "       "
+
   def render list
     list.io.clear_console
     list.io.append_to_console list.description
 
     lines = list.window.map {|n, c, line| format(n, c, line, list.display_text(line)) }.join
+    lines += $/ + TEXT_INDENT + "..." + $/ if list.respond_to?(:more_below?) && list.more_below?
 
     list.io.append_to_console lines + $/
   end

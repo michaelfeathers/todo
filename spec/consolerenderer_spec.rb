@@ -11,6 +11,7 @@ describe ConsoleRenderer do
   before do
     allow(tasklist).to receive(:io).and_return(io)
     allow(tasklist).to receive(:display_text) { |task| task }
+    allow(tasklist).to receive(:more_below?).and_return(false)
     allow(io).to receive(:clear_console)
     allow(io).to receive(:append_to_console)
   end
@@ -93,6 +94,27 @@ describe ConsoleRenderer do
 
       expected_output = "   9 \e[41m- L: task 9\n\e[0m"  +
                         "  10   L: task 10\n" +
+                        "\n"
+
+      expect(io).to receive(:append_to_console).with("")
+      expect(io).to receive(:append_to_console).with(expected_output)
+
+      renderer.render(tasklist)
+    end
+
+    it 'appends ellipses flush with task text when more content lies below' do
+      window = [
+        ["0", "-", "L: task 1\n"],
+        ["1", " ", "L: task 2\n"]
+      ]
+      allow(tasklist).to receive(:description).and_return("")
+      allow(tasklist).to receive(:window).and_return(window)
+      allow(tasklist).to receive(:more_below?).and_return(true)
+
+      expected_output = "   0 \e[41m- L: task 1\n\e[0m" +
+                        "   1   L: task 2\n" +
+                        "\n" +
+                        "       ...\n" +
                         "\n"
 
       expect(io).to receive(:append_to_console).with("")
