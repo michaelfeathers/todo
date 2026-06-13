@@ -523,7 +523,7 @@ describe TaskList do
       task_list.cursor_set("0.1")
       task_list.remove_task_at_cursor
 
-      expect(task_list.instance_variable_get(:@cursor)).to eq([0, nil])
+      expect(task_list.instance_variable_get(:@cursor)).to eq(Position.top(0))
     end
 
     it 'adjusts cursor when removing the last child by index' do
@@ -532,7 +532,7 @@ describe TaskList do
       task_list.remove_task_at_cursor
 
       # cursor should clamp to the new last child
-      expect(task_list.instance_variable_get(:@cursor)).to eq([0, 0])
+      expect(task_list.instance_variable_get(:@cursor)).to eq(Position.child(0, 0))
       expect(task_list.task_at_cursor).to eq("L: first")
     end
 
@@ -560,7 +560,7 @@ describe TaskList do
       task_list.cursor_set("0.1")
       task_list.zap_to_position(2)
 
-      expect(task_list.instance_variable_get(:@cursor)).to eq([0, nil])
+      expect(task_list.instance_variable_get(:@cursor)).to eq(Position.top(0))
     end
   end
 

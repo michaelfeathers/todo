@@ -200,7 +200,7 @@ describe TaskList do
 
       it 'keeps cursor at 0 when list is empty' do
         empty_list.cursor_set(10)
-        expect(empty_list.instance_variable_get(:@cursor)).to eq([0, nil])
+        expect(empty_list.instance_variable_get(:@cursor)).to eq(Position.top(0))
       end
     end
 
@@ -225,7 +225,7 @@ describe TaskList do
       it 'handles empty list gracefully when search text exists' do
         empty_list.instance_variable_set(:@last_search_text, "find me")
         empty_list.iterative_find_continue
-        expect(empty_list.instance_variable_get(:@cursor)).to eq([0, nil])
+        expect(empty_list.instance_variable_get(:@cursor)).to eq(Position.top(0))
       end
     end
 
@@ -236,7 +236,7 @@ describe TaskList do
 
       it 'keeps cursor at 0 after removing from empty list' do
         empty_list.remove_task_at_cursor
-        expect(empty_list.instance_variable_get(:@cursor)).to eq([0, nil])
+        expect(empty_list.instance_variable_get(:@cursor)).to eq(Position.top(0))
       end
 
       it 'maintains valid cursor state after removing last task' do
@@ -246,7 +246,7 @@ describe TaskList do
         list_with_one.remove_task_at_cursor
 
         expect(list_with_one.empty?).to be true
-        expect(list_with_one.instance_variable_get(:@cursor)).to eq([0, nil])
+        expect(list_with_one.instance_variable_get(:@cursor)).to eq(Position.top(0))
       end
     end
 
@@ -263,7 +263,7 @@ describe TaskList do
 
       it 'cursor stays at 0 on empty list' do
         empty_list.down
-        expect(empty_list.instance_variable_get(:@cursor)).to eq([0, nil])
+        expect(empty_list.instance_variable_get(:@cursor)).to eq(Position.top(0))
       end
     end
 
@@ -274,7 +274,7 @@ describe TaskList do
 
       it 'cursor stays at 0 on empty list' do
         empty_list.up
-        expect(empty_list.instance_variable_get(:@cursor)).to eq([0, nil])
+        expect(empty_list.instance_variable_get(:@cursor)).to eq(Position.top(0))
       end
     end
 
@@ -334,7 +334,7 @@ describe TaskList do
 
       it 'does not find anything on empty list' do
         empty_list.iterative_find_init("test")
-        expect(empty_list.instance_variable_get(:@cursor)).to eq([0, nil])
+        expect(empty_list.instance_variable_get(:@cursor)).to eq(Position.top(0))
       end
     end
 

@@ -126,7 +126,7 @@ describe TaskList, 'sections' do
       task_list.down
       task_list.up
 
-      expect(task_list.instance_variable_get(:@cursor)).to eq([0, nil])
+      expect(task_list.instance_variable_get(:@cursor)).to eq(Position.top(0))
     end
   end
 

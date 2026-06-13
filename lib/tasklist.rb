@@ -6,6 +6,7 @@ require_relative 'interactive_paginator'
 require_relative 'array_ext'
 require_relative 'task'
 require_relative 'section'
+require_relative 'position'
 
 
 class TaskList
@@ -20,7 +21,7 @@ class TaskList
     @items = parse_items(io.read_tasks.lines)
 
     @last_search_text = nil
-    @cursor = [0, nil]
+    @cursor = Position.top(0)
     @grab_mode = false
     @detail_mode = false
     @page_no = 0
@@ -34,98 +35,39 @@ class TaskList
 
   def add task_line
     @items.unshift(Task.new(task_line + $/))
-    @cursor = [0, nil]
+    @cursor = Position.top(0)
     adjust_page
   end
 
   def add_section text
     @items.unshift(Section.new(text))
-    @cursor = [0, nil]
+    @cursor = Position.top(0)
     adjust_page
   end
 
   def save_all
-    lines = @items.flat_map do |item|
-      if item.section?
-        [item.text] + item.children.map(&:text)
-      else
-        [item.text]
-      end
-    end
-    @io.write_tasks(lines)
+    @io.write_tasks(all_texts)
   end
 
   def cursor_set line_no
     return if @items.empty?
-    if line_no.is_a?(String)
-      if line_no.include?('.')
-        parts = line_no.split('.')
-        top = parts[0].to_i
-        child = parts[1].to_i - 1
-        return unless top >= 0 && top < @items.size
-        return unless @items[top].section?
-        return unless child >= 0 && child < @items[top].children.size
-        @items[top].collapsed = false
-        @cursor = [top, child]
-      else
-        top = line_no.to_i.clamp(0, @items.size - 1)
-        @cursor = [top, nil]
-      end
-    else
-      @cursor = [line_no.clamp(0, @items.size - 1), nil]
-    end
+    pos = parse_position(line_no)
+    return unless pos
+    @items[pos.top].collapsed = false if pos.child?
+    @cursor = pos
     adjust_page
   end
 
   def down
     return if @items.empty?
-    top, child = @cursor
-
-    if @grab_mode
-      grab_down
-    else
-      item = @items[top]
-      if child.nil?
-        if item.section? && !item.collapsed && item.children.any?
-          @cursor = [top, 0]
-        elsif top < @items.size - 1
-          @cursor = [top + 1, nil]
-        end
-      else
-        if child < item.children.size - 1
-          @cursor = [top, child + 1]
-        elsif top < @items.size - 1
-          @cursor = [top + 1, nil]
-        end
-      end
-      adjust_page
-    end
+    return grab_down if @grab_mode
+    step(+1)
   end
 
   def up
     return if @items.empty?
-    top, child = @cursor
-
-    if @grab_mode
-      grab_up
-    else
-      if child.nil?
-        return if top <= 0
-        prev_item = @items[top - 1]
-        if prev_item.section? && !prev_item.collapsed && prev_item.children.any?
-          @cursor = [top - 1, prev_item.children.size - 1]
-        else
-          @cursor = [top - 1, nil]
-        end
-      else
-        if child > 0
-          @cursor = [top, child - 1]
-        else
-          @cursor = [top, nil]
-        end
-      end
-      adjust_page
-    end
+    return grab_up if @grab_mode
+    step(-1)
   end
 
   def edit_insert position, new_tokens
@@ -194,41 +136,24 @@ class TaskList
 
   def zap_to_position line_no
     return if @items.empty?
+    target = zap_target(line_no)
+    return unless target
 
-    if line_no.is_a?(String)
-      return if line_no.include?('.')
-      target = line_no.to_i
+    if @cursor.child?
+      task = @items[@cursor.top].remove(@cursor.child)
+      @items.insert(target.clamp(0, @items.size), task)
+      @cursor = cursor_after_child_removal(@cursor)
     else
-      target = line_no
-    end
-
-    top, child = @cursor
-
-    if child
-      task = @items[top].remove(child)
+      item = @items.delete_at(@cursor.top)
       target = target.clamp(0, @items.size)
-      @items.insert(target, task)
-      # Fix cursor in section after child removal
-      if @items[top].section? && @items[top].children.any?
-        @cursor = [top, [child, @items[top].children.size - 1].min]
-      else
-        @cursor = [top, nil]
-      end
-    elsif cursor_on_section_header?
-      section = @items.delete_at(top)
-      target = target.clamp(0, [@items.size, 0].max)
-      @items.insert(target, section)
-      @cursor = [target, nil]
-    else
-      task = @items.delete_at(top)
-      target = target.clamp(0, [@items.size, 0].max)
-      @items.insert(target, task)
-      # Cursor stays at same index (old behavior)
+      @items.insert(target, item)
+      # A whole section moves with the cursor; a bare task leaves the cursor put.
+      @cursor = Position.top(target) if item.section?
     end
   end
 
   def retag new_tag
-    item = cursor_item
+    item = @cursor.resolve(@items)
     return unless item
 
     tokens = item.text.split
@@ -239,56 +164,33 @@ class TaskList
   end
 
   def window
-    visible_items = []
-    @items.each_with_index do |item, i|
-      visible_items << [display_label(i), cursor_char(i, nil), item.text]
-      if item.section? && !item.collapsed
-        item.children.each_with_index do |child, j|
-          visible_items << [display_label(i, j), cursor_char(i, j), child.text]
-        end
-      end
-    end
-    visible_items.drop(@page_no * InteractivePaginator::PAGE_SIZE)
-                 .take(InteractivePaginator::PAGE_SIZE)
+    visible_positions.map { |pos| [pos.label, cursor_char(pos), pos.resolve(@items).text] }
+                     .drop(@page_no * InteractivePaginator::PAGE_SIZE)
+                     .take(InteractivePaginator::PAGE_SIZE)
   end
 
   def find text
-    results = []
-    @items.each_with_index do |item, i|
-      results << "%4s %s" % [display_label(i), item.text]
-      if item.section?
-        item.children.each_with_index do |child, j|
-          results << "%4s %s" % [display_label(i, j), child.text]
-        end
-      end
-    end
-    results.grep(/#{Regexp.escape text}/i)
+    all_positions.map { |pos| "%4s %s" % [pos.label, pos.resolve(@items).text] }
+                 .grep(/#{Regexp.escape text}/i)
   end
 
   def remove_task_at_cursor
-    top, child = @cursor
-    if child
-      @items[top].remove(child)
-      if @items[top].children.empty?
-        @cursor = [top, nil]
-      elsif child >= @items[top].children.size
-        @cursor = [top, @items[top].children.size - 1]
-      end
-    elsif cursor_on_section_header?
-      section = @items.delete_at(top)
-      section.children.reverse.each { |c| @items.insert(top, c) }
-      clamp_cursor
+    return clamp_cursor if @items.empty?
+    if @cursor.child?
+      @items[@cursor.top].remove(@cursor.child)
+      @cursor = cursor_after_child_removal(@cursor)
     else
-      @items.delete_at(top)
+      # Removing a section header spills its children back into the list;
+      # a bare task has no children, so this is just a deletion.
+      item = @items.delete_at(@cursor.top)
+      item.children.reverse_each { |c| @items.insert(@cursor.top, c) }
       clamp_cursor
     end
   end
 
   def task_at_cursor
-    return "" if @items.empty?
-    item = cursor_item
-    return "" unless item
-    item.text.chomp
+    item = @cursor.resolve(@items)
+    item ? item.text.chomp : ""
   end
 
   def tag_tallies
@@ -300,15 +202,14 @@ class TaskList
   end
 
   def insert_blank
-    @items.insert(@cursor[0], Task.new($/))
-    @cursor = [@cursor[0], nil]
+    @items.insert(@cursor.top, Task.new($/))
+    @cursor = Position.top(@cursor.top)
     adjust_page
   end
 
   def iterative_find_init text
     @last_search_text = text
-    positions = all_positions
-    found = positions.find { |pos| item_at(*pos).text =~ /#{Regexp.escape(text)}/i }
+    found = all_positions.find { |pos| pos.resolve(@items).text =~ /#{Regexp.escape(text)}/i }
     if found
       @cursor = found
       adjust_page
@@ -324,8 +225,7 @@ class TaskList
     current_idx = positions.index(@cursor) || 0
     start_idx = [current_idx + 1, positions.size - 1].min
 
-    remaining = positions[start_idx..]
-    found = remaining.find { |pos| item_at(*pos).text =~ /#{Regexp.escape(text)}/i }
+    found = positions[start_idx..].find { |pos| pos.resolve(@items).text =~ /#{Regexp.escape(text)}/i }
     if found
       @cursor = found
       adjust_page
@@ -385,19 +285,18 @@ class TaskList
   end
 
   def cursor_on_section_header?
-    return false if @items.empty?
-    @cursor[1].nil? && @items[@cursor[0]]&.section?
+    @cursor.on_section_header?(@items)
   end
 
   def display_label(top_index, child_index = nil)
-    child_index ? "#{top_index}.#{child_index + 1}" : top_index.to_s
+    (child_index ? Position.child(top_index, child_index) : Position.top(top_index)).label
   end
 
   # Section mutation methods
 
   def section_toggle
     return unless cursor_on_section_header?
-    item = @items[@cursor[0]]
+    item = @items[@cursor.top]
     item.collapsed = !item.collapsed
   end
 
@@ -412,21 +311,18 @@ class TaskList
     return if cursor_on_section_header?
     return unless @items[target_top_index]&.section?
 
-    top, child = @cursor
-
-    if child
-      task = @items[top].remove(child)
+    if @cursor.child?
+      task = @items[@cursor.top].remove(@cursor.child)
       @items[target_top_index].add(task)
     else
-      return if top == target_top_index
-      task = @items.delete_at(top)
-      adjusted = top < target_top_index ? target_top_index - 1 : target_top_index
-      @items[adjusted].add(task)
-      target_top_index = adjusted
+      return if @cursor.top == target_top_index
+      task = @items.delete_at(@cursor.top)
+      target_top_index -= 1 if @cursor.top < target_top_index
+      @items[target_top_index].add(task)
     end
 
     @items[target_top_index].collapsed = false
-    @cursor = [target_top_index, @items[target_top_index].children.size - 1]
+    @cursor = Position.child(target_top_index, @items[target_top_index].children.size - 1)
     adjust_page
   end
 
@@ -455,24 +351,23 @@ class TaskList
     items
   end
 
-  def cursor_item
-    top, child = @cursor
-    return nil if top >= @items.size
-    item = @items[top]
-    child ? item.children[child] : item
-  end
-
-  def item_at(top, child)
-    child ? @items[top].children[child] : @items[top]
+  def parse_position line_no
+    unless line_no.is_a?(String) && line_no.include?('.')
+      return Position.top(line_no.to_i.clamp(0, @items.size - 1))
+    end
+    top, child = line_no.split('.')
+    top, child = top.to_i, child.to_i - 1
+    return nil unless top.between?(0, @items.size - 1)
+    return nil unless @items[top].section?
+    return nil unless child.between?(0, @items[top].children.size - 1)
+    Position.child(top, child)
   end
 
   def all_positions
     positions = []
     @items.each_with_index do |item, i|
-      positions << [i, nil]
-      if item.section?
-        item.children.each_with_index { |_, j| positions << [i, j] }
-      end
+      positions << Position.top(i)
+      item.children.each_index { |j| positions << Position.child(i, j) }
     end
     positions
   end
@@ -480,22 +375,14 @@ class TaskList
   def visible_positions
     positions = []
     @items.each_with_index do |item, i|
-      positions << [i, nil]
-      if item.section? && !item.collapsed
-        item.children.each_with_index { |_, j| positions << [i, j] }
-      end
+      positions << Position.top(i)
+      item.children.each_index { |j| positions << Position.child(i, j) } unless item.collapsed
     end
     positions
   end
 
   def visible_count
-    @items.sum do |item|
-      if item.section? && !item.collapsed
-        1 + item.children.size
-      else
-        1
-      end
-    end
+    @items.sum { |item| 1 + (item.collapsed ? 0 : item.children.size) }
   end
 
   def adjust_page
@@ -504,52 +391,66 @@ class TaskList
     @page_no = idx / InteractivePaginator::PAGE_SIZE
   end
 
-  def cursor_char(top, child)
-    return " " unless @cursor == [top, child]
+  def cursor_char pos
+    return " " unless @cursor == pos
     @grab_mode ? "*" : "-"
   end
 
   def update_task_at_cursor task_text
-    item = cursor_item
+    item = @cursor.resolve(@items)
     return unless item
     item.text = task_text + $/
   end
 
   def clamp_cursor
-    if @items.empty?
-      @cursor = [0, nil]
-    else
-      @cursor = [[@cursor[0], @items.size - 1].min, nil]
-    end
+    @cursor = @items.empty? ? Position.top(0)
+                            : Position.top([@cursor.top, @items.size - 1].min)
+  end
+
+  def zap_target line_no
+    return line_no unless line_no.is_a?(String)
+    return nil if line_no.include?('.')
+    line_no.to_i
+  end
+
+  def cursor_after_child_removal pos
+    children = @items[pos.top].children
+    children.empty? ? Position.top(pos.top)
+                    : Position.child(pos.top, [pos.child, children.size - 1].min)
+  end
+
+  def step direction
+    positions = visible_positions
+    idx = positions.index(@cursor) || 0
+    @cursor = positions[(idx + direction).clamp(0, positions.size - 1)]
+    adjust_page
   end
 
   def grab_down
-    top, child = @cursor
-    if child
-      item = @items[top]
-      if child < item.children.size - 1
-        item.children.swap_elements(child, child + 1)
-        @cursor = [top, child + 1]
+    if @cursor.child?
+      item = @items[@cursor.top]
+      if @cursor.child < item.children.size - 1
+        item.children.swap_elements(@cursor.child, @cursor.child + 1)
+        @cursor = Position.child(@cursor.top, @cursor.child + 1)
       end
     else
-      return if top >= @items.size - 1
-      @items.swap_elements(top, top + 1)
-      @cursor = [top + 1, nil]
+      return if @cursor.top >= @items.size - 1
+      @items.swap_elements(@cursor.top, @cursor.top + 1)
+      @cursor = Position.top(@cursor.top + 1)
     end
     adjust_page
   end
 
   def grab_up
-    top, child = @cursor
-    if child
-      if child > 0
-        @items[top].children.swap_elements(child, child - 1)
-        @cursor = [top, child - 1]
+    if @cursor.child?
+      if @cursor.child > 0
+        @items[@cursor.top].children.swap_elements(@cursor.child, @cursor.child - 1)
+        @cursor = Position.child(@cursor.top, @cursor.child - 1)
       end
     else
-      return if top <= 0
-      @items.swap_elements(top, top - 1)
-      @cursor = [top - 1, nil]
+      return if @cursor.top <= 0
+      @items.swap_elements(@cursor.top, @cursor.top - 1)
+      @cursor = Position.top(@cursor.top - 1)
     end
     adjust_page
   end
@@ -562,13 +463,7 @@ class TaskList
   end
 
   def all_texts
-    @items.flat_map do |item|
-      if item.section?
-        [item.text] + item.children.map(&:text)
-      else
-        [item.text]
-      end
-    end
+    @items.flat_map { |item| [item.text, *item.children.map(&:text)] }
   end
 
 end

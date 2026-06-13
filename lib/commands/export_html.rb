@@ -1,5 +1,6 @@
 require_relative '../command'
 require_relative '../session'
+require_relative '../position'
 
 class ExportHtml < Command
   def matches?(line)
@@ -42,11 +43,11 @@ class ExportHtml < Command
     body = ""
     items.each_with_index do |item, i|
       if item.section?
-        cursor_mark = cursor == [i, nil] ? "&mdash;" : "&nbsp;"
+        cursor_mark = cursor == Position.top(i) ? "&mdash;" : "&nbsp;"
         label = i.to_s
         name = esc(item.name)
         children_html = item.children.map.with_index do |child, j|
-          child_cursor = cursor == [i, j] ? "&mdash;" : "&nbsp;"
+          child_cursor = cursor == Position.child(i, j) ? "&mdash;" : "&nbsp;"
           child_label = "#{i}.#{j + 1}"
           "<div class=\"item child\"><span class=\"label\">#{esc(child_label)}</span><span class=\"cursor-char\">#{child_cursor}</span>#{esc(strip_tag(child.text.chomp))}</div>"
         end.join("\n")
@@ -58,7 +59,7 @@ class ExportHtml < Command
           </details>
         SECTION
       else
-        cursor_mark = cursor == [i, nil] ? "&mdash;" : "&nbsp;"
+        cursor_mark = cursor == Position.top(i) ? "&mdash;" : "&nbsp;"
         label = i.to_s
         body << "<div class=\"item\"><span class=\"label\">#{esc(label)}</span><span class=\"cursor-char\">#{cursor_mark}</span>#{esc(strip_tag(item.text.chomp))}</div>\n"
       end

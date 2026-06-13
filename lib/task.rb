@@ -9,4 +9,8 @@ class Task
   def section?
     false
   end
+
+  def children
+    []
+  end
 end
