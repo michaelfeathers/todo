@@ -170,7 +170,7 @@ class TaskList
   end
 
   def find text
-    all_positions.map { |pos| "%4s %s" % [pos.label, pos.resolve(@items).text] }
+    all_positions.map { |pos| "%6s %s" % [pos.label, pos.resolve(@items).text] }
                  .grep(/#{Regexp.escape text}/i)
   end
 

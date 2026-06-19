@@ -4,10 +4,25 @@ require_relative '../appio'
 
 class PullUpdates < Command
   def matches?(line)
-    line.split == ["pu"]
+    case line.split
+    in ["pu"] then true
+    in ["pu", position] then position =~ /\A\d+\z/
+    else false
+    end
   end
 
   def process(line, session)
+    position = line.split[1]
+    position ? pull_at(position.to_i, session) : pull_next_day(session)
+  end
+
+  def description
+    CommandDesc.new("pu [n]", "pull next day's updates (or the update at position n) to foreground list")
+  end
+
+  private
+
+  def pull_next_day(session)
     io = session.foreground_tasks.io
     updates = io.read_updates.lines.to_a
     return if updates.empty?
@@ -27,7 +42,15 @@ class PullUpdates < Command
     io.write_updates(remaining_updates)
   end
 
-  def description
-    CommandDesc.new("pu", "pull next day's updates to foreground list")
+  def pull_at(position, session)
+    io = session.foreground_tasks.io
+    updates = io.read_updates.lines.to_a
+    return unless (1..updates.count).include?(position)
+
+    update = updates.delete_at(position - 1)
+    task = update.split(' ', 2).last.chomp
+
+    session.foreground_tasks.add(task)
+    io.write_updates(updates)
   end
 end

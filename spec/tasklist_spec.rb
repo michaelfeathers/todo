@@ -109,12 +109,12 @@ describe TaskList do
 
   it 'finds simple text' do
     io.tasks_content = "L: task AA\nL: task BB\n"
-    expect(task_list.find("AA")).to eq(["   0 L: task AA\n"])
+    expect(task_list.find("AA")).to eq(["     0 L: task AA\n"])
   end
 
   it 'ignores case when it finds' do
     io.tasks_content = "L: task A\nL: task B\n"
-    expect(task_list.find("b")).to eq(["   1 L: task B\n"])
+    expect(task_list.find("b")).to eq(["     1 L: task B\n"])
   end
 
   describe '#save_all' do

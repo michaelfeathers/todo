@@ -24,6 +24,7 @@ class ToDo
                 EditInsert.new,
                 EditReplace.new,
                 Find.new,
+                FindUpdates.new,
                 FindInArchive.new,
                 GlobalFind.new,
                 GrabToggle.new,

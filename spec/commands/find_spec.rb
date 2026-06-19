@@ -65,5 +65,17 @@ describe Find do
       command.run('f nonexistent', session)
       expect(f_io.console_output_content).to include('0')
     end
+
+    it 'does not search the updates list' do
+      f_io.update_content = "An update task\n"
+      command.run('f update', session)
+      expect(f_io.console_output_content).not_to include('An update task')
+    end
+
+    it 'does not search the background list' do
+      b_io.tasks_content = "A background task\n"
+      command.run('f background', session)
+      expect(f_io.console_output_content).not_to include('A background task')
+    end
   end
 end

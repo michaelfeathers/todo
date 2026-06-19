@@ -14,8 +14,16 @@ describe PullUpdates do
       expect(command.matches?('pu')).to be_truthy
     end
 
-    it 'does not match "pu" with arguments' do
+    it 'matches "pu" followed by an integer position' do
+      expect(command.matches?('pu 3')).to be_truthy
+    end
+
+    it 'does not match "pu" with a non-integer argument' do
       expect(command.matches?('pu arg')).to be_falsey
+    end
+
+    it 'does not match "pu" with more than one argument' do
+      expect(command.matches?('pu 1 2')).to be_falsey
     end
 
     it 'does not match other commands' do
@@ -73,13 +81,53 @@ describe PullUpdates do
       expect(session.foreground_tasks.task_at_cursor).to eq("")
       expect(f_io.update_content).to eq("")
     end
+
+    context 'with a position argument' do
+      before do
+        f_io.update_content = "2023-12-02 First update\n2023-12-03 Second update\n2023-12-04 Third update\n"
+        f_io.tasks_content = ""
+      end
+
+      it 'pulls the update at the given position to the top of the foreground list' do
+        command.run('pu 2', session)
+
+        expect(session.foreground_tasks.task_at_cursor).to eq("Second update")
+      end
+
+      it 'removes the pulled update from the update list' do
+        command.run('pu 2', session)
+
+        expect(f_io.update_content).to eq(["2023-12-02 First update\n", "2023-12-04 Third update\n"])
+      end
+
+      it 'pulls the first update for position 1' do
+        command.run('pu 1', session)
+
+        expect(session.foreground_tasks.task_at_cursor).to eq("First update")
+        expect(f_io.update_content).to eq(["2023-12-03 Second update\n", "2023-12-04 Third update\n"])
+      end
+
+      it 'ignores positions beyond the end of the list' do
+        command.run('pu 9', session)
+
+        expect(session.foreground_tasks.task_at_cursor).to eq("")
+        expect(f_io.update_content).to eq("2023-12-02 First update\n2023-12-03 Second update\n2023-12-04 Third update\n")
+      end
+
+      it 'ignores position 0' do
+        command.run('pu 0', session)
+
+        expect(session.foreground_tasks.task_at_cursor).to eq("")
+        expect(f_io.update_content).to eq("2023-12-02 First update\n2023-12-03 Second update\n2023-12-04 Third update\n")
+      end
+    end
   end
 
   describe '#description' do
     it 'returns the correct command description' do
       desc = command.description
-      expect(desc.name).to eq('pu')
-      expect(desc.line).to eq("pull next day's updates to foreground list")
+      expect(desc.name).to eq('pu [n]')
+      expect(desc.line).to eq("pull next day's updates (or the update at position n) to foreground list")
     end
   end
 end
