@@ -160,6 +160,22 @@ describe TaskList do
     expect(task_list.window[0]).to eq(["0", "-", "L: new task\n"])
   end
 
+  it 'reports nothing below when the list fits on one page' do
+    io.tasks_content = 40.times.map { "L: task\n" }.join
+    expect(task_list.more_below?).to be false
+  end
+
+  it 'reports more below when the list overflows the page' do
+    io.tasks_content = 41.times.map { "L: task\n" }.join
+    expect(task_list.more_below?).to be true
+  end
+
+  it 'reports nothing below once paged down to the last page' do
+    io.tasks_content = 41.times.map { "L: task\n" }.join
+    task_list.page_down
+    expect(task_list.more_below?).to be false
+  end
+
   it 'preserves a tag on editing' do
     io.tasks_content = "L: task\n"
     task_list.edit "edited task"
