@@ -1,6 +1,5 @@
 require_relative '../command'
 require_relative '../session'
-require_relative '../position'
 
 class ExportHtml < Command
   def matches?(line)
@@ -38,30 +37,26 @@ class ExportHtml < Command
 
   def build_html(list)
     items = list.instance_variable_get(:@items)
-    cursor = list.instance_variable_get(:@cursor)
 
     body = ""
     items.each_with_index do |item, i|
       if item.section?
-        cursor_mark = cursor == Position.top(i) ? "&mdash;" : "&nbsp;"
         label = i.to_s
         name = esc(item.name)
         children_html = item.children.map.with_index do |child, j|
-          child_cursor = cursor == Position.child(i, j) ? "&mdash;" : "&nbsp;"
           child_label = "#{i}.#{j + 1}"
-          "<div class=\"item child\"><span class=\"label\">#{esc(child_label)}</span><span class=\"cursor-char\">#{child_cursor}</span>#{esc(strip_tag(child.text.chomp))}</div>"
+          "<div class=\"item child\"><span class=\"label\">#{esc(child_label)}</span>#{task_content(child.text.chomp)}</div>"
         end.join("\n")
         open_attr = item.collapsed ? "" : " open"
         body << <<~SECTION
           <details class="section"#{open_attr}>
-            <summary class="item section-header"><span class="label">#{esc(label)}</span><span class="cursor-char">#{cursor_mark}</span>#{name}</summary>
+            <summary class="item section-header"><span class="label">#{esc(label)}</span>#{name}</summary>
             #{children_html}
           </details>
         SECTION
       else
-        cursor_mark = cursor == Position.top(i) ? "&mdash;" : "&nbsp;"
         label = i.to_s
-        body << "<div class=\"item\"><span class=\"label\">#{esc(label)}</span><span class=\"cursor-char\">#{cursor_mark}</span>#{esc(strip_tag(item.text.chomp))}</div>\n"
+        body << "<div class=\"item top\"><span class=\"label\">#{esc(label)}</span>#{task_content(item.text.chomp)}</div>\n"
       end
     end
 
@@ -70,7 +65,7 @@ class ExportHtml < Command
 
   def build_section_html(section)
     body = section.children.map.with_index do |child, j|
-      "<div class=\"item\"><span class=\"label\">#{esc((j + 1).to_s)}</span>#{esc(strip_tag(child.text.chomp))}</div>"
+      "<div class=\"item\"><span class=\"label\">#{esc((j + 1).to_s)}</span>#{task_content(child.text.chomp)}</div>"
     end.join("\n")
 
     wrap_html(esc(section.name), body)
@@ -92,9 +87,10 @@ class ExportHtml < Command
           .section-header::-webkit-details-marker { display: none; }
           details .section-header::before { content: '\\25B8 '; color: #6c7086; }
           details[open] .section-header::before { content: '\\25BE '; color: #6c7086; }
+          .item.top::before { content: '\\25B8 '; color: transparent; }
           .child { padding-left: 36px; }
           .label { color: #6c7086; display: inline-block; width: 48px; text-align: right; margin-right: 8px; }
-          .cursor-char { display: inline-block; width: 16px; color: #f38ba8; }
+          .tag { color: #f5c2e7; font-weight: bold; display: inline-block; width: 1.5ch; }
         </style>
       </head>
       <body>
@@ -102,6 +98,15 @@ class ExportHtml < Command
       </body>
       </html>
     HTML
+  end
+
+  def task_content(text)
+    "<span class=\"tag\">#{esc(tag_of(text).to_s)}</span>#{esc(strip_tag(text))}"
+  end
+
+  def tag_of(text)
+    tokens = text.split
+    tokens.first =~ /^[A-Z]:$/ && tokens.size > 1 ? tokens.first[0] : nil
   end
 
   def strip_tag(text)
