@@ -82,11 +82,12 @@ describe ExportHtml do
         io.tasks_content = "W: tagged task\n"
       end
 
-      it 'strips the tag from the HTML output' do
+      it 'shows the tag and the description without the raw tag prefix' do
         session = Session.from_ios(io, io)
         command.run("x", session)
 
         html = File.read(output_path)
+        expect(html).to include('<span class="tag">W</span>')
         expect(html).to include("tagged task")
         expect(html).not_to include("W:")
       end
@@ -123,6 +124,14 @@ describe ExportHtml do
 
         html = File.read(output_path)
         expect(html).to include("plain task")
+      end
+
+      it 'indents top-level tasks so they line up with sections' do
+        session = Session.from_ios(io, io)
+        command.run("x", session)
+
+        html = File.read(output_path)
+        expect(html).to include('<div class="item top">')
       end
     end
 
@@ -198,12 +207,13 @@ describe ExportHtml do
         io.tasks_content = "first task\nsecond task\n"
       end
 
-      it 'marks the cursor position with an mdash' do
+      it 'does not show a cursor marker' do
         session = Session.from_ios(io, io)
         command.run("x", session)
 
         html = File.read(output_path)
-        expect(html).to include("&mdash;")
+        expect(html).not_to include("&mdash;")
+        expect(html).not_to include("cursor-char")
       end
     end
   end

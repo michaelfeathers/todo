@@ -491,6 +491,24 @@ describe TaskList do
       expect(task_list.section_declared_count(0)).to eq(1)
       expect(task_list.count).to eq(1)
     end
+
+    it 'does not move the cursor onto the moved top-level task' do
+      io.tasks_content = "#1 Work\nL: existing\nL: orphan\nL: after\n"
+      task_list.cursor_set(1) # the orphan task
+      task_list.section_insert(0)
+
+      # Cursor stays at its position rather than following the task into the section
+      expect(task_list.task_at_cursor).to eq("L: after")
+    end
+
+    it 'does not move the cursor onto the moved child task' do
+      io.tasks_content = "#2 A\nL: a1\nL: a2\n#1 B\nL: b1\n"
+      task_list.cursor_set("0.1") # a1, a child of section A
+      task_list.section_insert(1) # move into section B
+
+      # Cursor stays within section A rather than jumping to section B
+      expect(task_list.task_at_cursor).to eq("L: a2")
+    end
   end
 
   describe '#find with sections' do

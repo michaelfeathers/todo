@@ -314,15 +314,15 @@ class TaskList
     if @cursor.child?
       task = @items[@cursor.top].remove(@cursor.child)
       @items[target_top_index].add(task)
+      @cursor = cursor_after_child_removal(@cursor)
     else
       return if @cursor.top == target_top_index
       task = @items.delete_at(@cursor.top)
       target_top_index -= 1 if @cursor.top < target_top_index
       @items[target_top_index].add(task)
+      clamp_cursor
     end
 
-    @items[target_top_index].collapsed = false
-    @cursor = Position.child(target_top_index, @items[target_top_index].children.size - 1)
     adjust_page
   end
 
